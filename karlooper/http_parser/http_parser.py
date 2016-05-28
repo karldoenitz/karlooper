@@ -24,7 +24,11 @@ class HttpParser(object):
 
     def __get_ip(self):
         import socket
-        local_ip = socket.gethostbyname(socket.gethostname())
+        try:
+            local_ip = socket.gethostbyname(socket.gethostname())
+        except Exception, e:
+            self.logger.error("get ip error: %s" % str(e))
+            local_ip = "Unknown IP"
         self.logger.info("IP is: %s" % local_ip)
         return local_ip
 

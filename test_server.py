@@ -36,7 +36,7 @@ class TestHandler(Request):
 class TestHandler2(Request):
     def get(self):
         result = {
-            "key": "value_test_2"
+            "k": "v"
         }
         return self.response_as_json(result)
 

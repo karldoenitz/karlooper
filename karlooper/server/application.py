@@ -4,7 +4,6 @@ import socket
 import select
 import platform
 from karlooper.http_parser.http_parser import HttpParser
-from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR, SHUT_WR
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -48,7 +47,7 @@ class Application(object):
                         requests[fileno] += connections[fileno].recv(1024)  # read data from connections
                         if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
                             request_data = requests[fileno][:-2]
-                            data = HttpParser(request_data, settings=self.settings).parse()
+                            data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
                             responses[fileno] += data
                             epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
                     elif event & select.EPOLLOUT:  # if out mode
@@ -75,11 +74,12 @@ class Application(object):
         """
         while True:
             request_data = cl_socket.recv(1024)
+            print request_data
             if request_data:
                 data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
                 cl_socket.send(data)
             else:
-                cl_socket.shutdown(SHUT_WR)
+                cl_socket.shutdown(socket.SHUT_WR)
                 cl_socket.close()
                 break
 
@@ -87,8 +87,8 @@ class Application(object):
         """
         run the server use kqueue
         """
-        s = socket(AF_INET, SOCK_STREAM)
-        s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(("0.0.0.0", self.port))
         s.listen(10)
         kq = select.kqueue()
