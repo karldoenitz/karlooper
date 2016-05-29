@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+from karlooper.router.router import Router
 from karlooper.config.config import HttpStatus, HttpStatusMsg, ContentType, RESPONSE_HEAD_MESSAGE
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -60,21 +61,20 @@ class HttpParser(object):
         http_message_dict["version"] = http_version
         http_message_dict["header"] = header
         http_message_dict["body"] = http_body
-        url_list = self.handlers.keys()
         now = datetime.datetime.now()
         now_time = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
         status = dict({})
         status["date"] = now_time
         status["host"] = self.ip
         url = http_url.split("?")[0]
-        if url not in url_list:
+        handler = Router(self.handlers, url).get_handler()
+        if not handler:
             status["status"] = HttpStatus.NOT_FOUND
             status["content_type"] = ContentType.HTML
             status["content_length"] = 3
             status["status_msg"] = HttpStatusMsg.NOT_FOUND
             data = str(HttpStatus.NOT_FOUND)
         else:
-            handler = self.handlers[url]
             try:
                 handler_init = handler(http_message_dict, self.data)
                 function = getattr(handler_init, http_method)
