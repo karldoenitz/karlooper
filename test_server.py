@@ -15,14 +15,16 @@ class TestHandler(Request):
             "test": test,
             "cookie": cookie
         }
-        http_message = self.get_http_request_message()
-        print http_message
+        # http_message = self.get_http_request_message()
+        # print http_message
         self.set_cookie("what", "happened")
         self.set_cookie("what1", "happened1")
         self.set_cookie("what2", "happened2")
         return self.response_as_json(result)
 
     def post(self):
+        http_message = self.get_http_request_message()
+        print http_message
         post_1 = self.get_parameter("post1")
         result = {
             "key": "value",
@@ -48,5 +50,8 @@ handlers = {
 
 
 if __name__ == '__main__':
-    application = Application(9898, handlers)
+    import sys
+    arg = sys.argv[1]
+    port = int(arg)
+    application = Application(port, handlers)
     application.run()
