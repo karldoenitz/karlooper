@@ -70,6 +70,15 @@ class Request(object):
         """
         return self.cookie_dict.get(key, default)
 
+    def get_security_cookie(self, key, default=None):
+        """
+
+        :param key: cookie's key
+        :param default: cookie's default value
+        :return: cookie's value
+
+        """
+
     def get_parameter(self, key, default=None):
         """
 
@@ -108,6 +117,15 @@ class Request(object):
         expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
         cookie_string = 'Set-Cookie: %s=%s; expires=%s; Path=%s' % (key, value, expires_days, path)
         self.header += "%s\r\n" % cookie_string
+
+    def set_security_cookie(self, key, value):
+        """
+
+        :param key:
+        :param value:
+        :return:
+
+        """
 
     def set_header(self, header_dict):
         """

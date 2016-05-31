@@ -21,22 +21,12 @@ class HttpParser(object):
         self.data = data
         self.settings = settings if settings else {}
         self.handlers = handlers
-        self.ip = self.__get_ip() if "ip" not in self.settings else self.settings.get("ip", "0.0.0.0")
-
-    def __get_ip(self):
-        import socket
-        try:
-            local_ip = socket.gethostbyname(socket.gethostname())
-        except Exception, e:
-            self.logger.error("get ip error: %s" % str(e))
-            local_ip = "Unknown IP"
-        self.logger.info("IP is: %s" % local_ip)
-        return local_ip
+        self.host = "Karlooper" if "host" not in self.settings else self.settings.get("host", "0.0.0.0")
 
     def parse(self):
-        return self.parse_data_to_dict()
+        return self.__parse_data_to_dict()
 
-    def parse_data_to_dict(self):
+    def __parse_data_to_dict(self):
         """
 
         parse http request data to dict and get handler's response data
@@ -65,7 +55,7 @@ class HttpParser(object):
         now_time = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
         status = dict({})
         status["date"] = now_time
-        status["host"] = self.ip
+        status["host"] = self.host
         url = http_url.split("?")[0]
         handler = Router(self.handlers, url).get_handler()
         if not handler:
