@@ -74,7 +74,6 @@ class Application(object):
         """
         while True:
             request_data = cl_socket.recv(1024)
-            print request_data
             if request_data:
                 data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
                 cl_socket.send(data)
