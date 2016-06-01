@@ -4,12 +4,13 @@ import datetime
 import json
 import logging
 from karlooper.config.config import ContentType
+from karlooper.core.security import DES
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
 
 class Request(object):
-    def __init__(self, http_data_dict, http_message):
+    def __init__(self, http_data_dict, http_message, settings):
         """
 
         :param http_data_dict: converted http data, dict type
@@ -22,6 +23,7 @@ class Request(object):
         self.logger = logging
         self.cookie_dict = self.__parse_cookie()
         self.param_dict = self.__parse_param()
+        self.__settings = settings
 
     def __parse_cookie(self):
         """
@@ -78,6 +80,13 @@ class Request(object):
         :return: cookie's value
 
         """
+        cookie = self.get_cookie(key)
+        if not cookie:
+            return default
+        des = DES()
+        security_key = self.__settings.get("cookie", "1qaz2wsx3")
+        des.input_key(security_key)
+        return des.decode(cookie)
 
     def get_parameter(self, key, default=None):
         """
@@ -118,14 +127,21 @@ class Request(object):
         cookie_string = 'Set-Cookie: %s=%s; expires=%s; Path=%s' % (key, value, expires_days, path)
         self.header += "%s\r\n" % cookie_string
 
-    def set_security_cookie(self, key, value):
+    def set_security_cookie(self, key, value, expires_days=1, path="/"):
         """
 
-        :param key:
-        :param value:
-        :return:
+        :param key: cookie's key
+        :param value: cookie's value
+        :param expires_days: cookie's expires days
+        :param path: cookie's value path
+        :return: None
 
         """
+        des = DES()
+        security_key = self.__settings.get("cookie", "1qaz2wsx3")
+        des.input_key(security_key)
+        security_value = des.encode(value)
+        self.set_cookie(key, security_value, expires_days, path)
 
     def set_header(self, header_dict):
         """

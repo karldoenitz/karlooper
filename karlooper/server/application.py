@@ -2,6 +2,7 @@
 
 import socket
 import select
+import logging
 import platform
 from karlooper.http_parser.http_parser import HttpParser
 
@@ -11,6 +12,7 @@ __author__ = 'karlvorndoenitz@gmail.com'
 class Application(object):
     def __init__(self, port, handlers, settings=None):
         self.port = port
+        self.logger = logging
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
@@ -36,30 +38,34 @@ class Application(object):
             while True:
                 events = epoll.poll(1)
                 for fileno, event in events:
-                    if fileno == server_socket.fileno():  # if request come
-                        connection, address = server_socket.accept()  # waiting income connection
-                        connection.setblocking(0)  # none block
-                        epoll.register(connection.fileno(), select.EPOLLIN)  # register socket read event to epoll
-                        connections[connection.fileno()] = connection  # add connection to connections dict
-                        requests[connection.fileno()] = b''
-                        responses[connection.fileno()] = self.response  # write data to responses dict
-                    elif event & select.EPOLLIN:  # when data in os's read buffer area
-                        requests[fileno] += connections[fileno].recv(1024)  # read data from connections
-                        if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
-                            request_data = requests[fileno][:-2]
-                            data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
-                            responses[fileno] += data
-                            epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
-                    elif event & select.EPOLLOUT:  # if out mode
-                        byteswritten = connections[fileno].send(responses[fileno])  # write data to os's write buffer
-                        responses[fileno] = responses[fileno][byteswritten:]  # get http response message
-                        if len(responses[fileno]) == 0:  # if file sent
-                            epoll.modify(fileno, 0)  # change file number to hup mode
-                            connections[fileno].shutdown(socket.SHUT_RDWR)  # set socket read and write mode shutdown
-                    elif event & select.EPOLLHUP:  # if message sent and file number in epoll is hup
-                        epoll.unregister(fileno)  # remove file number from epoll
-                        connections[fileno].close()  # close connection
-                        del connections[fileno]  # delete connection from connections dict
+                    try:
+                        if fileno == server_socket.fileno():  # if request come
+                            connection, address = server_socket.accept()  # waiting income connection
+                            connection.setblocking(0)  # none block
+                            epoll.register(connection.fileno(), select.EPOLLIN)  # register socket read event to epoll
+                            connections[connection.fileno()] = connection  # add connection to connections dict
+                            requests[connection.fileno()] = b''
+                            responses[connection.fileno()] = self.response  # write data to responses dict
+                        elif event & select.EPOLLIN:  # when data in os's read buffer area
+                            requests[fileno] += connections[fileno].recv(1024)  # read data from connections
+                            if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
+                                request_data = requests[fileno][:-2]
+                                data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
+                                responses[fileno] += data
+                                epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
+                        elif event & select.EPOLLOUT:  # if out mode
+                            byteswritten = connections[fileno].send(responses[fileno])  # write to os's write buffer
+                            responses[fileno] = responses[fileno][byteswritten:]  # get http response message
+                            if len(responses[fileno]) == 0:  # if file sent
+                                epoll.modify(fileno, 0)  # change file number to hup mode
+                                connections[fileno].shutdown(socket.SHUT_RDWR)  # set socket read and write mod shutdown
+                        elif event & select.EPOLLHUP:  # if message sent and file number in epoll is hup
+                            epoll.unregister(fileno)  # remove file number from epoll
+                            connections[fileno].close()  # close connection
+                            del connections[fileno]  # delete connection from connections dict
+                    except Exception, e:
+                        self.logger.error(e)
+                        continue
         finally:
             epoll.unregister(server_socket.fileno())
             epoll.close()

@@ -66,7 +66,7 @@ class HttpParser(object):
             data = str(HttpStatus.NOT_FOUND)
         else:
             try:
-                handler_init = handler(http_message_dict, self.data)
+                handler_init = handler(http_message_dict, self.data, self.settings)
                 function = getattr(handler_init, http_method)
                 data = function()
                 http_response_header = handler_init.get_response_header()
