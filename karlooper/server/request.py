@@ -3,8 +3,9 @@
 import datetime
 import json
 import logging
+
 from karlooper.config.config import ContentType
-from karlooper.core.security import DES
+from karlooper.utils.security import DES
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
