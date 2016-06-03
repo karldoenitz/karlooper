@@ -6,6 +6,7 @@ import logging
 
 from karlooper.config.config import ContentType
 from karlooper.utils.security import DES
+from karlooper.template import render
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -171,6 +172,11 @@ class Request(object):
         """
         self.set_header({"Content-Type": "application/json"})
         return json.dumps(data, ensure_ascii=False)
+
+    def render(self, template_path, **kwargs):
+        root_path = self.__settings.get("template", ".")
+        template_path = root_path + template_path
+        return render(template_path, **kwargs)
 
     def get_http_request_message(self):
         return self.__http_message

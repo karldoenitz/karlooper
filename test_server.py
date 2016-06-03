@@ -2,6 +2,7 @@
 
 from karlooper.server.application import Application
 from karlooper.server.request import Request
+import os
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -43,9 +44,38 @@ class TestHandler2(Request):
         return self.response_as_json(result)
 
 
+class Document(Request):
+    def get(self):
+        f = open("/opt/zhihao/bpi_api/static/bpi_api_document.md")
+        data = f.read()
+        f.close()
+        self.set_header({"Content-Type": "text/plain"})
+        return data
+
+
+class Hello:
+    pass
+
+
+class HelloWorld(Request):
+    def get(self):
+        title = "你好, 世界"
+        numbers = [1, 2, 3, 4, 5]
+        hello = Hello()
+        hello.world = "world"
+        return self.render("/helloworld.html", title=title, numbers=numbers, hello=hello)
+
+
 handlers = {
     "/test": TestHandler,
-    "/test/test2": TestHandler2
+    "/test/test2": TestHandler2,
+    "/document.md": Document,
+    "/hello": HelloWorld
+}
+
+
+settings = {
+    "template": os.getcwd() + "/template"
 }
 
 
@@ -53,5 +83,5 @@ if __name__ == '__main__':
     import sys
     arg = sys.argv[1]
     port = int(arg)
-    application = Application(port, handlers)
+    application = Application(port, handlers, settings)
     application.run()
