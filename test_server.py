@@ -2,6 +2,7 @@
 
 from karlooper.server.application import Application
 from karlooper.server.request import Request
+from test import test_handler
 import os
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -70,7 +71,8 @@ handlers = {
     "/test": TestHandler,
     "/test/test2": TestHandler2,
     "/document.md": Document,
-    "/hello": HelloWorld
+    "/hello": HelloWorld,
+    "/test-handler": test_handler.TestHandler1
 }
 
 
