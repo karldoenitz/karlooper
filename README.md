@@ -3,7 +3,7 @@ a python web framework, single thread, asyncio
 
 # install
 depend: jinja2.8
-python version: >=2.7.5 and < 3.0
+python version: >=2.6.6 and < 3.0
 download the package or check out the project  
 then cd to the project folder  
 run these commands:  

@@ -37,7 +37,7 @@ class Request(object):
         if not cookie_string:
             return {}
         try:
-            cookie_dict = {cookie.split("=")[0]: cookie.split("=")[1] for cookie in cookie_string.split("; ")}
+            cookie_dict = dict((cookie.split("=")[0], cookie.split("=")[1]) for cookie in cookie_string.split("; "))
             return cookie_dict
         except Exception, e:
             raise e
@@ -52,11 +52,11 @@ class Request(object):
         if not url_param:
             url_param_dict = {}
         else:
-            url_param_dict = {param.split("=")[0]: param.split("=")[1] for param in url_param.split("&")}
+            url_param_dict = dict((param.split("=")[0], param.split("=")[1]) for param in url_param.split("&"))
         content_type = self.get_header("content-type")
         http_body = self.__http_data.get("body", "")
         if content_type == ContentType.FORM and http_body:
-            body_param = {param.split("=")[0]: param.split("=")[1] for param in http_body.split("&")}
+            body_param = dict((param.split("=")[0], param.split("=")[1]) for param in http_body.split("&"))
         elif content_type == ContentType.JSON and http_body:
             body_param = eval(http_body)
         else:

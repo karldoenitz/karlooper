@@ -43,7 +43,7 @@ class HttpParser(object):
         http_head_list = http_request_head.split("\r\n")[1:]
         if "" in http_head_list:
             http_head_list.remove("")
-        header = {header.split(": ")[0].lower(): header.split(": ")[1] for header in http_head_list}
+        header = dict((header.split(": ")[0].lower(), header.split(": ")[1]) for header in http_head_list)
         http_body = http_message[1] if len(http_message) > 1 else None
         http_message_dict = dict({})
         http_message_dict["url"] = http_url

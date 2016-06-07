@@ -114,5 +114,9 @@ class Application(object):
         system_name = platform.system()
         if system_name == "Linux":
             self.__run_epoll()
-        else:
+        elif system_name == "Darwin":
             self.__run_kqueue()
+        elif system_name == "Windows":
+            pass
+        else:
+            print("no support operating system")
