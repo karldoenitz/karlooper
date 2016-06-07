@@ -21,7 +21,7 @@ class HttpParser(object):
         self.data = data
         self.settings = settings if settings else {}
         self.handlers = handlers
-        self.host = "Karlooper" if "host" not in self.settings else self.settings.get("host", "0.0.0.0")
+        self.host = self.settings.get("host", "Karlooper")
 
     def parse(self):
         return self.__parse_data_to_dict()
