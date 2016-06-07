@@ -8,7 +8,7 @@ setup(
         'karlooper.utils',
         'karlooper.config',
         'karlooper.router',
-        'karlooper.server',
+        'karlooper.web',
         'karlooper.http_parser'
     ],
     url='https://github.com/karldoenitz/karlooper',

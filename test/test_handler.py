@@ -1,6 +1,6 @@
 # -*-coding:utf-8-*-
 
-from karlooper.server.request import Request
+from karlooper.web.request import Request
 
 
 class TestHandler1(Request):

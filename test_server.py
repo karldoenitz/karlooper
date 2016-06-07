@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 
-from karlooper.server.application import Application
-from karlooper.server.request import Request
+from karlooper.web.application import Application
+from karlooper.web.request import Request
 from test import test_handler
 import os
 

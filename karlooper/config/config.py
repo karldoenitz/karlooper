@@ -7,7 +7,7 @@ RESPONSE_HEAD_MESSAGE = "HTTP/1.1 %(status)s %(status_msg)s\r\n" \
                         "Date: %(date)s\r\n" \
                         "Host: %(host)s\r\n" \
                         "Content-Length: %(content_length)s\r\n" \
-                        "Set-Cookie: server=run; path=/\r\n\r\n"
+                        "Set-Cookie: web=run; path=/\r\n\r\n"
 
 
 class HttpStatus:
