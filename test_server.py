@@ -48,9 +48,12 @@ class TestHandler2(Request):
 class Document(Request):
     def get(self):
         f = open("/opt/zhihao/bpi_api/static/bpi_api_document.md")
+        # f = open("/Users/lizhihao/Downloads/my pdf/python_source_code_analy.pdf")
+        # f = open("/Users/lizhihao/PycharmProjects/karlooper/document.md")
         data = f.read()
         f.close()
         self.set_header({"Content-Type": "text/plain"})
+        # self.set_header({"Content-Type": "application/octet-stream"})
         return data
 
 
