@@ -4,6 +4,7 @@ import socket
 import select
 import logging
 import platform
+from karlooper.web.__async_core_server import EchoServer
 from karlooper.http_parser.http_parser import HttpParser
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -110,13 +111,14 @@ class Application(object):
                     cl, _ = s.accept()
                     self.__handle_connection(cl)
 
+    def __run_async_io(self):
+        pass
+
     def run(self):
         system_name = platform.system()
         if system_name == "Linux":
             self.__run_epoll()
         elif system_name == "Darwin":
             self.__run_kqueue()
-        elif system_name == "Windows":
-            pass
         else:
-            print("no support operating system")
+            self.__run_async_io()

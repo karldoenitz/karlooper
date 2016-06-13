@@ -46,8 +46,9 @@ def to_basestring(value):
 def utf8(value):
     """Converts a string argument to a byte string.
 
-    If the argument is already a byte string or None, it is returned unchanged.
-    Otherwise it must be a unicode string and is encoded as utf8.
+    :param value: value will encode to utf-8
+    :return: utf-8 value
+
     """
     if isinstance(value, (bytes, type(None))):
         return value
