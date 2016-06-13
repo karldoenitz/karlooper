@@ -4,7 +4,7 @@ import socket
 import select
 import logging
 import platform
-from karlooper.web.__async_core_server import EchoServer
+from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.http_parser.http_parser import HttpParser
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -112,7 +112,11 @@ class Application(object):
                     self.__handle_connection(cl)
 
     def __run_async_io(self):
-        pass
+        """
+        run server use asyncore
+        """
+        EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
+        asyncore.loop()
 
     def run(self):
         system_name = platform.system()
