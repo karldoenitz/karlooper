@@ -1,10 +1,25 @@
 # -*-coding:utf-8-*-
+"""
+
+introduction
+first initial an object of CommandLineParser
+then use the object to set some default values
+end, use parse_command_line function to parse the command line
+
+
+>>>from karlooper.utils.parse_command_line import CommandLineParser
+>>>command_line_parser = CommandLineParser()
+>>>command_line_parser.default(port=8080, debug=True, log_enable=False)
+>>>command_line_parser.parse_command_line()
+
+"""
 
 import sys
 
 
 class CommandLineParser(object):
-    __params_dict = dict({})
+    def __init__(self):
+        self.__params_dict = dict({})
 
     def default(self, **kwargs):
         for param in kwargs:

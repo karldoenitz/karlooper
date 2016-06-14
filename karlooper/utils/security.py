@@ -1,4 +1,18 @@
 # -*-coding:utf-8-*-
+"""
+
+introduction
+
+>>>if __name__ == '__main__':
+>>>    d = DES()
+>>>    d.input_key("123456789")
+>>>    s = "/static/hello.js"
+>>>    a = d.encode(s)
+>>>    print a
+>>>    b = d.decode(a)
+>>>    print b
+
+"""
 
 from functools import partial
 
@@ -180,14 +194,3 @@ class DES(object):
             after = self.__code(before, self.__k[::-1])
             a += self.__class__.__DB(after)
         return a.rstrip().decode('utf-8')
-
-
-if __name__ == '__main__':
-    d = DES()
-    d.input_key("123456789")
-    s = "/static/hello.js"
-    a = d.encode(s)
-    print a
-
-    b = d.decode(a)
-    print b
