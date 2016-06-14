@@ -6,6 +6,7 @@ import logging
 import platform
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.http_parser.http_parser import HttpParser
+from karlooper.config.config import SOCKET_RECEIVE_SIZE
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -48,7 +49,7 @@ class Application(object):
                             requests[connection.fileno()] = b''
                             responses[connection.fileno()] = self.response  # write data to responses dict
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
-                            requests[fileno] += connections[fileno].recv(1024)  # read data from connections
+                            requests[fileno] += connections[fileno].recv(SOCKET_RECEIVE_SIZE)  # read data from connections
                             if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
                                 request_data = requests[fileno][:-2]
                                 data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
@@ -80,7 +81,7 @@ class Application(object):
 
         """
         while True:
-            request_data = cl_socket.recv(1024)
+            request_data = cl_socket.recv(SOCKET_RECEIVE_SIZE)
             if request_data:
                 data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
                 cl_socket.send(data)

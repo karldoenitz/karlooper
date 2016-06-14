@@ -3,6 +3,7 @@
 import asyncore
 import socket
 from karlooper.http_parser.http_parser import HttpParser
+from karlooper.config.config import SOCKET_RECEIVE_SIZE
 
 
 class EchoHandler(asyncore.dispatcher_with_send):
@@ -19,7 +20,7 @@ class EchoHandler(asyncore.dispatcher_with_send):
         asyncore.dispatcher_with_send.__init__(self, sock=async_socket)
 
     def handle_read(self):
-        data = self.recv(1024)
+        data = self.recv(SOCKET_RECEIVE_SIZE)
         response_data = HttpParser(data=data, handlers=self.__handlers, settings=self.__settings).parse()
         self.send(response_data)
 

@@ -9,6 +9,9 @@ RESPONSE_HEAD_MESSAGE = "HTTP/1.1 %(status)s %(status_msg)s\r\n" \
                         "Content-Length: %(content_length)s\r\n\r\n"
 
 
+SOCKET_RECEIVE_SIZE = 1024
+
+
 class HttpStatus:
     SUCCESS = 200
     PARTIAL_SUCCESS = 206
