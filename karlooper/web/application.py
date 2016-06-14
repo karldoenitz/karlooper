@@ -49,7 +49,7 @@ class Application(object):
                             requests[connection.fileno()] = b''
                             responses[connection.fileno()] = self.response  # write data to responses dict
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
-                            requests[fileno] += connections[fileno].recv(SOCKET_RECEIVE_SIZE)  # read data from connections
+                            requests[fileno] += connections[fileno].recv(SOCKET_RECEIVE_SIZE)
                             if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
                                 request_data = requests[fileno][:-2]
                                 data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
@@ -121,7 +121,8 @@ class Application(object):
 
     def run(self):
         system_name = platform.system()
-        if system_name == "Linux":
+        kernel_version = platform.release()
+        if system_name == "Linux" and kernel_version >= "2.5.44":
             self.__run_epoll()
         elif system_name == "Darwin":
             self.__run_kqueue()
