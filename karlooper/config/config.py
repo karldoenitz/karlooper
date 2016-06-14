@@ -12,7 +12,7 @@ RESPONSE_HEAD_MESSAGE = "HTTP/1.1 %(status)s %(status_msg)s\r\n" \
 SOCKET_RECEIVE_SIZE = 1024
 
 
-class HttpStatus:
+class HttpStatus(object):
     SUCCESS = 200
     PARTIAL_SUCCESS = 206
     REQUEST_FORBID = 403
@@ -23,7 +23,7 @@ class HttpStatus:
     TIME_OUT = 503
 
 
-class HttpStatusMsg:
+class HttpStatusMsg(object):
     SUCCESS = "OK"
     PARTIAL_SUCCESS = "OK"
     REQUEST_FORBID = "FORBID"
@@ -34,7 +34,7 @@ class HttpStatusMsg:
     TIME_OUT = "TIME-OUT"
 
 
-class ContentType:
+class ContentType(object):
     FORM = "application/x-www-form-urlencoded"
     JSON = "application/json"
     HTML = "text/html"

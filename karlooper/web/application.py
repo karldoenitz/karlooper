@@ -13,7 +13,7 @@ __author__ = 'karlvorndoenitz@gmail.com'
 
 class Application(object):
     def __init__(self, port, handlers, settings=None):
-        self.port = port
+        self.port = int(port)
         self.logger = logging
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
