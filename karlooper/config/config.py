@@ -7,9 +7,8 @@ RESPONSE_HEAD_MESSAGE = "HTTP/1.1 %(status)s %(status_msg)s\r\n" \
                         "Date: %(date)s\r\n" \
                         "Host: %(host)s\r\n" \
                         "Content-Length: %(content_length)s\r\n\r\n"
-
-
 SOCKET_RECEIVE_SIZE = 1024
+DEFAULT_PORT = 80
 
 
 class HttpStatus(object):
@@ -38,3 +37,4 @@ class ContentType(object):
     FORM = "application/x-www-form-urlencoded"
     JSON = "application/json"
     HTML = "text/html"
+    TEXT = "text/plain"

@@ -15,6 +15,7 @@ end, use parse_command_line function to parse the command line
 """
 
 import sys
+from karlooper.config import set_cli_data
 
 
 class CommandLineParser(object):
@@ -29,3 +30,4 @@ class CommandLineParser(object):
         params = sys.argv[1:]
         for param in params:
             self.__params_dict[param.split("=")[0]] = param.split("=")[1]
+        set_cli_data(data=self.__params_dict)

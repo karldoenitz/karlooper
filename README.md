@@ -30,7 +30,7 @@ handlers = {
 }
 
 if __name__ == '__main__':
-    application = Application(8000, handlers)
+    application = Application(handlers, port=8000)
     application.run()
 
 ```

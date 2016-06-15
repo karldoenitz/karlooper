@@ -2,24 +2,29 @@
 
 import socket
 import select
-import logging
 import platform
+from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.http_parser.http_parser import HttpParser
-from karlooper.config.config import SOCKET_RECEIVE_SIZE
+from karlooper.config import get_cli_data
+from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
 
 class Application(object):
-    def __init__(self, port, handlers, settings=None):
-        self.port = int(port)
-        self.logger = logging
+    def __init__(self, handlers, settings=None, **kwargs):
+        cli_data = get_cli_data()
+        self.port = int(kwargs.get("port", 0)) or int(cli_data.get("port", DEFAULT_PORT))
+        self.logger = init_logger()
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
         self.settings = settings
         self.handlers = handlers
+
+    def listen(self, port):
+        self.port = int(port)
 
     def __run_epoll(self):
         """

@@ -22,7 +22,7 @@ class Request(object):
         self.__http_data = http_data_dict
         self.header = "ServerName: karlooper\r\n"
         self.__http_message = http_message
-        self.logger = logging
+        self.logger = logging.getLogger()
         self.cookie_dict = self.__parse_cookie()
         self.param_dict = self.__parse_param()
         self.__settings = settings

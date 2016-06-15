@@ -16,7 +16,7 @@ class HttpParser(object):
         :param settings: url settings
 
         """
-        self.logger = logging
+        self.logger = logging.getLogger()
         self.response_header = RESPONSE_HEAD_MESSAGE
         self.data = data
         self.settings = settings if settings else {}

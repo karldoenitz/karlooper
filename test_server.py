@@ -2,6 +2,7 @@
 
 from karlooper.web.application import Application
 from karlooper.web.request import Request
+from karlooper.utils.parse_command_line import CommandLineParser
 from test import test_handler
 import os
 
@@ -85,8 +86,8 @@ settings = {
 
 
 if __name__ == '__main__':
-    import sys
-    arg = sys.argv[1]
-    port = int(arg)
-    application = Application(port, handlers, settings)
+    command_line_parser = CommandLineParser()
+    command_line_parser.default(port=9987, log_enable=False)
+    command_line_parser.parse_command_line()
+    application = Application(handlers, settings)
     application.run()

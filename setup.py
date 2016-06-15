@@ -9,10 +9,15 @@ setup(
         'karlooper.config',
         'karlooper.escape',
         'karlooper.http_parser',
+        'karlooper.logger',
         'karlooper.router',
         'karlooper.template',
         'karlooper.utils',
         'karlooper.web'
+    ],
+    data_files=[
+        ('lib/python2.7/dist-packages/karlooper/logger', ['karlooper/logger/log.conf']),
+        ('lib/python2.7/site-packages/karlooper/logger', ['karlooper/logger/log.conf'])
     ],
     url='https://github.com/karldoenitz/karlooper',
     license='',
