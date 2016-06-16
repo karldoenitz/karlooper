@@ -4,7 +4,7 @@ import datetime
 import json
 import logging
 
-from karlooper.config.config import ContentType
+from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING
 from karlooper.utils.security import DES
 from karlooper.template import render
 
@@ -86,7 +86,7 @@ class Request(object):
         if not cookie:
             return default
         des = DES()
-        security_key = self.__settings.get("cookie", "1qaz2wsx3")
+        security_key = self.__settings.get("cookie", COOKIE_SECURITY_DEFAULT_STRING)
         des.input_key(security_key)
         return des.decode(cookie)
 
@@ -111,13 +111,24 @@ class Request(object):
         header_data = self.__http_data["header"]
         return header_data.get(key, default)
 
-    def set_cookie(self, key, value, expires_days=1, path="/"):
+    def __check_headers(self, key):
+        pass
+
+    def __check_cookies(self, key):
+        feature_key = "Set-Cookie: %s=" % key
+        header_list = self.header.split("\r\n")
+        for header_string in header_list:
+            if feature_key in header_string:
+                return header_string
+
+    def set_cookie(self, key, value, expires_days=1, path="/", domain=None):
         """
 
         :param key: cookie's key
         :param value: cookie's value
         :param expires_days: cookie's expires days
         :param path: cookie's value path
+        :param domain: cookie's domain
         :return: None
 
         """
@@ -127,23 +138,52 @@ class Request(object):
         expires_days = now_time + datetime.timedelta(days=expires_days)
         expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
         cookie_string = 'Set-Cookie: %s=%s; expires=%s; Path=%s' % (key, value, expires_days, path)
-        self.header += "%s\r\n" % cookie_string
+        if domain:
+            cookie_string += "; Domain=%s" % domain
+        check_cookie = self.__check_cookies(key)
+        if not check_cookie:
+            self.header += "%s\r\n" % cookie_string
+        else:
+            self.header = self.header.replace(check_cookie, cookie_string)
 
-    def set_security_cookie(self, key, value, expires_days=1, path="/"):
+    def set_security_cookie(self, key, value, expires_days=1, path="/", domain=None):
         """
 
         :param key: cookie's key
         :param value: cookie's value
         :param expires_days: cookie's expires days
         :param path: cookie's value path
+        :param domain: cookie's domain
         :return: None
 
         """
         des = DES()
-        security_key = self.__settings.get("cookie", "1qaz2wsx3")
+        security_key = self.__settings.get("cookie", COOKIE_SECURITY_DEFAULT_STRING)
         des.input_key(security_key)
         security_value = des.encode(value)
-        self.set_cookie(key, security_value, expires_days, path)
+        self.set_cookie(key, security_value, expires_days, path, domain)
+
+    def clear_cookie(self, key, path="/", domain=None):
+        """
+
+        :param key: clear cookie by key
+        :param path: cookie's path
+        :param domain: cookie's domain
+        :return: None
+
+        """
+        self.set_cookie(key, "", 0, path, domain)
+
+    def clear_all_cookie(self, path="/", domain=None):
+        """
+
+        :param path: cookie's path
+        :param domain: cookie's domain
+        :return: None
+
+        """
+        for key in self.cookie_dict:
+            self.clear_cookie(key, path, domain)
 
     def set_header(self, header_dict):
         """

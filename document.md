@@ -41,6 +41,24 @@ def connect()
 ```
 http connect method
 ### Cookies
+```python
+def get_cookie(key, default=None)
+```
+Gets the value of the cookie with the given name, else default.
+```python
+def set_cookie(key, value, expires_days=1, path="/")
+```
+Sets the given cookie name/value with the given options.
+```python
+def get_security_cookie(key, default=None)
+```
+Gets the value of the cookie with the given name, else default.
+The value of the cookie is decoded.
+```python
+def set_security_cookie(key, value, expires_days=1, path="/")
+```
+Sets the given cookie name/value with the given options.
+The value of the cookie is encoded.
 ### Input
 ### Output
 ## karlooper.web.application
