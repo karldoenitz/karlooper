@@ -111,9 +111,6 @@ class Request(object):
         header_data = self.__http_data["header"]
         return header_data.get(key, default)
 
-    def __check_headers(self, key):
-        pass
-
     def __check_cookies(self, key):
         feature_key = "Set-Cookie: %s=" % key
         header_list = self.header.split("\r\n")
