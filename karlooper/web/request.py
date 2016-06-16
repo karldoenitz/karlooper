@@ -192,6 +192,20 @@ class Request(object):
         for header_key in header_dict:
             self.header += "%s: %s\r\n" % (header_key, header_dict[header_key])
 
+    def clear_header(self, name):
+        """
+
+        :param name: header's name
+        :return:
+
+        """
+        header_list = self.header.split("\r\n")
+        name = "%s: " % name
+        for header_string in header_list:
+            if name in header_string:
+                header_string += "\r\n"
+                self.header = self.header.replace(header_string, "")
+
     def get_response_header(self):
         """
 
