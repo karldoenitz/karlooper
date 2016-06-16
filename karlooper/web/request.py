@@ -3,6 +3,7 @@
 import datetime
 import json
 import logging
+from urllib import unquote
 
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING
 from karlooper.utils.security import DES
@@ -99,6 +100,19 @@ class Request(object):
 
         """
         return self.param_dict.get(key, default)
+
+    def decode_parameter(self, key, default=None):
+        """
+
+        :param key: value's key
+        :param default: default value
+        :return: decoded parameter
+
+        """
+        parameter = self.get_parameter(key)
+        if not parameter:
+            return default
+        return unquote(parameter)
 
     def get_header(self, key, default=None):
         """
