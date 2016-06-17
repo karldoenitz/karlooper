@@ -5,7 +5,7 @@ This model provides a class named Request.
 ```python
 class Request(http_data_dict, http_message, settings)
 ```
-Base class for HTTP request handlers.
+Base class for HTTP request handlers.  
 Subclasses must define at least one of the methods defined in the “Entry points” section below.  
 ### Entry points
 ```python
@@ -44,44 +44,44 @@ HTTP connect method
 ```python
 def get_cookie(key, default=None)
 ```
-Gets the value of the cookie with the given name, else default.
+Gets the value of the cookie with the given name, else default.  
 ```python
 def set_cookie(key, value, expires_days=1, path="/")
 ```
-Sets the given cookie name/value with the given options.
+Sets the given cookie name/value with the given options.  
 ```python
 def get_security_cookie(key, default=None)
 ```
-Gets the value of the cookie with the given name, else default.
-The value of the cookie is decoded.
+Gets the value of the cookie with the given name, else default.  
+The value of the cookie is decoded.  
 ```python
 def set_security_cookie(key, value, expires_days=1, path="/")
 ```
-Sets the given cookie name/value with the given options.
-The value of the cookie is encoded.
+Sets the given cookie name/value with the given options.  
+The value of the cookie is encoded.  
 ### Input
 ```python
 def get_parameter(key, default=None)
 ```
-Get the value of the argument with the given name.
-If key does not exist, return default.
-This method return the value in HTTP body or url.
+Get the value of the argument with the given name.  
+If key does not exist, return default.  
+This method return the value in HTTP body or url.  
 ```python
 def decode_parameter(key, default=None)
 ```
-Get the value of the argument with the given name.
-If the given name does not exist, return default.
-This method return the value in HTTP body or url.
-The value must be urlencoded.
+Get the value of the argument with the given name.  
+If the given name does not exist, return default.  
+This method return the value in HTTP body or url.  
+The value must be urlencoded.  
 ```python
 def get_http_request_message()
 ```
-Get the http request message.
+Get the http request message.  
 ### Output
 ```python
 def set_header(self, header_dict)
 ```
-Sets the given response header name and value.
+Sets the given response header name and value.  
 For example:
 ```python
 self.set_header({
@@ -89,8 +89,8 @@ self.set_header({
     "Content-Length": "65"
 })
 ```
-The key in _**header_dict**_ is the HTTP header name.
-The value in _**header_dict**_ is the HTTP header value.
+The key in _**header_dict**_ is the HTTP header name.  
+The value in _**header_dict**_ is the HTTP header value.  
 ```python
 def clear_header(self, header_dict)
 ```
@@ -108,14 +108,12 @@ This model provides a class named Application.
 ```python
 class Application(handlers, settings=None, **kwargs)
 ```
-A collection of request handlers that make up a web application.
-Instances of this class are callable and can be passed directly to HTTPServer to serve the application.
+A collection of request handlers that make up a web application.  
+Instances of this class are callable and can be passed directly to HTTPServer to serve the application.  
 *  arguments in init method
-*  dsaf  
-
-  `handlers`: A dict contains urls and handlers mapping.
-  `settings`: A dict contains some settings.
-  `kwargs`: Other arguments, for example: _port_.
+  `handlers`: A dict contains urls and handlers mapping.  
+  `settings`: A dict contains some settings.  
+  `kwargs`: Other arguments, for example: _port_.  
 - methods
 ```python
 def listen(port)
