@@ -214,7 +214,19 @@ def decode(s)
 ```
 Decode a string.
 ## parse_command_line
-
+```python
+class CommandLineParser()
+```
+This class contains some methods to parse the command line.
+**Method**:
+```python
+def default(**kwargs)
+```
+Set default arguments and values, if not type arguments and values in command line.
+```python
+def parse_command_line()
+```
+Parsing command line.
 # karlooper.logger
 _**karlooper.logger**_ provides a model to write the log to file.
 **Methods**:
