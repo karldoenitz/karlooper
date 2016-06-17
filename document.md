@@ -199,7 +199,7 @@ _**karlooper.utils**_ provides `security` and `parse_command_line` models.
 ```python
 class DES()
 ```
-DES security class.
+DES security class.  
 **Methods**:
 ```python
 def input(key, base=10)
@@ -217,7 +217,7 @@ Decode a string.
 ```python
 class CommandLineParser()
 ```
-This class contains some methods to parse the command line.
+This class contains some methods to parse the command line.  
 **Method**:
 ```python
 def default(**kwargs)
@@ -228,7 +228,7 @@ def parse_command_line()
 ```
 Parsing command line.
 # karlooper.logger
-_**karlooper.logger**_ provides a model to write the log to file.
+_**karlooper.logger**_ provides a model to write the log to file.  
 **Methods**:
 ```python
 def init_logger(config_path=None)
