@@ -195,5 +195,17 @@ If the argument is already a byte string or None, it is returned unchanged.
 Otherwise it must be a unicode string and is encoded as utf8.
 # karlooper.utils
 _**karlooper.utils**_ provides `security` and `parse_command_line` models.
+
 # karlooper.logger
 _**karlooper.logger**_ provides a model to write the log to file.
+**Methods**:
+```python
+def init_logger(config_path=None)
+```
+Init the logger, if config_path is None, the method will use default log configurations.
+After init logger, we can use 
+```python
+logger = logging.getLogger()
+logger.info("it is test")
+```
+to write log to file.
