@@ -141,4 +141,6 @@ This template system based on jinja2.
 # karlooper.escape
 _**karlooper.escape**_ provides some escaping/unescaping methods for HTML, URLs, and others.
 # karlooper.utils
+_**karlooper.utils**_ provides `security` and `parse_command_line` models.
 # karlooper.logger
+_**karlooper.logger**_ provides a model to write the log to file.
