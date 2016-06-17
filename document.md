@@ -112,10 +112,10 @@ A collection of request handlers that make up a web application.
 Instances of this class are callable and can be passed directly to HTTPServer to serve the application.  
 **arguments in init method**  
   `handlers`: A dict contains urls and handlers mapping.  
+  `kwargs`: Other arguments, for example: _port_.  
   `settings`: A dict contains some settings.  
   - `template`: config the template files directory.  
   - `cookie`:  config the security cookie's security key.  
-  `kwargs`: Other arguments, for example: _port_.  
 **methods**
 ```python
 def listen(port)
