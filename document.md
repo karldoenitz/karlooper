@@ -140,7 +140,7 @@ _**karlooper.template**_ provides a simple template system that compiles templat
 This template system based on jinja2.  
 _**Methods**_:
 ```python
-def render(template_path, **kwargs):
+def render(template_path, **kwargs)
 ```
 Renders the template with the given arguments as the response.
 ```python
