@@ -118,6 +118,7 @@ handlers = {
 application = Application(handlers, port=8080)
 application.run()
 ```
+If not define the port in anywhere, the server will run on the port 80.
 **arguments in init method**  
   `handlers`: A dict contains urls and handlers mapping.  
   `kwargs`: Other arguments, for example: _port_.  
@@ -135,8 +136,9 @@ def run()
 ```
 Run the web server.  
 # karlooper.template
-_**karlooper.template**_ provides a simple template system that compiles templates to Python code.
+_**karlooper.template**_ provides a simple template system that compiles templates to Python code.  
 This template system based on jinja2.
 # karlooper.escape
+_**karlooper.escape**_ provides some escaping/unescaping methods for HTML, URLs, and others.
 # karlooper.utils
 # karlooper.logger
