@@ -195,6 +195,25 @@ If the argument is already a byte string or None, it is returned unchanged.
 Otherwise it must be a unicode string and is encoded as utf8.
 # karlooper.utils
 _**karlooper.utils**_ provides `security` and `parse_command_line` models.
+## security
+```python
+class DES()
+```
+DES security class.
+**Methods**:
+```python
+def input(key, base=10)
+```
+Set security key.
+```python
+def encode(s)
+```
+Encode a string.
+```python
+def decode(s)
+```
+Decode a string.
+## parse_command_line
 
 # karlooper.logger
 _**karlooper.logger**_ provides a model to write the log to file.
