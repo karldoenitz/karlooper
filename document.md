@@ -137,7 +137,16 @@ def run()
 Run the web server.  
 # karlooper.template
 _**karlooper.template**_ provides a simple template system that compiles templates to Python code.  
-This template system based on jinja2.
+This template system based on jinja2.  
+_**Methods**_:
+```python
+def render(template_path, **kwargs):
+```
+Renders the template with the given arguments as the response.
+```python
+def render_string(template_string, **kwargs)
+```
+Renders the template string data with the given arguments as the response.
 # karlooper.escape
 _**karlooper.escape**_ provides some escaping/unescaping methods for HTML, URLs, and others.
 # karlooper.utils

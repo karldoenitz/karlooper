@@ -16,3 +16,8 @@ def render(template_path, **kwargs):
     data = template.render(kwargs)
     template_file.close()
     return data
+
+
+def render_string(template_string, **kwargs):
+    template = Template(template_string)
+    return template.render(kwargs)
