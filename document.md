@@ -202,7 +202,7 @@ _**karlooper.logger**_ provides a model to write the log to file.
 ```python
 def init_logger(config_path=None)
 ```
-Init the logger, if config_path is None, the method will use default log configurations.
+Init the logger, if config_path is None, the method will use default log configurations.  
 After init logger, we can use 
 ```python
 logger = logging.getLogger()
