@@ -11,35 +11,35 @@ Subclasses must define at least one of the methods defined in the “Entry point
 ```python
 def get()
 ```
-http get method
+HTTP get method
 ```python
 def post()
 ```
-http post method
+HTTP post method
 ```python
 def put()
 ```
-http put method
+HTTP put method
 ```python
 def head()
 ```
-http head method
+HTTP head method
 ```python
 def options()
 ```
-http options method
+HTTP options method
 ```python
 def delete()
 ```
-http delete method
+HTTP delete method
 ```python
 def trace()
 ```
-http trace method
+HTTP trace method
 ```python
 def connect()
 ```
-http connect method
+HTTP connect method
 ### Cookies
 ```python
 def get_cookie(key, default=None)
@@ -60,7 +60,49 @@ def set_security_cookie(key, value, expires_days=1, path="/")
 Sets the given cookie name/value with the given options.
 The value of the cookie is encoded.
 ### Input
+```python
+def get_parameter(key, default=None)
+```
+Get the value of the argument with the given name.
+If key does not exist, return default.
+This method return the value in HTTP body or url.
+```python
+def decode_parameter(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in HTTP body or url.
+The value must be urlencoded.
+```python
+def get_http_request_message()
+```
+Get the http request message.
 ### Output
+```python
+def set_header(self, header_dict)
+```
+Sets the given response header name and value.
+For example:
+```python
+self.set_header({
+    "Content-Type": "application/json",
+    "Content-Length": "65"
+})
+```
+The key in `header_dict` is the HTTP header name.
+The value in `header_dict` is the HTTP header value.
+```python
+def clear_header(self, header_dict)
+```
+Clears an outgoing header, undoing a previous set_header call.
+```python
+def response_as_json(data)
+```
+Return json data.
+```python
+def render(template_path, **kwargs)
+```
+Renders the template with the given arguments as the response.
 ## karlooper.web.application
 This model provides a class named Application.  
 # karlooper.template
