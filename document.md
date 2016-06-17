@@ -113,6 +113,8 @@ Instances of this class are callable and can be passed directly to HTTPServer to
 **arguments in init method**  
   `handlers`: A dict contains urls and handlers mapping.  
   `settings`: A dict contains some settings.  
+  - `template`: config the template files directory.  
+  - `cookie`:  config the security cookie's security key.  
   `kwargs`: Other arguments, for example: _port_.  
 **methods**
 ```python
