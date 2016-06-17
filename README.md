@@ -39,7 +39,7 @@ if __name__ == '__main__':
 then open the web browser and go to "127.0.0.1:8000/hello", you will see the hello world.
 
 # Documentation
-[click here](https://github.com/karldoenitz/karlooper/blob/master/document.md)
+[click here](https://github.com/karldoenitz/karlooper/blob/master/documentations/document.md)
 
 # Notice
 This framework has been used on the linux version of [CubeBackup for Google Apps](http://www.cubebackup.com), which is a local backup solution for Google Apps data.   
