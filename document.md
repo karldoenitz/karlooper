@@ -142,13 +142,57 @@ _**Methods**_:
 ```python
 def render(template_path, **kwargs)
 ```
-Renders the template with the given arguments as the response.
+Renders the template with the given arguments as the response.  
 ```python
 def render_string(template_string, **kwargs)
 ```
-Renders the template string data with the given arguments as the response.
+Renders the template string data with the given arguments as the response.  
 # karlooper.escape
 _**karlooper.escape**_ provides some escaping/unescaping methods for HTML, URLs, and others.
+## Escaping functions
+```python
+def xhtml_escape(value)
+```
+Escapes a string so it is valid within HTML or XML.  
+Escapes the characters <, >, ", ', and &. When used in attribute values the escaped strings must be enclosed in quotes.
+```python
+def xhtml_unescape(value)
+```
+Un-escapes an XML-escaped string.
+```python
+def url_escape(value, plus=True)
+```
+Returns a URL-encoded version of the given value.  
+If plus is true (the default), spaces will be represented as “+” instead of “%20”.   
+This is appropriate for query strings but not for the path component of a URL.  
+Note that this default is the reverse of Python’s urllib module.
+```python
+def url_unescape(value, plus=True)
+```
+Decodes the given value from a URL.  
+The argument may be either a byte or unicode string.  
+If encoding is None, the result will be a byte string.  
+Otherwise, the result is a unicode string in the specified encoding.  
+If plus is true (the default), plus signs will be interpreted as spaces (literal plus signs must be represented as “%2B”).  
+This is appropriate for query strings and form-encoded values but not for the path component of a URL.  
+Note that this default is the reverse of Python’s urllib module.
+## Byte/unicode conversions
+```python
+def to_unicode(value)
+```
+Converts a string argument to a unicode string.  
+If the argument is already a unicode string or None, it is returned unchanged.  
+Otherwise it must be a byte string and is decoded as utf8.
+```python
+def to_basestring(value)
+```
+Converts a byte or unicode string into type str.
+```python
+def utf8(value)
+```
+Converts a string argument to a byte string.  
+If the argument is already a byte string or None, it is returned unchanged.  
+Otherwise it must be a unicode string and is encoded as utf8.
 # karlooper.utils
 _**karlooper.utils**_ provides `security` and `parse_command_line` models.
 # karlooper.logger
