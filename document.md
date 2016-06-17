@@ -116,6 +116,7 @@ Instances of this class are callable and can be passed directly to HTTPServer to
   `settings`: A dict contains some settings.  
   - `template`: config the template files directory.  
   - `cookie`:  config the security cookie's security key.  
+
 **methods**
 ```python
 def listen(port)
