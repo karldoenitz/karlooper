@@ -110,7 +110,7 @@ class Application(handlers, settings=None, **kwargs)
 ```
 A collection of request handlers that make up a web application.  
 Instances of this class are callable and can be passed directly to HTTPServer to serve the application.  
-*  arguments in init method
+*  arguments in init method  
   `handlers`: A dict contains urls and handlers mapping.  
   `settings`: A dict contains some settings.  
   `kwargs`: Other arguments, for example: _port_.  
