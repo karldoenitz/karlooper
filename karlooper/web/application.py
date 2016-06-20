@@ -16,12 +16,13 @@ class Application(object):
     def __init__(self, handlers, settings=None, **kwargs):
         cli_data = get_cli_data()
         self.port = int(kwargs.get("port", 0)) or int(cli_data.get("port", DEFAULT_PORT))
+        self.settings = settings
+        self.handlers = handlers
+        set_cli_data(self.settings)
         self.logger = init_logger()
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
-        self.settings = settings
-        self.handlers = handlers
 
     def listen(self, port):
         self.port = int(port)
@@ -127,7 +128,6 @@ class Application(object):
     def run(self):
         print "server run on port: %d" % self.port
         self.logger.info("server run on port: %d" % self.port)
-        set_cli_data(self.settings)
         system_name = platform.system()
         kernel_version = platform.release()
         if system_name == "Linux" and kernel_version >= "2.5.44":
