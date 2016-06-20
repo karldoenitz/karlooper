@@ -82,7 +82,7 @@ handlers = {
 
 settings = {
     "template": os.getcwd() + "/template",
-    "log_enable": True
+    "log_enable": False
 }
 
 
