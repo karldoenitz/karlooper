@@ -27,6 +27,7 @@ class Request(object):
         self.cookie_dict = self.__parse_cookie()
         self.param_dict = self.__parse_param()
         self.__settings = settings
+        self.__response_cookie = {}
 
     def __parse_cookie(self):
         """
@@ -125,12 +126,14 @@ class Request(object):
         header_data = self.__http_data["header"]
         return header_data.get(key, default)
 
-    def __check_cookies(self, key):
-        feature_key = "Set-Cookie: %s=" % key
-        header_list = self.header.split("\r\n")
-        for header_string in header_list:
-            if feature_key in header_string:
-                return header_string
+    def __parse_cookie_dict_to_string(self):
+        for cookie in self.__response_cookie.values():
+            if cookie.get("domain"):
+                cookie_format = 'Set-Cookie: %(key)s=%(value)s; expires=%(expires)s; Path=%(path)s; Domain=%(domain)s'
+            else:
+                cookie_format = 'Set-Cookie: %(key)s=%(value)s; expires=%(expires)s; Path=%(path)s'
+            cookie_string = cookie_format % cookie
+            self.header += "%s\r\n" % cookie_string
 
     def set_cookie(self, key, value, expires_days=1, path="/", domain=None):
         """
@@ -148,14 +151,16 @@ class Request(object):
         now_time = datetime.datetime.now()
         expires_days = now_time + datetime.timedelta(days=expires_days)
         expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        cookie_string = 'Set-Cookie: %s=%s; expires=%s; Path=%s' % (key, value, expires_days, path)
+        cookie_dict = {
+            "key": key,
+            "value": value,
+            "expires": expires_days,
+            "path": path,
+            "domain": domain
+        }
         if domain:
-            cookie_string += "; Domain=%s" % domain
-        check_cookie = self.__check_cookies(key)
-        if not check_cookie:
-            self.header += "%s\r\n" % cookie_string
-        else:
-            self.header = self.header.replace(check_cookie, cookie_string)
+            cookie_dict["Domain"] = domain
+        self.__response_cookie[key] = cookie_dict
 
     def set_security_cookie(self, key, value, expires_days=1, path="/", domain=None):
         """
@@ -226,6 +231,7 @@ class Request(object):
         :return: http message's header
 
         """
+        self.__parse_cookie_dict_to_string()
         return "\r\n" + self.header + "\r\n"
 
     def response_as_json(self, data):

@@ -13,14 +13,16 @@ class TestHandler(Request):
     def get(self):
         test = self.get_parameter("test")
         cookie = self.get_cookie("what1")
+        cookie_1 = self.get_security_cookie("what")
         result = {
             "key": "value",
             "test": test,
-            "cookie": cookie
+            "cookie": cookie,
+            "cookie_1": cookie_1
         }
-        # http_message = self.get_http_request_message()
-        # print http_message
-        self.set_cookie("what", "happened")
+        http_message = self.get_http_request_message()
+        print http_message
+        self.set_security_cookie("what", "happened")
         self.set_cookie("what1", "happened1")
         self.set_cookie("what2", "happened2")
         return self.response_as_json(result)

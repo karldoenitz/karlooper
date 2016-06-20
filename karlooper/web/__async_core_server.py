@@ -3,7 +3,7 @@
 import asyncore
 import socket
 from karlooper.http_parser.http_parser import HttpParser
-from karlooper.config.config import SOCKET_RECEIVE_SIZE
+from karlooper.config.config import SOCKET_RECEIVE_SIZE, CLIENT_CONNECT_TO_SERVER_NUM
 
 
 class EchoHandler(asyncore.dispatcher_with_send):
@@ -41,7 +41,7 @@ class EchoServer(asyncore.dispatcher):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind((host, port))
-        self.listen(1)
+        self.listen(CLIENT_CONNECT_TO_SERVER_NUM)
 
     def handle_accept(self):
         pair = self.accept()

@@ -7,7 +7,7 @@ from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.http_parser.http_parser import HttpParser
 from karlooper.config import get_cli_data, set_cli_data
-from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT
+from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT, CLIENT_CONNECT_TO_SERVER_NUM
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -34,7 +34,7 @@ class Application(object):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind(('0.0.0.0', self.port))
-        server_socket.listen(1)  # the number of client that connect to server
+        server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)  # the number of client that connect to server
         server_socket.setblocking(0)  # set 0 not block other block
         server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         epoll = select.epoll()
@@ -103,7 +103,7 @@ class Application(object):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(("0.0.0.0", self.port))
-        s.listen(1)
+        s.listen(CLIENT_CONNECT_TO_SERVER_NUM)
         kq = select.kqueue()
         kevent = select.kevent(
             s.fileno(),
