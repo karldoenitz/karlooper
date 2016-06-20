@@ -102,7 +102,7 @@ class Application(object):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(("0.0.0.0", self.port))
-        s.listen(10)
+        s.listen(1)
         kq = select.kqueue()
         kevent = select.kevent(
             s.fileno(),

@@ -41,7 +41,7 @@ class EchoServer(asyncore.dispatcher):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind((host, port))
-        self.listen(5)
+        self.listen(1)
 
     def handle_accept(self):
         pair = self.accept()
