@@ -125,6 +125,8 @@ class Application(object):
         asyncore.loop()
 
     def run(self):
+        print "server run on port: %d" % self.port
+        self.logger.info("server run on port: %d" % self.port)
         set_cli_data(self.settings)
         system_name = platform.system()
         kernel_version = platform.release()
