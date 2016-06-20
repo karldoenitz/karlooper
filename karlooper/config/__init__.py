@@ -13,8 +13,15 @@ __CLI_DATA = dict({})
 
 
 def set_cli_data(data):
+    """set global config data
+
+    :param data: a dict contain global config data
+    :return:
+
+    """
     global __CLI_DATA
-    __CLI_DATA = data
+    for key in data:
+        __CLI_DATA[key] = data[key]
 
 
 def get_cli_data():

@@ -6,7 +6,7 @@ import platform
 from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.http_parser.http_parser import HttpParser
-from karlooper.config import get_cli_data
+from karlooper.config import get_cli_data, set_cli_data
 from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -125,6 +125,7 @@ class Application(object):
         asyncore.loop()
 
     def run(self):
+        set_cli_data(self.settings)
         system_name = platform.system()
         kernel_version = platform.release()
         if system_name == "Linux" and kernel_version >= "2.5.44":
