@@ -8,6 +8,7 @@ download the package or check out the project
 then cd to the project folder  
 run these commands:  
 
+    sudo pip install jinja2
     sudo python setup.py install  
 
 # demo
