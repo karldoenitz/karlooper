@@ -24,6 +24,8 @@ def set_cli_data(data):
 
     """
     global __CLI_DATA
+    if not data:
+        return
     for key in data:
         __CLI_DATA[key] = data[key]
 
