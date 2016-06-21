@@ -23,6 +23,7 @@ class TestHandler(Request):
         http_message = self.get_http_request_message()
         print http_message
         self.set_security_cookie("what", "happened")
+        self.set_security_cookie("what", "are you")
         self.set_cookie("what1", "happened1")
         self.set_cookie("what2", "happened2")
         return self.response_as_json(result)

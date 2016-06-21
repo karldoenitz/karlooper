@@ -6,6 +6,7 @@ import logging
 from urllib import unquote
 
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING
+from karlooper.escape import utf8
 from karlooper.utils.security import DES
 from karlooper.template import render
 
@@ -242,7 +243,8 @@ class Request(object):
 
         """
         self.set_header({"Content-Type": "application/json"})
-        return json.dumps(data, ensure_ascii=False)
+        response = json.dumps(data, ensure_ascii=False)
+        return utf8(response)
 
     def render(self, template_path, **kwargs):
         root_path = self.__settings.get("template", ".")
