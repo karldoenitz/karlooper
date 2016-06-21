@@ -132,7 +132,7 @@ class Application(object):
         kernel_version = platform.release()
         if system_name == "Linux" and kernel_version >= "2.5.44":
             self.__run_epoll()
-        elif system_name == "Darwin":
+        elif system_name == "Darwin" and kernel_version >= "13.0.0":
             self.__run_kqueue()
         else:
             self.__run_async_io()
