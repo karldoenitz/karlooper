@@ -35,7 +35,7 @@ if __name__ == '__main__':
     application.run()
 
 ```
-### run hello world
+### run _hello world_
     python index.py
 then open the web browser and go to "http://127.0.0.1:8000/hello", you will see the hello world.
 
