@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='karlooper',
-    version='0.1.5',
+    version='0.1.6',
     packages=[
         'karlooper',
         'karlooper.autoreload',

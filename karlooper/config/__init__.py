@@ -1,10 +1,14 @@
 # -*-coding:utf-8-*-
 """
 
+config
+~~~~~~
 store global config data
 
->>>set_cli_data({"port": 8080})
->>>data = get_cli_data()
+Usage
+=====
+>>> set_cli_data({"port": 8080})
+>>> data = get_cli_data()
 
 """
 

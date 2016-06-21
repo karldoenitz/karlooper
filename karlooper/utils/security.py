@@ -1,16 +1,22 @@
 # -*-coding:utf-8-*-
 """
 
-introduction
+security
+~~~~~~~~
 
->>>if __name__ == '__main__':
->>>    d = DES()
->>>    d.input_key("123456789")
->>>    s = "/static/hello.js"
->>>    a = d.encode(s)
->>>    print a
->>>    b = d.decode(a)
->>>    print b
+Use this model to encrypt string.
+
+Usage
+=====
+>>> d = DES()
+>>> d.input_key("123456789")
+>>> s = "/static/hello.js"
+>>> a = d.encode(s)
+>>> print a
+b14f1453ceddc91e492fbe883d552a2e
+>>> b = d.decode(a)
+>>> print b
+/static/hello.js
 
 """
 
