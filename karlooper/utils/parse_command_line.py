@@ -12,9 +12,8 @@ end, use parse_command_line function to parse the command line
 Usage
 =====
 >>> from karlooper.utils.parse_command_line import CommandLineParser
->>> command_line_parser = CommandLineParser()
->>> command_line_parser.default(port=8080, debug=True, log_enable=False)
->>> command_line_parser.parse_command_line()
+>>> CommandLineParser.default(port=8080, debug=True, log_enable=False)
+>>> CommandLineParser.parse_command_line()
 
 """
 
@@ -23,15 +22,23 @@ from karlooper.config import set_cli_data
 
 
 class CommandLineParser(object):
-    def __init__(self):
-        self.__params_dict = dict({})
+    """
 
-    def default(self, **kwargs):
-        for param in kwargs:
-            self.__params_dict[param] = kwargs[param]
+    Two methods:
 
-    def parse_command_line(self):
+    def default(**kwargs):  set default arguments
+
+    def parse_command_line():  parse the command line to get arguments
+
+    """
+    @staticmethod
+    def default(**kwargs):
+        set_cli_data(kwargs)
+
+    @staticmethod
+    def parse_command_line():
         params = sys.argv[1:]
+        __params_dict = dict({})
         for param in params:
-            self.__params_dict[param.split("=")[0]] = param.split("=")[1]
-        set_cli_data(data=self.__params_dict)
+            __params_dict[param.split("=")[0]] = param.split("=")[1]
+        set_cli_data(data=__params_dict)

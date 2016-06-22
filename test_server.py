@@ -21,6 +21,12 @@ class TestHandler(Request):
             "cookie_1": cookie_1
         }
         http_message = self.get_http_request_message()
+        self.set_header({
+            "what": "happened",
+            "hello": "world",
+            "ok": "let's go"
+        })
+        self.clear_header("ok")
         print http_message
         self.set_security_cookie("what", "happened")
         self.set_security_cookie("what", "are you")
@@ -90,8 +96,7 @@ settings = {
 
 
 if __name__ == '__main__':
-    command_line_parser = CommandLineParser()
-    command_line_parser.default(port=9987, log_enable=False)
-    command_line_parser.parse_command_line()
+    CommandLineParser.default(port=9987, log_enable=False)
+    CommandLineParser.parse_command_line()
     application = Application(handlers, settings)
     application.run()

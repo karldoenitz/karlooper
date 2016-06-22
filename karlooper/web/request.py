@@ -29,6 +29,7 @@ class Request(object):
         self.param_dict = self.__parse_param()
         self.__settings = settings
         self.__response_cookie = {}
+        self.__response_header = {}
 
     def __parse_cookie(self):
         """
@@ -202,6 +203,10 @@ class Request(object):
         for key in self.cookie_dict:
             self.clear_cookie(key, path, domain)
 
+    def __parse_header_dict_to_string(self):
+        for header_key in self.__response_header:
+            self.header += "%s: %s\r\n" % (header_key, self.__response_header[header_key])
+
     def set_header(self, header_dict):
         """
 
@@ -210,7 +215,7 @@ class Request(object):
 
         """
         for header_key in header_dict:
-            self.header += "%s: %s\r\n" % (header_key, header_dict[header_key])
+            self.__response_header[header_key] = header_dict[header_key]
 
     def clear_header(self, name):
         """
@@ -219,12 +224,7 @@ class Request(object):
         :return:
 
         """
-        header_list = self.header.split("\r\n")
-        name = "%s: " % name
-        for header_string in header_list:
-            if name in header_string:
-                header_string += "\r\n"
-                self.header = self.header.replace(header_string, "")
+        self.__response_header.pop(name)
 
     def get_response_header(self):
         """
@@ -232,6 +232,7 @@ class Request(object):
         :return: http message's header
 
         """
+        self.__parse_header_dict_to_string()
         self.__parse_cookie_dict_to_string()
         return "\r\n" + self.header + "\r\n"
 
