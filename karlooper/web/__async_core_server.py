@@ -1,5 +1,6 @@
 # -*-coding:utf-8-*-
 
+import logging
 import asyncore
 import socket
 from karlooper.http_parser.http_parser import HttpParser
@@ -15,14 +16,18 @@ class EchoHandler(asyncore.dispatcher_with_send):
         :param settings: settings config
 
         """
+        self.logger = logging.getLogger()
         self.__handlers = handlers
         self.__settings = settings
         asyncore.dispatcher_with_send.__init__(self, sock=async_socket)
 
     def handle_read(self):
-        data = self.recv(SOCKET_RECEIVE_SIZE)
-        response_data = HttpParser(data=data, handlers=self.__handlers, settings=self.__settings).parse()
-        self.send(response_data)
+        try:
+            data = self.recv(SOCKET_RECEIVE_SIZE)
+            response_data = HttpParser(data=data, handlers=self.__handlers, settings=self.__settings).parse()
+            self.send(response_data)
+        except Exception, e:
+            self.logger.info("echo handler error: %s" % str(e))
 
 
 class EchoServer(asyncore.dispatcher):
