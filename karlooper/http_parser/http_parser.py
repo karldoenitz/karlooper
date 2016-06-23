@@ -75,7 +75,7 @@ class HttpParser(object):
                     data = str(HttpStatus.METHOD_NOT_ALLOWED)
                     status["status"] = HttpStatus.METHOD_NOT_ALLOWED
                     status["status_msg"] = HttpStatusMsg.METHOD_NOT_ALLOWED
-                if isinstance(data, tuple) and len(data) > 2:
+                elif isinstance(data, tuple) and len(data) > 2:
                     status["status"] = data[1]
                     status["status_msg"] = data[2]
                     data = data[0]
