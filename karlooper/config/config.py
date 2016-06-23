@@ -16,6 +16,7 @@ CLIENT_CONNECT_TO_SERVER_NUM = 128
 class HttpStatus(object):
     SUCCESS = 200
     PARTIAL_SUCCESS = 206
+    REDIRECT = 302
     REQUEST_FORBID = 403
     NOT_FOUND = 404
     METHOD_NOT_ALLOWED = 405
@@ -27,6 +28,7 @@ class HttpStatus(object):
 class HttpStatusMsg(object):
     SUCCESS = "OK"
     PARTIAL_SUCCESS = "OK"
+    REDIRECT = "Moved Temporarily"
     REQUEST_FORBID = "FORBID"
     NOT_FOUND = "NOT-FOUND"
     METHOD_NOT_ALLOWED = "METHOD-NOT-ALLOWED"

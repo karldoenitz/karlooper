@@ -5,7 +5,7 @@ import json
 import logging
 from urllib import unquote
 
-from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING
+from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
 from karlooper.escape import utf8
 from karlooper.utils.security import DES
 from karlooper.template import render
@@ -251,6 +251,12 @@ class Request(object):
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
         return render(template_path, **kwargs)
+
+    def redirect(self, url):
+        self.set_header({
+            "Location": url,
+        })
+        return "", HttpStatus.REDIRECT, HttpStatusMsg.REDIRECT
 
     def get_http_request_message(self):
         return self.__http_message
