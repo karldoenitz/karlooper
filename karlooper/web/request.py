@@ -252,11 +252,11 @@ class Request(object):
         template_path = root_path + template_path
         return render(template_path, **kwargs)
 
-    def redirect(self, url):
+    def redirect(self, url, status=HttpStatus.REDIRECT):
         self.set_header({
             "Location": url,
         })
-        return "", HttpStatus.REDIRECT, HttpStatusMsg.REDIRECT
+        return "", status, HttpStatusMsg.REDIRECT
 
     def get_http_request_message(self):
         return self.__http_message
