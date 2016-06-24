@@ -111,6 +111,10 @@ Return json data.
 def render(template_path, **kwargs)
 ```
 Renders the template with the given arguments as the response.
+```python
+def redirect(url, status=302)
+```
+Redirect to the url, default status is 302.
 ## karlooper.web.application
 This model provides a class named Application.  
 ```python
