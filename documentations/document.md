@@ -137,7 +137,8 @@ If not define the port in anywhere, the server will run on the port 80.
   `settings`: A dict contains some settings.  
   - `template`: config the template files directory.  
   - `cookie`:  config the security cookie's security key.  
-
+  - `log_enable`:  set whether enable the log model.
+  - `port`:  define the server's port.  
 **methods**
 ```python
 def listen(port)
