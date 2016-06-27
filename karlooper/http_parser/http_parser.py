@@ -24,9 +24,9 @@ class HttpParser(object):
         self.host = self.settings.get("host", "Karlooper")
 
     def parse(self):
-        return self.__parse_data_to_dict()
+        return self.__parse_data()
 
-    def __parse_data_to_dict(self):
+    def __parse_data(self):
         """
 
         parse http request data to dict and get handler's response data
