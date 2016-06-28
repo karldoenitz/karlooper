@@ -14,16 +14,23 @@ __author__ = 'karlvorndoenitz@gmail.com'
 
 class Application(object):
     def __init__(self, handlers, settings=None, **kwargs):
-        cli_data = get_cli_data()
-        self.port = int(kwargs.get("port", 0)) or int(cli_data.get("port", DEFAULT_PORT))
+        """
+
+        :param handlers: handlers mapping, dict type
+        :param settings: settings mapping, dict type
+        :param kwargs: options
+
+        """
         self.settings = settings
         self.handlers = handlers
         set_cli_data(self.settings)
+        set_cli_data(kwargs)
+        cli_data = get_cli_data()
+        self.port = int(cli_data.get("port", DEFAULT_PORT))
         self.logger = init_logger()
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
-        set_cli_data(kwargs)
 
     def listen(self, port):
         self.port = int(port)
