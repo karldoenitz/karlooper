@@ -23,6 +23,7 @@ class Application(object):
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
+        set_cli_data(kwargs)
 
     def listen(self, port):
         self.port = int(port)

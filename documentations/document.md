@@ -240,7 +240,14 @@ Set default arguments and values, if not type arguments and values in command li
 ```python
 def parse_command_line()
 ```
-Parsing command line.
+Parsing command line.  
+例如:
+```
+python index.py port=8080 log_enable=true cookie=9cedxz1r2q
+```
+port=8080, set the port that the http server listen.  
+log_eable=true, set the log models open.  
+cookie=xxxxxxxx, set the security cookie's key-chain.  
 # karlooper.logger
 _**karlooper.logger**_ provides a model to write the log to file.  
 **Methods**:
