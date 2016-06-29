@@ -68,7 +68,7 @@ class Document(Request):
         return data
 
 
-class Hello:
+class Hello(object):
     pass
 
 
