@@ -137,6 +137,27 @@ class Request(object):
             cookie_string = cookie_format % cookie
             self.header += "%s\r\n" % cookie_string
 
+    def generate_expire_date(self, expires_days):
+        """
+
+        :param expires_days: expires days, int type
+        :return: http expires days, string type
+
+        """
+        now_time = datetime.datetime.now()
+        expires_days = now_time + datetime.timedelta(days=expires_days)
+        expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.logger.info(expires_days)
+        return expires_days
+
+    def get_now_time(self):
+        now_time = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.logger.info(now_time)
+        return now_time
+
+    def get_request_url(self):
+        return self.__http_data.get("url", "")
+
     def set_cookie(self, key, value, expires_days=1, path="/", domain=None):
         """
 
@@ -150,9 +171,7 @@ class Request(object):
         """
         key = str(key)
         value = str(value)
-        now_time = datetime.datetime.now()
-        expires_days = now_time + datetime.timedelta(days=expires_days)
-        expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        expires_days = self.generate_expire_date(expires_days)
         cookie_dict = {
             "key": key,
             "value": value,

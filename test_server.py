@@ -92,6 +92,7 @@ handlers = {
 
 settings = {
     "template": os.getcwd() + "/template",
+    "static": os.getcwd() + "/template",
     "log_enable": False
 }
 

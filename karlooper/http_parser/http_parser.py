@@ -87,6 +87,5 @@ class HttpParser(object):
                 status["status_msg"] = HttpStatusMsg.SERVER_ERROR
                 data = str(e)
             status["content_length"] = len(data)
-        data = self.response_header + data
-        response_data = data % status
+        response_data = self.response_header % status + data
         return response_data

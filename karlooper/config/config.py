@@ -12,11 +12,24 @@ DEFAULT_PORT = 80
 COOKIE_SECURITY_DEFAULT_STRING = "1qaz2wsx3"
 CLIENT_CONNECT_TO_SERVER_NUM = 128
 
+content_type = {
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "gif": "image/gif",
+    "css": "text/css",
+    "js": "text/js",
+    "mp3": "audio/mpeg",
+    "ogg": "audio/ogg",
+    "mp4": "video/mp4"
+}
+
 
 class HttpStatus(object):
     SUCCESS = 200
     PARTIAL_SUCCESS = 206
     REDIRECT = 302
+    RESOURCE_NOT_MODIFIED = 304
     REQUEST_FORBID = 403
     NOT_FOUND = 404
     METHOD_NOT_ALLOWED = 405
@@ -29,6 +42,7 @@ class HttpStatusMsg(object):
     SUCCESS = "OK"
     PARTIAL_SUCCESS = "OK"
     REDIRECT = "Moved Temporarily"
+    RESOURCE_NOT_MODIFIED = "Not Modified"
     REQUEST_FORBID = "FORBID"
     NOT_FOUND = "NOT-FOUND"
     METHOD_NOT_ALLOWED = "METHOD-NOT-ALLOWED"
