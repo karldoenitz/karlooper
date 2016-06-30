@@ -49,11 +49,11 @@ class TestHandler(Request):
 
 class TestHandler2(Request):
     def get(self):
-        # result = {
-        #     "k": "v"
-        # }
-        # return self.response_as_json(result)
-        return self.redirect("http://www.baidu.com")
+        result = {
+            "k": "v"
+        }
+        return self.response_as_json(result)
+        # return self.redirect("http://www.baidu.com")
 
 
 class Document(Request):

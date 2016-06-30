@@ -1,4 +1,5 @@
 # -*-coding:utf-8-*-
+import os
 import hashlib
 from karlooper.web.request import Request
 from karlooper.config import get_cli_data
@@ -15,7 +16,10 @@ class StaticHandler(Request):
             return "", HttpStatus.RESOURCE_NOT_MODIFIED, HttpStatusMsg.RESOURCE_NOT_MODIFIED
         request_etag = self.get_header("if-none-match")
         file_path = self.get_request_url()
-        file_etag, file_data = self.get_file_etag(static_root+file_path)
+        file_absolute_path = static_root+file_path
+        if not os.path.exists(file_absolute_path):
+            return "404", HttpStatus.NOT_FOUND, HttpStatusMsg.NOT_FOUND
+        file_etag, file_data = self.get_file_etag(file_absolute_path)
         if request_etag and request_etag == file_etag:
             return "", HttpStatus.RESOURCE_NOT_MODIFIED, HttpStatusMsg.RESOURCE_NOT_MODIFIED
         expires = self.generate_expire_date(expires_days=7)
