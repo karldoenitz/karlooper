@@ -37,7 +37,7 @@ if __name__ == '__main__':
 ```
 ### run _hello world_
     python index.py
-then open the web browser and go to "http://127.0.0.1:8000/hello", you will see the hello world.
+then open the web browser and go to "http://127.0.0.1:8000/hello", you will see ```hello world```.
 
 # Documentation
 [click here](https://github.com/karldoenitz/karlooper/blob/master/documentations/document.md)
