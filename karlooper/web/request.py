@@ -145,10 +145,10 @@ class Request(object):
 
         """
         now_time = datetime.datetime.now()
-        expires_days = now_time + datetime.timedelta(days=expires_days)
-        expires_days = expires_days.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        self.logger.info(expires_days)
-        return expires_days
+        expires_time = now_time + datetime.timedelta(days=expires_days)
+        expires_time = expires_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.logger.info(expires_time)
+        return expires_time
 
     def get_now_time(self):
         now_time = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S GMT")
@@ -281,26 +281,32 @@ class Request(object):
         return self.__http_message
 
     def get(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
 
     def post(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
 
     def put(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
 
     def head(self):
         self.logger.info(self.__http_data.get("url", ""))
         return ""
 
     def options(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
 
     def delete(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
 
     def trace(self):
         return self.__http_message.split("\r\n\r\n") if "\r\n\r\n" in self.__http_message else ""
 
     def connect(self):
-        pass
+        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
+        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED

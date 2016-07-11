@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='karlooper',
-    version='0.2.1',
+    version='0.2.5',
     packages=[
         'karlooper',
         'karlooper.autoreload',
@@ -23,5 +23,5 @@ setup(
     license='',
     author='lizhihao',
     author_email='karlvorndoenitz@gmail.com',
-    description='karloop plus frame work'
+    description='karloop plus framework'
 )
