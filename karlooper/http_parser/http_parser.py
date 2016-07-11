@@ -71,11 +71,7 @@ class HttpParser(object):
                 data = function()
                 http_response_header = handler_init.get_response_header()
                 self.response_header = self.response_header.replace("\r\n\r\n", http_response_header)
-                if data is None:
-                    data = str(HttpStatus.METHOD_NOT_ALLOWED)
-                    status["status"] = HttpStatus.METHOD_NOT_ALLOWED
-                    status["status_msg"] = HttpStatusMsg.METHOD_NOT_ALLOWED
-                elif isinstance(data, tuple) and len(data) > 2:
+                if isinstance(data, tuple) and len(data) > 2:
                     status["status"] = data[1]
                     status["status_msg"] = data[2]
                     data = data[0]
