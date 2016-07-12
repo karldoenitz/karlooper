@@ -56,16 +56,9 @@ class TestHandler2(Request):
         # return self.redirect("http://www.baidu.com")
 
 
-class Document(Request):
+class Test(Request):
     def get(self):
-        f = open("/opt/zhihao/bpi_api/static/bpi_api_document.md")
-        # f = open("/Users/lizhihao/Downloads/my pdf/python_source_code_analy.pdf")
-        # f = open("/Users/lizhihao/PycharmProjects/karlooper/document.md")
-        data = f.read()
-        f.close()
-        self.set_header({"Content-Type": "text/plain"})
-        # self.set_header({"Content-Type": "application/octet-stream"})
-        return data
+        return self.http_response("Hello, World!")
 
 
 class Hello(object):
@@ -84,7 +77,7 @@ class HelloWorld(Request):
 handlers = {
     "/test": TestHandler,
     "/test/test2": TestHandler2,
-    "/document.md": Document,
+    "/hello-world": Test,
     "/hello": HelloWorld,
     "/test-handler": test_handler.TestHandler1
 }
@@ -93,7 +86,8 @@ handlers = {
 settings = {
     "template": os.getcwd() + "/template",
     "static": os.getcwd() + "/template",
-    "log_enable": False
+    "log_enable": False,
+    "debug": True
 }
 
 

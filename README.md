@@ -24,7 +24,7 @@ __author__ = 'karlvorndoenitz@gmail.com'
 
 class HelloHandler(Request):
     def get(self):
-        return "Hello,World!"
+        return self.http_response("Hello,World!")
 
 handlers = {
     "/hello": HelloHandler,

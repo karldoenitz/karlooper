@@ -29,7 +29,7 @@ class StaticHandler(Request):
             "Expires": expires,
             "Content-Type": content_type.get(file_extension)
         })
-        return file_data
+        return file_data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def get_file_etag(self, file_path):
         f = open(file_path)

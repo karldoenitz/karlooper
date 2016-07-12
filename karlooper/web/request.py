@@ -264,12 +264,16 @@ class Request(object):
         """
         self.set_header({"Content-Type": "application/json"})
         response = json.dumps(data, ensure_ascii=False)
-        return utf8(response)
+        return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+
+    def http_response(self, data):
+        self.logger.info("response data:", data)
+        return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def render(self, template_path, **kwargs):
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
-        return render(template_path, **kwargs)
+        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def redirect(self, url, status=HttpStatus.REDIRECT):
         self.set_header({

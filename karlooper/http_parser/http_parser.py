@@ -71,13 +71,9 @@ class HttpParser(object):
                 data = function()
                 http_response_header = handler_init.get_response_header()
                 self.response_header = self.response_header.replace("\r\n\r\n", http_response_header)
-                if isinstance(data, tuple) and len(data) > 2:
-                    status["status"] = data[1]
-                    status["status_msg"] = data[2]
-                    data = data[0]
-                else:
-                    status["status"] = HttpStatus.SUCCESS
-                    status["status_msg"] = HttpStatusMsg.SUCCESS
+                status["status"] = data[1]
+                status["status_msg"] = data[2]
+                data = data[0]
             except Exception, e:
                 status["status"] = HttpStatus.SERVER_ERROR
                 status["status_msg"] = HttpStatusMsg.SERVER_ERROR
