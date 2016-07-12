@@ -32,7 +32,7 @@ class Request(object):
         self.__response_header = {}
 
     def __parse_cookie(self):
-        """
+        """parse cookie string to cookie dict
 
         :return: a dict contain cookie or None or error
 
@@ -47,7 +47,7 @@ class Request(object):
             raise e
 
     def __parse_param(self):
-        """
+        """parse http message to get the param dict
 
         :return: a dict contain params
 
