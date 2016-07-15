@@ -1,4 +1,18 @@
 # -*-coding:utf-8-*-
+"""
+
+statics
+~~~~~~~
+
+introduction
+a simple static http handler
+
+Warning: this model just support debug model, we do not recommend developer use this models,
+we recommend developer to use nginx as a static server.
+
+
+"""
+
 import os
 import hashlib
 from karlooper.web.request import Request
@@ -7,7 +21,21 @@ from karlooper.config.config import content_type, HttpStatus, HttpStatusMsg
 
 
 class StaticHandler(Request):
+    """
+
+    Two methods:
+
+    def get(self): http get method
+
+    def get_file_etag(self, file_path): get file's etag
+
+    """
     def get(self):
+        """
+
+        :return: http response data, status, status message
+
+        """
         global_config_data = get_cli_data()
         static_root = global_config_data.get("static", ".")
         request_expire_days = self.get_header("expires")
@@ -32,6 +60,12 @@ class StaticHandler(Request):
         return file_data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def get_file_etag(self, file_path):
+        """get file's etag
+
+        :param file_path: static file's path
+        :return: file's etag
+
+        """
         f = open(file_path)
         file_data = f.read()
         f.close()
