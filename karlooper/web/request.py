@@ -69,7 +69,7 @@ class Request(object):
         return param
 
     def get_cookie(self, key, default=None):
-        """
+        """get cookie's value with defined key
 
         :param key: cookie's key
         :param default: cookie's default value
@@ -79,7 +79,7 @@ class Request(object):
         return self.cookie_dict.get(key, default)
 
     def get_security_cookie(self, key, default=None):
-        """
+        """get security cookie's value with decode
 
         :param key: cookie's key
         :param default: cookie's default value
@@ -95,7 +95,9 @@ class Request(object):
         return des.decode(cookie)
 
     def get_parameter(self, key, default=None):
-        """
+        """get parameter's value with the given key,
+        this method can get value in http body or head,
+        content-type support: application/json and application/x-www-form-urlencoded
 
         :param key: param's key
         :param default: param's default value
@@ -105,7 +107,7 @@ class Request(object):
         return self.param_dict.get(key, default)
 
     def decode_parameter(self, key, default=None):
-        """
+        """decode parameter with defined key
 
         :param key: value's key
         :param default: default value
@@ -118,7 +120,7 @@ class Request(object):
         return unquote(parameter)
 
     def get_header(self, key, default=None):
-        """
+        """get http header's value with defined key
 
         :param key: header data's key
         :param default: default value
@@ -138,7 +140,7 @@ class Request(object):
             self.header += "%s\r\n" % cookie_string
 
     def generate_expire_date(self, expires_days):
-        """
+        """get expire date
 
         :param expires_days: expires days, int type
         :return: http expires days, string type
@@ -156,10 +158,15 @@ class Request(object):
         return now_time
 
     def get_request_url(self):
+        """get request url
+
+        :return: request url
+
+        """
         return self.__http_data.get("url", "")
 
     def set_cookie(self, key, value, expires_days=1, path="/", domain=None):
-        """
+        """set cookie's value
 
         :param key: cookie's key
         :param value: cookie's value
@@ -184,7 +191,7 @@ class Request(object):
         self.__response_cookie[key] = cookie_dict
 
     def set_security_cookie(self, key, value, expires_days=1, path="/", domain=None):
-        """
+        """set security cookie's value
 
         :param key: cookie's key
         :param value: cookie's value
@@ -201,7 +208,7 @@ class Request(object):
         self.set_cookie(key, security_value, expires_days, path, domain)
 
     def clear_cookie(self, key, path="/", domain=None):
-        """
+        """clear cookie with defined key
 
         :param key: clear cookie by key
         :param path: cookie's path
@@ -212,7 +219,7 @@ class Request(object):
         self.set_cookie(key, "", 0, path, domain)
 
     def clear_all_cookie(self, path="/", domain=None):
-        """
+        """clear all cookie
 
         :param path: cookie's path
         :param domain: cookie's domain
@@ -227,7 +234,7 @@ class Request(object):
             self.header += "%s: %s\r\n" % (header_key, self.__response_header[header_key])
 
     def set_header(self, header_dict):
-        """
+        """set header data in http message
 
         :param header_dict: http header data dict type
         :return: None
@@ -237,7 +244,7 @@ class Request(object):
             self.__response_header[header_key] = header_dict[header_key]
 
     def clear_header(self, name):
-        """
+        """clear headers' data in http response message
 
         :param name: header's name
         :return:
@@ -246,7 +253,7 @@ class Request(object):
         self.__response_header.pop(name)
 
     def get_response_header(self):
-        """
+        """get http response header
 
         :return: http message's header
 
@@ -256,7 +263,7 @@ class Request(object):
         return "\r\n" + self.header + "\r\n"
 
     def response_as_json(self, data):
-        """
+        """decorate data to http json data
 
         :param data: the response data
         :return: json data
@@ -267,6 +274,12 @@ class Request(object):
         return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def http_response(self, data):
+        """decorate data to http response data
+
+        :param data: http response data
+        :return: a tuple contains http message, status, status message
+
+        """
         self.logger.info("response data:", data)
         return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
@@ -276,12 +289,24 @@ class Request(object):
         return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def redirect(self, url, status=HttpStatus.REDIRECT):
+        """redirect to defined url
+
+        :param url: redirect url
+        :param status: http status
+        :return: a tuple contains http message, status, status message
+
+        """
         self.set_header({
             "Location": url,
         })
         return "", status, HttpStatusMsg.REDIRECT
 
     def get_http_request_message(self):
+        """get request message
+
+        :return: self http message
+
+        """
         return self.__http_message
 
     def get(self):

@@ -33,6 +33,12 @@ class Application(object):
         self.response = ""
 
     def listen(self, port):
+        """listen port
+
+        :param port: port that application listened
+        :return: None
+
+        """
         self.port = int(port)
 
     def __run_epoll(self):
@@ -134,6 +140,9 @@ class Application(object):
         asyncore.loop()
 
     def run(self):
+        """
+        run the web server
+        """
         print "server run on port: %d" % self.port
         self.logger.info("server run on port: %d" % self.port)
         system_name = platform.system()
