@@ -31,5 +31,10 @@ def set_cli_data(data):
 
 
 def get_cli_data():
+    """get data from command line client
+
+    :return: None
+
+    """
     global __CLI_DATA
     return __CLI_DATA
