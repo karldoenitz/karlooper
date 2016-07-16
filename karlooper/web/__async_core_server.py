@@ -1,4 +1,18 @@
 # -*-coding:utf-8-*-
+"""
+
+__async_core_server
+~~~~~~~~~~~~~~~~~~
+
+introduction
+use python asyncore model to implement a async http server
+
+Usage
+=====
+>>> EchoServer('0.0.0.0', port=8080, handlers={}, settings={})
+>>> asyncore.loop()
+
+"""
 
 import logging
 import asyncore
