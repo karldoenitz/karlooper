@@ -284,6 +284,13 @@ class Request(object):
         return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def render(self, template_path, **kwargs):
+        """render a template
+
+        :param template_path: template's relative path
+        :param kwargs: params used in template
+        :return: a tuple contains http message, status, status message
+
+        """
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
         return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
