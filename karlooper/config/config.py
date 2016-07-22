@@ -35,7 +35,7 @@ class HttpStatus(object):
     METHOD_NOT_ALLOWED = 405
     SERVER_ERROR = 500
     SERVER_NOT_SUPPORT = 501
-    TIME_OUT = 503
+    TIME_OUT = 504
 
 
 class HttpStatusMsg(object):
