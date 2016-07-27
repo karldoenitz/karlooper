@@ -7,7 +7,7 @@ from urllib import unquote
 
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
 from karlooper.escape import utf8
-from karlooper.utils.security import DES
+from karlooper.utils.encrypt import DES
 from karlooper.template import render
 
 __author__ = 'karlvorndoenitz@gmail.com'
