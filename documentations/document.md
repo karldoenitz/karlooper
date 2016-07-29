@@ -104,6 +104,10 @@ def clear_header(self, header_dict)
 ```
 Clears an outgoing header, undoing a previous set_header call.
 ```python
+def http_response(data)
+```
+Return http data.
+```python
 def response_as_json(data)
 ```
 Return json data.
