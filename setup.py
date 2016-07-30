@@ -1,8 +1,9 @@
 from distutils.core import setup
+from karlooper import __version__
 
 setup(
     name='karlooper',
-    version='0.3.0',
+    version=__version__,
     packages=[
         'karlooper',
         'karlooper.autoreload',
