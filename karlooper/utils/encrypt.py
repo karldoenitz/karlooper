@@ -158,7 +158,7 @@ class DES(object):
     __K = partial(lambda K1, K0, k: K0(K1(k)), __K1, __K0)
 
     def __init__(self):
-        pass
+        self.__k = None
 
     def input_key(self, key, base=10):
         if base == 2:
