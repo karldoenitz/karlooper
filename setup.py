@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 from karlooper import __version__
 
 with open('requirements.txt') as f:
