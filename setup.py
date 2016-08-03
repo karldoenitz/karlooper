@@ -1,9 +1,13 @@
 from distutils.core import setup
 from karlooper import __version__
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name='karlooper',
     version=__version__,
+    install_requires=required,
     packages=[
         'karlooper',
         'karlooper.autoreload',
