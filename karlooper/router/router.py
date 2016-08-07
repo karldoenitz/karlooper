@@ -12,6 +12,7 @@ class Router(object):
 
     def get_handler(self):
         """
+        I will add url regex parse in the future
         :return: return a handler object
         """
         handler = self.__handlers.get(self.__url, None)
