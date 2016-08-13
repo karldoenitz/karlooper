@@ -62,7 +62,11 @@ class Request(object):
         if content_type == ContentType.FORM and http_body:
             body_param = dict((param.split("=")[0], param.split("=")[1]) for param in http_body.split("&"))
         elif content_type == ContentType.JSON and http_body:
-            body_param = eval(http_body)
+            try:
+                body_param = json.loads(http_body)
+            except Exception, e:
+                self.logger.warning("parse json error: %s" % str(e))
+                body_param = eval(http_body)
         else:
             body_param = {}
         param = dict(url_param_dict, **body_param)
