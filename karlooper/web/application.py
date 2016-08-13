@@ -71,7 +71,8 @@ class Application(object):
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
                             requests[fileno] += connections[fileno].recv(SOCKET_RECEIVE_SIZE)
                             if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
-                                request_data = requests[fileno][:-2]
+                                request_data = requests[fileno][:-2] \
+                                    if requests[fileno].endswith("\r\n") else requests[fileno]
                                 data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
                                 responses[fileno] += data
                                 epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode

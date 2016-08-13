@@ -92,7 +92,7 @@ settings = {
 
 
 if __name__ == '__main__':
-    CommandLineParser.default(port=9987, log_enable=False)
+    CommandLineParser.default(port=9988, log_enable=False)
     CommandLineParser.parse_command_line()
     application = Application(handlers, settings)
     application.run()
