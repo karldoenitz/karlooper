@@ -245,7 +245,7 @@ Set default arguments and values, if not type arguments and values in command li
 def parse_command_line()
 ```
 Parsing command line.  
-例如:
+for example:
 ```
 python index.py port=8080 log_enable=true cookie=9cedxz1r2q
 ```
