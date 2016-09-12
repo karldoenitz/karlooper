@@ -55,6 +55,10 @@ class TestHandler2(Request):
         return self.response_as_json(result)
         # return self.redirect("http://www.baidu.com")
 
+    def post(self):
+        print self.get_http_request_message()
+        return self.response_as_json({})
+
 
 class Test(Request):
     def get(self):
