@@ -40,6 +40,14 @@ HTTP trace method
 def connect()
 ```
 HTTP connect method
+```python
+def before_request()
+```
+Run before this request.
+```python
+def teardown_request()
+```
+Run after teardown this request.
 ### Cookies
 ```python
 def get_cookie(key, default=None)
