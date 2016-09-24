@@ -350,3 +350,9 @@ class Request(object):
     def connect(self):
         self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
         return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+
+    def before_request(self):
+        pass
+
+    def teardown_request(self):
+        pass

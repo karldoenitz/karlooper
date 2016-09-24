@@ -67,6 +67,7 @@ class HttpParser(object):
         else:
             try:
                 handler_init = handler(http_message_dict, self.data, self.settings)
+                handler_init.before_request()
                 function = getattr(handler_init, http_method)
                 data = function()
                 http_response_header = handler_init.get_response_header()
@@ -74,6 +75,7 @@ class HttpParser(object):
                 status["status"] = data[1]
                 status["status_msg"] = data[2]
                 data = data[0]
+                handler_init.teardown_request()
             except Exception, e:
                 status["status"] = HttpStatus.SERVER_ERROR
                 status["status_msg"] = HttpStatusMsg.SERVER_ERROR

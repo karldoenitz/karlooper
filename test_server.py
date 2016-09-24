@@ -70,12 +70,18 @@ class Hello(object):
 
 
 class HelloWorld(Request):
+    def before_request(self):
+        print self.get_http_request_message()
+
     def get(self):
         title = "你好, 世界"
         numbers = [1, 2, 3, 4, 5]
         hello = Hello()
         hello.world = "world"
         return self.render("/helloworld.html", title=title, numbers=numbers, hello=hello)
+
+    def teardown_request(self):
+        print "tear down now"
 
 
 handlers = {
