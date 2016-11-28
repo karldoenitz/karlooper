@@ -16,7 +16,8 @@ class Router(object):
         :return: return a handler object
         """
         handler = self.__handlers.get(self.__url, None)
-        if self.__is_debug \
+        if handler is None \
+                and self.__is_debug \
                 and self.__is_static_enable \
                 and (str(self.__is_debug).lower() == "true") \
                 and (not handler) \
