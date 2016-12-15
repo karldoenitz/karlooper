@@ -57,7 +57,7 @@ class TestHandler2(Request):
 
     def post(self):
         print self.get_http_request_message()
-        return self.response_as_json({})
+        return self.http_response("Hello World")
 
 
 class Test(Request):
