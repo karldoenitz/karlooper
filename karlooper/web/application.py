@@ -128,8 +128,8 @@ class Application(object):
         )
 
         while True:
-            revents = kq.control([kevent], 1, None)
-            for event in revents:
+            receive_events = kq.control([kevent], 1, None)
+            for event in receive_events:
                 if event.filter == select.KQ_FILTER_READ:
                     cl, _ = s.accept()
                     self.__handle_connection(cl)
