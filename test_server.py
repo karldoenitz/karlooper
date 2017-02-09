@@ -84,12 +84,24 @@ class HelloWorld(Request):
         print "tear down now"
 
 
+class TestPathParam(Request):
+    def get(self):
+        result = {
+            "status": 0,
+            "desc": "succeed",
+            "data": self.get_path_param("id")
+        }
+        return self.response_as_json(result)
+
+
 handlers = {
     "/test": TestHandler,
     "/test/test2": TestHandler2,
     "/hello-world": Test,
     "/hello": HelloWorld,
-    "/test-handler": test_handler.TestHandler1
+    "/test-handler": test_handler.TestHandler1,
+    "/user/{age}/{id}": TestPathParam,
+    "/user/vip/{id}/{token}": TestPathParam
 }
 
 
