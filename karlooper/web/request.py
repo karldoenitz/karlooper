@@ -30,6 +30,7 @@ class Request(object):
         self.__settings = settings
         self.__response_cookie = {}
         self.__response_header = {}
+        self.__path_param = {}
 
     def __parse_cookie(self):
         """parse cookie string to cookie dict
@@ -71,6 +72,25 @@ class Request(object):
             body_param = {}
         param = dict(url_param_dict, **body_param)
         return param
+
+    def set_path_param(self, path_param_dict):
+        """ set the param in url
+
+        :param path_param_dict: param parsed from url
+        :return: None
+
+        """
+        self.__path_param = path_param_dict
+
+    def get_path_param(self, key, default=None):
+        """ get param in url with key
+
+        :param key: param's key
+        :param default: param's default value
+        :return: param's value
+
+        """
+        return self.__path_param.get(key, default)
 
     def get_cookie(self, key, default=None):
         """get cookie's value with defined key

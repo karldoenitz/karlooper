@@ -66,7 +66,13 @@ class HttpParser(object):
             data = str(HttpStatus.NOT_FOUND)
         else:
             try:
-                handler_init = handler(http_message_dict, self.data, self.settings)
+                if isinstance(handler, tuple):
+                    path_param = handler[1]
+                    handler = handler[0]
+                    handler_init = handler(http_message_dict, self.data, self.settings)
+                    handler_init.set_path_param(path_param.value)
+                else:
+                    handler_init = handler(http_message_dict, self.data, self.settings)
                 handler_init.before_request()
                 function = getattr(handler_init, http_method)
                 data = function()
