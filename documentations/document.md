@@ -88,7 +88,37 @@ def decode_parameter(key, default=None)
 Get the value of the argument with the given name.  
 If the given name does not exist, return default.  
 This method return the value in HTTP body or url.  
-The value must be urlencoded.  
+The value must be urlencoded.
+```python
+def get_path_param(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in url path.
+```python
+def get_path_param_int(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in url path and format to int type.
+```python
+def get_path_param_str(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in url path and format to str type.
+```python
+def get_path_param_boolean(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in url path and format to boolean type.
+```python
+def get_path_param_float(key, default=None)
+```
+Get the value of the argument with the given name.
+If the given name does not exist, return default.
+This method return the value in url path and format to float type.
 ```python
 def get_http_request_message()
 ```
