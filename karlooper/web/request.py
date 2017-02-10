@@ -92,6 +92,50 @@ class Request(object):
         """
         return self.__path_param.get(key, default)
 
+    def get_path_param_int(self, key, default=None):
+        """ get param's int value in url with key
+
+        :param key: param's key
+        :param default: param's default value
+        :return: param's value
+
+        """
+        value = self.__path_param.get(key, default)
+        return int(value)
+
+    def get_path_param_str(self, key, default=None):
+        """ get param's str value in url with key
+
+        :param key: param's key
+        :param default: param's default value
+        :return: param's value
+
+        """
+        value = self.__path_param.get(key, default)
+        return str(value)
+
+    def get_path_param_boolean(self, key, default=None):
+        """ get param's boolean value in url with key
+
+        :param key: param's key
+        :param default: param's default value
+        :return: param's value
+
+        """
+        value = self.__path_param.get(key, default)
+        return bool(value)
+
+    def get_path_param_float(self, key, default=None):
+        """ get param's float value in url with key
+
+        :param key: param's key
+        :param default: param's default value
+        :return: param's value
+
+        """
+        value = self.__path_param.get(key, default)
+        return float(value)
+
     def get_cookie(self, key, default=None):
         """get cookie's value with defined key
 
