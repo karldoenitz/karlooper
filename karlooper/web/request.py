@@ -101,6 +101,8 @@ class Request(object):
 
         """
         value = self.__path_param.get(key, default)
+        if value is None:
+            return None
         return int(value)
 
     def get_path_param_str(self, key, default=None):
@@ -112,6 +114,8 @@ class Request(object):
 
         """
         value = self.__path_param.get(key, default)
+        if value is None:
+            return None
         return str(value)
 
     def get_path_param_boolean(self, key, default=None):
@@ -123,6 +127,8 @@ class Request(object):
 
         """
         value = self.__path_param.get(key, default)
+        if value is None:
+            return None
         return bool(value)
 
     def get_path_param_float(self, key, default=None):
@@ -134,6 +140,8 @@ class Request(object):
 
         """
         value = self.__path_param.get(key, default)
+        if value is None:
+            return None
         return float(value)
 
     def get_cookie(self, key, default=None):

@@ -89,7 +89,11 @@ class TestPathParam(Request):
         result = {
             "status": 0,
             "desc": "succeed",
-            "data": self.get_path_param("id")
+            "data": {
+                "id": self.get_path_param_int("id"),
+                "age": self.get_path_param_int("age"),
+                "token": self.get_path_param_str("token")
+            }
         }
         return self.response_as_json(result)
 
