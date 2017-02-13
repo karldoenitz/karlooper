@@ -58,6 +58,8 @@ class HttpParser(object):
         status["host"] = self.host
         url = http_url.split("?")[0]
         handler = Router(self.handlers, url).get_handler()
+        path_param = handler[1]
+        handler = handler[0]
         if not handler:
             status["status"] = HttpStatus.NOT_FOUND
             status["content_type"] = ContentType.HTML
@@ -66,13 +68,9 @@ class HttpParser(object):
             data = str(HttpStatus.NOT_FOUND)
         else:
             try:
-                if isinstance(handler, tuple):
-                    path_param = handler[1]
-                    handler = handler[0]
-                    handler_init = handler(http_message_dict, self.data, self.settings)
+                handler_init = handler(http_message_dict, self.data, self.settings)
+                if path_param.status:
                     handler_init.set_path_param(path_param.value)
-                else:
-                    handler_init = handler(http_message_dict, self.data, self.settings)
                 handler_init.before_request()
                 function = getattr(handler_init, http_method)
                 data = function()
