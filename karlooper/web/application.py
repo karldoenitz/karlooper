@@ -102,15 +102,18 @@ class Application(object):
 
         """
         while True:
-            request_data = cl_socket.recv(SOCKET_RECEIVE_SIZE)
-            if request_data:
-                request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
-                data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
-                cl_socket.send(data)
-            else:
-                cl_socket.shutdown(socket.SHUT_WR)
-                cl_socket.close()
-                break
+            try:
+                request_data = cl_socket.recv(SOCKET_RECEIVE_SIZE)
+                if request_data:
+                    request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
+                    data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
+                    cl_socket.send(data)
+                else:
+                    cl_socket.shutdown(socket.SHUT_WR)
+                    cl_socket.close()
+                    break
+            except Exception, e:
+                self.logger.error(e)
 
     def __run_kqueue(self):
         """
