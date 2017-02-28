@@ -7,6 +7,9 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world")
 
+    def post(self):
+        self.write("hello world")
+
 Handlers=[
     (r"/hello", MainHandler),
 ]
