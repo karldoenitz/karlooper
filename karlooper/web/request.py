@@ -172,7 +172,7 @@ class Request(object):
 
     def get_parameter(self, key, default=None):
         """get parameter's value with the given key,
-        this method can get value in http body or head,
+        this method can get value in http body or url,
         content-type support: application/json and application/x-www-form-urlencoded
 
         :param key: param's key
