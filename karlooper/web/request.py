@@ -5,6 +5,7 @@ import json
 import logging
 from urllib import unquote
 
+from karlooper.utils.http_utils import get_http_content_type
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
 from karlooper.escape import utf8
 from karlooper.utils.encrypt import DES
@@ -59,6 +60,7 @@ class Request(object):
         else:
             url_param_dict = dict((param.split("=")[0], param.split("=")[1]) for param in url_param.split("&"))
         content_type = self.get_header("content-type")
+        content_type = get_http_content_type(content_type)
         http_body = self.__http_data.get("body", "")
         if content_type == ContentType.FORM and http_body:
             body_param = dict((param.split("=")[0], param.split("=")[1]) for param in http_body.split("&"))
