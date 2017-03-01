@@ -144,6 +144,55 @@ class Application(object):
         EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
         asyncore.loop()
 
+    def __kqueue_mode(self):
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(('0.0.0.0', self.port))
+        server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)
+        kq = select.kqueue()
+        conn_list = {}
+        index = 1
+        events = [select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD)]
+        while True:
+            try:
+                eventlist = kq.control(events, 1)
+            except select.error as e:
+                break
+            if eventlist:
+                for each in eventlist:
+                    if each.ident == server_socket.fileno():
+                        conn, addr = server_socket.accept()
+                        conn_list[index] = conn
+                        events.append(
+                            select.kevent(
+                                conn_list[index].fileno(),
+                                select.KQ_FILTER_READ,
+                                select.KQ_EV_ADD,
+                                udata=index
+                            )
+                        )
+                        index += 1
+                    else:
+                        try:
+                            if each.udata >= 1 and each.flags == select.KQ_EV_ADD \
+                                    and each.filter == select.KQ_FILTER_READ:
+                                conn = conn_list[each.udata]
+                                request_data = conn.recv(SOCKET_RECEIVE_SIZE)
+                                if request_data:
+                                    request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
+                                    data = HttpParser(
+                                        request_data,
+                                        handlers=self.handlers,
+                                        settings=self.settings
+                                    ).parse()
+                                    conn.send(data)
+                                else:
+                                    conn.close()
+                        except Exception, e:
+                            self.logger.error(e)
+                        finally:
+                            conn.close()
+        server_socket.close()
+
     def run(self):
         """
         run the web server
@@ -155,6 +204,7 @@ class Application(object):
         if system_name == "Linux" and kernel_version >= "2.5.44":
             self.__run_epoll()
         elif system_name == "Darwin" and kernel_version >= "13.0.0":
-            self.__run_kqueue()
+            # self.__run_kqueue()
+            self.__kqueue_mode()
         else:
             self.__run_async_io()

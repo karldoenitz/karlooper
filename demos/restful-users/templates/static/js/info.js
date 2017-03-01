@@ -21,7 +21,7 @@ $(document).ready(
                 $.post(
                     "/user-info",
                     {
-                        user_size: 18
+                        user_size: Math.ceil(Math.random()*10)
                     },
                     function(data, status)
                     {
