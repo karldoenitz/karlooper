@@ -94,49 +94,6 @@ class Application(object):
             epoll.close()
             server_socket.close()
 
-    def __handle_connection(self, cl_socket):
-        """
-
-        :param cl_socket: client socket
-        :return: None
-
-        """
-        while True:
-            try:
-                request_data = cl_socket.recv(SOCKET_RECEIVE_SIZE)
-                if request_data:
-                    request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
-                    data = HttpParser(request_data, handlers=self.handlers, settings=self.settings).parse()
-                    cl_socket.send(data)
-                else:
-                    cl_socket.shutdown(socket.SHUT_WR)
-                    cl_socket.close()
-                    break
-            except Exception, e:
-                self.logger.error(e)
-
-    def __run_kqueue(self):
-        """
-        run the server use kqueue
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(("0.0.0.0", self.port))
-        s.listen(CLIENT_CONNECT_TO_SERVER_NUM)
-        kq = select.kqueue()
-        kevent = select.kevent(
-            s.fileno(),
-            filter=select.KQ_FILTER_READ,
-            flags=select.KQ_EV_ADD | select.KQ_EV_ENABLE
-        )
-
-        while True:
-            receive_events = kq.control([kevent], 1, None)
-            for event in receive_events:
-                if event.filter == select.KQ_FILTER_READ:
-                    cl, _ = s.accept()
-                    self.__handle_connection(cl)
-
     def __run_async_io(self):
         """
         run server use asyncore
@@ -144,7 +101,10 @@ class Application(object):
         EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
         asyncore.loop()
 
-    def __kqueue_mode(self):
+    def __run_kqueue(self):
+        """
+        run server use kqueue
+        """
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind(('0.0.0.0', self.port))
         server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)
@@ -154,11 +114,12 @@ class Application(object):
         events = [select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD)]
         while True:
             try:
-                eventlist = kq.control(events, 1)
+                event_list = kq.control(events, 1)
             except select.error as e:
+                self.logger.error(e)
                 break
-            if eventlist:
-                for each in eventlist:
+            if event_list:
+                for each in event_list:
                     if each.ident == server_socket.fileno():
                         conn, addr = server_socket.accept()
                         conn_list[index] = conn
@@ -204,7 +165,6 @@ class Application(object):
         if system_name == "Linux" and kernel_version >= "2.5.44":
             self.__run_epoll()
         elif system_name == "Darwin" and kernel_version >= "13.0.0":
-            # self.__run_kqueue()
-            self.__kqueue_mode()
+            self.__run_kqueue()
         else:
             self.__run_async_io()
