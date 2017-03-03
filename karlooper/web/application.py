@@ -87,7 +87,7 @@ class Application(object):
                             connections[fileno].close()  # close connection
                             del connections[fileno]  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error(e)
+                        self.logger.error("error in __run_epoll", e)
                         continue
         finally:
             epoll.unregister(server_socket.fileno())
@@ -116,7 +116,7 @@ class Application(object):
             try:
                 event_list = kq.control(events, 1)
             except select.error as e:
-                self.logger.error(e)
+                self.logger.error("error in __run_kqueue", e)
                 break
             if event_list:
                 for each in event_list:
@@ -149,7 +149,7 @@ class Application(object):
                                 else:
                                     conn.close()
                         except Exception, e:
-                            self.logger.error(e)
+                            self.logger.error("error in __run_kqueue event list", e)
                         finally:
                             conn.close()
         server_socket.close()

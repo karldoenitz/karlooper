@@ -38,5 +38,6 @@ settings = {
 
 
 if __name__ == '__main__':
-    application = Application(url_mapping, settings=settings, port=8080,)
+    application = Application(url_mapping, settings=settings)
+    application.listen(port=8080)
     application.run()
