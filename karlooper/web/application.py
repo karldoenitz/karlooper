@@ -5,6 +5,8 @@ import select
 import platform
 from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
+from karlooper.web.http_connection import HttpConnection
+from karlooper.web.http_io_buffer import HttpIOBuffer
 from karlooper.http_parser.http_parser import HttpParser
 from karlooper.config import get_cli_data, set_cli_data
 from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT, CLIENT_CONNECT_TO_SERVER_NUM
@@ -54,9 +56,10 @@ class Application(object):
         epoll = select.epoll()
         epoll.register(server_socket.fileno(), select.EPOLLIN)
         try:
-            connections = {}
-            requests = {}
-            responses = {}
+            http_connection = HttpConnection()
+            http_io_buffer = HttpIOBuffer()
+            # requests = {}
+            # responses = {}
             while True:
                 events = epoll.poll(1)
                 for fileno, event in events:
@@ -65,27 +68,38 @@ class Application(object):
                             connection, address = server_socket.accept()  # waiting income connection
                             connection.setblocking(0)  # none block
                             epoll.register(connection.fileno(), select.EPOLLIN)  # register socket read event to epoll
-                            connections[connection.fileno()] = connection  # add connection to connections dict
-                            requests[connection.fileno()] = b''
-                            responses[connection.fileno()] = self.response  # write data to responses dict
+                            http_connection.add_connection(connection.fileno(), connection)
+                            http_io_buffer.add_request(connection.fileno(), b'')
+                            http_io_buffer.add_response(connection.fileno(), self.response)
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
-                            requests[fileno] += connections[fileno].recv(SOCKET_RECEIVE_SIZE)
-                            if self.EOL1 in requests[fileno] or self.EOL2 in requests[fileno]:  # if http message
-                                request_data = requests[fileno][:-2] \
-                                    if requests[fileno].endswith("\r\n") else requests[fileno]
+                            http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                            http_io_buffer.add_request(
+                                fileno,
+                                http_io_buffer.get_request(fileno) + http_request_buffer
+                            )
+                            if self.EOL1 in http_io_buffer.get_request(fileno) \
+                                    or self.EOL2 in http_io_buffer.get_request(fileno):
+                                request_data = http_io_buffer.get_request(fileno)[:-2] \
+                                    if http_io_buffer.get_request(fileno).endswith("\r\n") \
+                                    else http_io_buffer.get_request(fileno)
                                 data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
-                                responses[fileno] += data
+                                http_io_buffer.add_response(
+                                    fileno,
+                                    http_io_buffer.get_response(fileno) + data
+                                )
                                 epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
                         elif event & select.EPOLLOUT:  # if out mode
-                            byteswritten = connections[fileno].send(responses[fileno])  # write to os's write buffer
-                            responses[fileno] = responses[fileno][byteswritten:]  # get http response message
-                            if len(responses[fileno]) == 0:  # if file sent
+                            byteswritten = http_connection.get_connection(fileno).send(
+                                http_io_buffer.get_response(fileno)
+                            )
+                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[byteswritten:])
+                            if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
                                 epoll.modify(fileno, 0)  # change file number to hup mode
-                                connections[fileno].shutdown(socket.SHUT_RDWR)  # set socket read and write mod shutdown
+                                http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
                         elif event & select.EPOLLHUP:  # if message sent and file number in epoll is hup
                             epoll.unregister(fileno)  # remove file number from epoll
-                            connections[fileno].close()  # close connection
-                            del connections[fileno]  # delete connection from connections dict
+                            http_connection.get_connection(fileno).close()  # close connection
+                            http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
                         self.logger.error("error in __run_epoll", e)
                         continue
