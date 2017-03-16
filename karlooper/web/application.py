@@ -58,8 +58,6 @@ class Application(object):
         try:
             http_connection = HttpConnection()
             http_io_buffer = HttpIOBuffer()
-            # requests = {}
-            # responses = {}
             while True:
                 events = epoll.poll(1)
                 for fileno, event in events:
@@ -96,6 +94,7 @@ class Application(object):
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
                                 epoll.modify(fileno, 0)  # change file number to hup mode
                                 http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
+                                epoll.modify(fileno, select.EPOLLHUP)
                         elif event & select.EPOLLHUP:  # if message sent and file number in epoll is hup
                             epoll.unregister(fileno)  # remove file number from epoll
                             http_connection.get_connection(fileno).close()  # close connection
