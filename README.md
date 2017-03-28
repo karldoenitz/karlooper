@@ -26,7 +26,7 @@ class HelloHandler(Request):
         return self.http_response("Hello,World!")
 
 handlers = {
-    "/hello": HelloHandler,
+    "/hello": HelloHandler
 }
 
 if __name__ == '__main__':
