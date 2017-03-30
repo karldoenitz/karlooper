@@ -122,7 +122,7 @@ class Application(object):
         server_socket.bind(('0.0.0.0', self.port))
         server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)
         kq = select.kqueue()
-        conn_list = {}
+        http_connection = HttpConnection()
         index = 1
         events = [select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD)]
         while True:
@@ -135,10 +135,10 @@ class Application(object):
                 for each in event_list:
                     if each.ident == server_socket.fileno():
                         conn, addr = server_socket.accept()
-                        conn_list[index] = conn
+                        http_connection.add_connection(index, conn)
                         events.append(
                             select.kevent(
-                                conn_list[index].fileno(),
+                                http_connection.get_connection(index).fileno(),
                                 select.KQ_FILTER_READ,
                                 select.KQ_EV_ADD,
                                 udata=index
@@ -149,7 +149,7 @@ class Application(object):
                         try:
                             if each.udata >= 1 and each.flags == select.KQ_EV_ADD \
                                     and each.filter == select.KQ_FILTER_READ:
-                                conn = conn_list[each.udata]
+                                conn = http_connection.get_connection(each.udata)
                                 request_data = conn.recv(SOCKET_RECEIVE_SIZE)
                                 if request_data:
                                     request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
