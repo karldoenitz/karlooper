@@ -40,7 +40,7 @@ then open the web browser and go to "http://127.0.0.1:8000/hello", you will see 
 
 # Compare performance with Tornado
 ## tornado
-```bash
+```
 karl@karl-Inspiron-N4050:~$ ab -n 10000 -c 50 http://localhost:9999/hello
 This is ApacheBench, Version 2.3 <$Revision: 1706008 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
@@ -97,7 +97,7 @@ Percentage of the requests served within a certain time (ms)
  100%    200 (longest request)
 ```
 ## karlooper
-```bash
+```
 karl@karl-Inspiron-N4050:~$ ab -n 10000 -c 50 http://localhost:8080/hello-world
 This is ApacheBench, Version 2.3 <$Revision: 1706008 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
