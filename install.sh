@@ -10,6 +10,7 @@ elif [ $1 = "develop" ] ; then
     cd ~/karlooper
     python setup.py install
     cd -
+    rm -rf ~/karlooper
 elif [ $1 = "release" ] ; then
     echo "start install..."
     python setup.py install
