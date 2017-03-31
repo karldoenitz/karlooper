@@ -39,6 +39,9 @@ if __name__ == '__main__':
 then open the web browser and go to "http://127.0.0.1:8000/hello", you will see ```hello world```.
 
 # Compare performance with Tornado
+OS: Ubuntu 14.04 LTS
+CPU: Intel core i5 2.5GHz
+Memory: 10G DDR3 1600GHz
 ## tornado
 ```
 karl@karl-Inspiron-N4050:~$ ab -n 10000 -c 50 http://localhost:9999/hello
