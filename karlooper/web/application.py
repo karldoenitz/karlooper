@@ -239,9 +239,9 @@ class Application(object):
         if hasattr(select, "epoll"):
             print "run with epoll"
             self.__run_epoll()
-        if hasattr(select, "poll"):
-            print "run with poll"
-            self.__run_poll()
         if hasattr(select, "kqueue"):
             print "run with kqueue"
             self.__run_kqueue()
+        if hasattr(select, "poll"):
+            print "run with poll"
+            self.__run_poll()
