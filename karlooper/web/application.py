@@ -2,7 +2,6 @@
 
 import socket
 import select
-import platform
 from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.web.http_connection import HttpConnection
@@ -167,17 +166,82 @@ class Application(object):
                             conn.close()
         server_socket.close()
 
+    def __run_poll(self):
+        """
+        run server use poll, I will modify __run_poll and __run_epoll in the future
+        """
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind(('0.0.0.0', self.port))
+        server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)  # the number of client that connect to server
+        server_socket.setblocking(0)  # set 0 not block other block
+        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        poll = select.poll()
+        poll.register(server_socket.fileno(), select.POLLIN)
+        try:
+            http_connection = HttpConnection()
+            http_io_buffer = HttpIOBuffer()
+            while True:
+                events = poll.poll(1)
+                for fileno, event in events:
+                    try:
+                        if fileno == server_socket.fileno():  # if request come
+                            connection, address = server_socket.accept()  # waiting income connection
+                            connection.setblocking(0)  # none block
+                            poll.register(connection.fileno(), select.POLLIN)  # register socket read event to poll
+                            http_connection.add_connection(connection.fileno(), connection)
+                            http_io_buffer.add_request(connection.fileno(), b'')
+                            http_io_buffer.add_response(connection.fileno(), self.response)
+                        elif event & select.POLLIN:  # when data in os's read buffer area
+                            http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                            http_io_buffer.add_request(
+                                fileno,
+                                http_io_buffer.get_request(fileno) + http_request_buffer
+                            )
+                            if self.EOL1 in http_io_buffer.get_request(fileno) \
+                                    or self.EOL2 in http_io_buffer.get_request(fileno):
+                                request_data = http_io_buffer.get_request(fileno)[:-2] \
+                                    if http_io_buffer.get_request(fileno).endswith("\r\n") \
+                                    else http_io_buffer.get_request(fileno)
+                                data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
+                                http_io_buffer.add_response(
+                                    fileno,
+                                    http_io_buffer.get_response(fileno) + data
+                                )
+                                poll.modify(fileno, select.POLLOUT)  # change file number to poll out mode
+                        elif event & select.POLLOUT:  # if out mode
+                            byteswritten = http_connection.get_connection(fileno).send(
+                                http_io_buffer.get_response(fileno)
+                            )
+                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[byteswritten:])
+                            if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
+                                poll.modify(fileno, 0)  # change file number to hup mode
+                                http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
+                                poll.modify(fileno, select.POLLHUP)
+                        elif event & select.POLLHUP:  # if message sent and file number in poll is hup
+                            poll.unregister(fileno)  # remove file number from poll
+                            http_connection.get_connection(fileno).close()  # close connection
+                            http_connection.remove_connection(fileno)  # delete connection from connections dict
+                    except Exception, e:
+                        self.logger.error("error in __run_poll", e)
+                        continue
+        finally:
+            poll.unregister(server_socket.fileno())
+            poll.close()
+            server_socket.close()
+
     def run(self):
         """
         run the web server
         """
         print "server run on port: %d" % self.port
         self.logger.info("server run on port: %d" % self.port)
-        system_name = platform.system()
-        kernel_version = platform.release()
-        if system_name == "Linux" and kernel_version >= "2.5.44":
+        if hasattr(select, "epoll"):
+            print "run with epoll"
             self.__run_epoll()
-        elif system_name == "Darwin" and kernel_version >= "13.0.0":
+        if hasattr(select, "poll"):
+            print "run with poll"
+            self.__run_poll()
+        if hasattr(select, "kqueue"):
+            print "run with kqueue"
             self.__run_kqueue()
-        else:
-            self.__run_async_io()
