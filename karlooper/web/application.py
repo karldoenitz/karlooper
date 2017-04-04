@@ -86,10 +86,10 @@ class Application(object):
                                 )
                                 epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
                         elif event & select.EPOLLOUT:  # if out mode
-                            byteswritten = http_connection.get_connection(fileno).send(
+                            bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
                             )
-                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[byteswritten:])
+                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
                                 epoll.modify(fileno, 0)  # change file number to hup mode
                                 http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
@@ -210,10 +210,10 @@ class Application(object):
                                 )
                                 poll.modify(fileno, select.POLLOUT)  # change file number to poll out mode
                         elif event & select.POLLOUT:  # if out mode
-                            byteswritten = http_connection.get_connection(fileno).send(
+                            bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
                             )
-                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[byteswritten:])
+                            http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
                                 poll.modify(fileno, 0)  # change file number to hup mode
                                 http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
