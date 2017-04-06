@@ -238,10 +238,13 @@ class Application(object):
         self.logger.info("server run on port: %d" % self.port)
         if hasattr(select, "epoll"):
             print "run with epoll"
+            self.logger.info("run with epoll")
             self.__run_epoll()
         if hasattr(select, "kqueue"):
             print "run with kqueue"
+            self.logger.info("run with kqueue")
             self.__run_kqueue()
         if hasattr(select, "poll"):
             print "run with poll"
+            self.logger.info("run with poll")
             self.__run_poll()
