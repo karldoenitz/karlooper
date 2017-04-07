@@ -240,11 +240,15 @@ class Application(object):
             print "run with epoll"
             self.logger.info("run with epoll")
             self.__run_epoll()
-        if hasattr(select, "kqueue"):
+        elif hasattr(select, "kqueue"):
             print "run with kqueue"
             self.logger.info("run with kqueue")
             self.__run_kqueue()
-        if hasattr(select, "poll"):
+        elif hasattr(select, "poll"):
             print "run with poll"
             self.logger.info("run with poll")
             self.__run_poll()
+        else:
+            print "run with asyncore"
+            self.logger.info("run with asyncore")
+            self.__run_async_io()
