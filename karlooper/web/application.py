@@ -106,13 +106,6 @@ class Application(object):
             epoll.close()
             server_socket.close()
 
-    def __run_async_io(self):
-        """
-        run server use asyncore
-        """
-        EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
-        asyncore.loop()
-
     def __run_kqueue(self):
         """
         run server use kqueue
@@ -229,6 +222,13 @@ class Application(object):
             poll.unregister(server_socket.fileno())
             poll.close()
             server_socket.close()
+
+    def __run_async_io(self):
+        """
+        run server use asyncore
+        """
+        EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
+        asyncore.loop()
 
     def run(self):
         """
