@@ -3,7 +3,7 @@
 import datetime
 import json
 import logging
-from urllib import unquote
+from urllib import unquote, unquote_plus
 
 from karlooper.utils.http_utils import get_http_content_type
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
@@ -196,6 +196,19 @@ class Request(object):
         if not parameter:
             return default
         return unquote(parameter)
+
+    def decode_parameter_plus(self, key, default=None):
+        """decode parameter with defined key, include decode plus symbol to space
+
+        :param key: value's key
+        :param default: default value
+        :return: decoded parameter
+
+        """
+        parameter = self.get_parameter(key)
+        if not parameter:
+            return default
+        return unquote_plus(parameter)
 
     def get_header(self, key, default=None):
         """get http header's value with defined key
