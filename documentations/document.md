@@ -90,6 +90,10 @@ If the given name does not exist, return default.
 This method return the value in HTTP body or url.  
 The value must be urlencoded.
 ```python
+def decode_parameter_plus(key, default=None)
+```
+This method like ```decode_parameter```, but decode symbol plus to space.
+```python
 def get_path_param(key, default=None)
 ```
 Get the value of the argument with the given name.  
