@@ -63,5 +63,5 @@ def get_global_conf(key):
     
     """
     global __GLOBAL_CONF_DATA
-    return __GLOBAL_CONF_DATA
+    return __GLOBAL_CONF_DATA[key]
 
