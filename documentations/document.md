@@ -308,7 +308,7 @@ logger.info("it is test")
 ```
 to write log to file.
 # karlooper.config
-_**karlooper.config**_ provides a model to operate the configuration file.
+_**karlooper.config**_ provides a model to operate the configuration file.  
 **Methods**:
 ```python
 def set_global_conf(key, data)
