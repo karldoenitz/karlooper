@@ -315,8 +315,7 @@ def set_global_conf(key, data)
 ```
 Set global configurations, such as redis. More examples in demos/chat-group projection.
 ```python
-logger = logging.getLogger()
-logger.info("it is test")
+def get_global_conf(key)
 ```
 Get global configurations.
 
