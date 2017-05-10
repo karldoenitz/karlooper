@@ -2,6 +2,7 @@
 
 import socket
 import select
+import sys
 from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.web.http_connection import HttpConnection
@@ -223,6 +224,47 @@ class Application(object):
             poll.close()
             server_socket.close()
 
+    def __run_select(self):
+        """
+        run server use select mod
+        """
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, )
+        server.bind(("0.0.0.0", self.port))
+        server.listen(CLIENT_CONNECT_TO_SERVER_NUM)
+        inputs = [server, sys.stdin]
+        running = True
+        while running:
+            try:
+                readable, writeable, exceptional = select.select(inputs, [], [])
+            except select.error, e:
+                self.logger.error("error in __run_select", e)
+                break
+
+            for each in readable:
+                if each == server:
+                    connection, address = server.accept()
+                    inputs.append(connection)
+                else:
+                    try:
+                        request_data = each.recv(SOCKET_RECEIVE_SIZE)
+                        if request_data:
+                            request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
+                            data = HttpParser(
+                                request_data,
+                                handlers=self.handlers,
+                                settings=self.settings
+                            ).parse()
+                            each.send(data)
+                            inputs.remove(each)
+                            each.close()
+                        else:
+                            inputs.remove(each)
+                            each.close()
+                    except socket.error, e:
+                        self.logger.error("error in __run_select", e)
+                        inputs.remove(each)
+        server.close()
+
     def __run_async_io(self):
         """
         run server use asyncore
@@ -248,6 +290,10 @@ class Application(object):
             print "run with poll"
             self.logger.info("run with poll")
             self.__run_poll()
+        elif hasattr(select, "select"):
+            print "run with select"
+            self.logger.info("run with select")
+            self.__run_select()
         else:
             print "run with asyncore"
             self.logger.info("run with asyncore")
