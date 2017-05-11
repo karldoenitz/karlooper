@@ -160,6 +160,9 @@ Percentage of the requests served within a certain time (ms)
 # Documentation
 [click here](https://github.com/karldoenitz/karlooper/blob/master/documentations/document.md)
 
+# Diagram
+![karlooper diagram](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/karlooper_architecture_diagram.png "this is karlooper diagram")
+
 # Notice
 This framework has been used on the linux version of [CubeBackup for Google Apps](http://www.cubebackup.com), which is a local backup solution for Google Apps data.   
 If you find bugs or know how to fix them,  please send a message to karlvorndoenitz@gmail.com, special thanks.   
