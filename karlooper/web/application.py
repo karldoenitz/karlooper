@@ -2,7 +2,6 @@
 
 import socket
 import select
-import sys
 from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.web.http_connection import HttpConnection
