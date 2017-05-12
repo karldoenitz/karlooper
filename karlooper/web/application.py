@@ -157,6 +157,13 @@ class Application(object):
                             self.logger.error("error in __run_kqueue event list", e)
                         finally:
                             conn.close()
+                            events.remove(select.kevent(
+                                http_connection.get_connection(each.udata).fileno(),
+                                select.KQ_FILTER_READ,
+                                select.KQ_EV_ADD,
+                                udata=each.udata)
+                            )
+                            http_connection.remove_connection(each.udata)
         server_socket.close()
 
     def __run_poll(self):
