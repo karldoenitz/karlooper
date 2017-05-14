@@ -126,6 +126,7 @@ class Application(object):
             if event_list:
                 for each in event_list:
                     if each.ident == server_socket.fileno():
+                        index += 1
                         conn, addr = server_socket.accept()
                         http_connection.add_connection(index, conn)
                         events.append(
@@ -136,7 +137,6 @@ class Application(object):
                                 udata=index
                             )
                         )
-                        index += 1
                     else:
                         try:
                             if each.udata >= 1 and each.flags == select.KQ_EV_ADD \
@@ -156,7 +156,6 @@ class Application(object):
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list", e)
                         finally:
-                            conn.close()
                             events.remove(select.kevent(
                                 http_connection.get_connection(each.udata).fileno(),
                                 select.KQ_FILTER_READ,
@@ -164,6 +163,7 @@ class Application(object):
                                 udata=each.udata)
                             )
                             http_connection.remove_connection(each.udata)
+                            conn.close()
         server_socket.close()
 
     def __run_poll(self):
@@ -247,10 +247,10 @@ class Application(object):
             print "run with epoll"
             self.logger.info("run with epoll")
             self.__run_epoll()
-        # elif hasattr(select, "kqueue"):  # there are some bugs in run_with_kqueue, I'm fixing the bugs.
-        #     print "run with kqueue"
-        #     self.logger.info("run with kqueue")
-        #     self.__run_kqueue()
+        elif hasattr(select, "kqueue"):  # there are some bugs in run_with_kqueue, I'm fixing the bugs.
+            print "run with kqueue"
+            self.logger.info("run with kqueue")
+            self.__run_kqueue()
         elif hasattr(select, "poll"):
             print "run with poll"
             self.logger.info("run with poll")
