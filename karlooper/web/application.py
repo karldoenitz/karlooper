@@ -247,7 +247,7 @@ class Application(object):
             print "run with epoll"
             self.logger.info("run with epoll")
             self.__run_epoll()
-        elif hasattr(select, "kqueue"):  # there are some bugs in run_with_kqueue, I'm fixing the bugs.
+        elif hasattr(select, "kqueue"):
             print "run with kqueue"
             self.logger.info("run with kqueue")
             self.__run_kqueue()
