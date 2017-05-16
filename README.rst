@@ -4,7 +4,7 @@ Karlooper Web Server
 `Karlooper <https://github.com/karldoenitz/karlooper>`_ is a Python web framework and
 asynchronous networking library, originally developed at `Coders
 <https://www.androiddev.net/>`_.  By using non-blocking network I/O, Karlooper
-can scale to tens of thousands of open connections, for more `click<https://github.com/karldoenitz/karlooper>`_
+can scale to tens of thousands of open connections, for more `click <https://github.com/karldoenitz/karlooper>`_
 
 Hello, world
 ------------
