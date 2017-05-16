@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+from __future__ import print_function
 from setuptools import setup
 from karlooper import __version__
 
@@ -28,5 +30,14 @@ setup(
     license='',
     author='lizhihao',
     author_email='karlvorndoenitz@gmail.com',
-    description='karloop plus framework'
+    description='karloop plus framework',
+    long_description=open("README.rst").read(),
+    classifiers=[
+        "Environment :: Web Environment",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7'
+    ]
 )
