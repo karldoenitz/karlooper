@@ -5,7 +5,7 @@
 """
 
 __author__ = 'karlvorndoenitz@gmail.com'
-__version__ = '0.3.5a1'
+__version__ = '0.3.5a5'
 __packages__ = [
     "autoreload",
     "config",
