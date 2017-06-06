@@ -8,7 +8,7 @@ from urllib import unquote, unquote_plus
 from karlooper.utils.http_utils import get_http_content_type
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
 from karlooper.escape import utf8
-from karlooper.utils.encrypt import DES
+from karlooper.utils.encrypt import StrEncryption
 from karlooper.template import render
 
 __author__ = 'karlvorndoenitz@gmail.com'
@@ -43,7 +43,7 @@ class Request(object):
         if not cookie_string:
             return {}
         try:
-            cookie_dict = dict((cookie.split("=")[0], cookie.split("=")[1]) for cookie in cookie_string.split("; "))
+            cookie_dict = dict((cookie.split("=")[0], cookie.split("=", 1)[1]) for cookie in cookie_string.split("; "))
             return cookie_dict
         except Exception, e:
             raise e
@@ -167,7 +167,7 @@ class Request(object):
         cookie = self.get_cookie(key)
         if not cookie:
             return default
-        des = DES()
+        des = StrEncryption()
         security_key = self.__settings.get("cookie", COOKIE_SECURITY_DEFAULT_STRING)
         des.input_key(security_key)
         return des.decode(cookie)
@@ -292,7 +292,7 @@ class Request(object):
         :return: None
 
         """
-        des = DES()
+        des = StrEncryption()
         security_key = self.__settings.get("cookie", COOKIE_SECURITY_DEFAULT_STRING)
         des.input_key(security_key)
         security_value = des.encode(value)
