@@ -12,6 +12,8 @@ __author__ = 'karlvorndoenitz@gmail.com'
 
 class TestHandler(Request):
     def get(self):
+        http_message = self.get_http_request_message()
+        print http_message
         test = self.get_parameter("test")
         cookie = self.get_cookie("what1")
         cookie_1 = self.get_security_cookie("what")
@@ -21,14 +23,12 @@ class TestHandler(Request):
             "cookie": cookie,
             "cookie_1": cookie_1
         }
-        http_message = self.get_http_request_message()
         self.set_header({
             "what": "happened",
             "hello": "world",
             "ok": "let's go"
         })
         self.clear_header("ok")
-        print http_message
         self.set_security_cookie("what", "happened")
         self.set_security_cookie("what", "are you")
         self.set_cookie("what1", "happened1")
