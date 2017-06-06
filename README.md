@@ -10,6 +10,10 @@ run these commands:
 
     sudo python setup.py install  
 
+or use ```pip```:
+
+    pip install karlooper
+
 # Demo
 ## hello world
 ```python
