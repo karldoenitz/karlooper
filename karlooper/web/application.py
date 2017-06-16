@@ -28,7 +28,8 @@ class Application(object):
         set_cli_data(kwargs)
         cli_data = get_cli_data()
         self.port = int(cli_data.get("port", DEFAULT_PORT))
-        self.logger = init_logger()
+        log_conf = self.settings.get("log_conf", None) if self.settings else kwargs.get("log_conf", None)
+        self.logger = init_logger(config_path=log_conf)
         self.EOL1 = b'\n\n'
         self.EOL2 = b'\n\r\n'
         self.response = ""
