@@ -1,5 +1,6 @@
 # -*-encoding:utf-8-*-
 
+from base import is_login
 from karlooper.web.request import Request
 
 
@@ -14,6 +15,7 @@ class Register(Request):
 
 
 class MainPage(Request):
+    @is_login
     def get(self):
         return self.http_response(
             "<html>"
