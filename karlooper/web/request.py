@@ -407,6 +407,14 @@ class Request(object):
         """
         return self.__http_message
 
+    def get_http_method(self):
+        """the http method
+
+        :return: the http method
+
+        """
+        return self.__http_data.get("method")
+
     def get(self):
         self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
         return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
