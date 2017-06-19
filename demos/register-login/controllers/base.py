@@ -14,7 +14,16 @@ def is_login(method):
     return _wrap
 
 
+class Status(object):
+    SUCCESS = (0, "OK")
+    USER_EXIST = (1, "user is existed")
+    USER_NOT_EXIST = (2, "user is not existed")
+    PSW_ERR = (3, "password error")
+
+
 class BaseRestHandler(Request):
+    redis_manager = RedisManage()
+
     def __handle(self):
         return self.process()
 
@@ -26,3 +35,11 @@ class BaseRestHandler(Request):
 
     def put(self):
         return self.__handle()
+
+    def result(self, status, **kwargs):
+        result = {
+            "status": status[0],
+            "message": status[1],
+            "data": kwargs
+        }
+        return self.response_as_json(result)
