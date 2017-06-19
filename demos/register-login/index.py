@@ -2,13 +2,16 @@
 
 import os
 from controllers.handlers import Login, Register, MainPage
+from controllers.rest import LoginRestHandler, RegisterRestHandler
 from karlooper.web.application import Application
 
 
 urls = {
     "/login": Login,
     "/register": Register,
-    "/main": MainPage
+    "/main": MainPage,
+    "/rest/login": LoginRestHandler,
+    "/rest/register": RegisterRestHandler
 }
 
 

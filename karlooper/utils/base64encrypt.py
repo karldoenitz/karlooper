@@ -53,6 +53,9 @@ class Encryption(object):
         :return: decoded result
 
         """
+        missing_padding = 4 - len(s) % 4
+        if missing_padding:
+            s += b'=' * missing_padding
         decode_result = base64.b64decode(s)
         result = decode_result[:len(decode_result)-len(self.__key)]
         return result

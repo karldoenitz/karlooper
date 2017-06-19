@@ -3,7 +3,7 @@
 from base import BaseRestHandler, Status
 
 
-class Login(BaseRestHandler):
+class LoginRestHandler(BaseRestHandler):
     def process(self):
         user_name = self.get_parameter("user_name")
         password = self.get_parameter("password")
@@ -15,7 +15,7 @@ class Login(BaseRestHandler):
         return self.result(Status.SUCCESS, url="/main")
 
 
-class Register(BaseRestHandler):
+class RegisterRestHandler(BaseRestHandler):
     def process(self):
         user_name = self.get_parameter("user_name")
         password = self.get_parameter("password")
