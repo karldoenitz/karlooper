@@ -6,12 +6,12 @@ from karlooper.web.request import Request
 
 class Login(Request):
     def get(self):
-        return self.render("/register-login.html", button="login", title="LOGIN")
+        return self.render("/register-login.html", button="Login", title="LOGIN")
 
 
 class Register(Request):
     def get(self):
-        return self.render("/register-login.html", button="sign up", title="REGISTER")
+        return self.render("/register-login.html", button="SignUp", title="REGISTER")
 
 
 class MainPage(Request):

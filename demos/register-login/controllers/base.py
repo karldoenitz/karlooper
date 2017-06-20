@@ -8,6 +8,7 @@ from redis_manage import RedisManage
 def is_login(method):
     @functools.wraps(method)
     def _wrap(self, *args, **kwargs):
+        print self.get_http_request_message()
         if not self.get_security_cookie("user_id"):
             return self.redirect("/login")
         return method(self, *args, **kwargs)

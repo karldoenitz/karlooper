@@ -22,4 +22,4 @@ class RegisterRestHandler(BaseRestHandler):
         if self.redis_manager.get_user(username=user_name):
             return self.result(Status.USER_EXIST)
         self.redis_manager.set_user(username=user_name, password=password)
-        return self.result(Status.SUCCESS)
+        return self.result(Status.SUCCESS, url="/login")
