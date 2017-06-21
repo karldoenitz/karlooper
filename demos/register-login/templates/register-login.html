@@ -3,12 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="static/js/login_sign_up.js" type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-<input id="id_username" placeholder="username">
-<input id="id_password" placeholder="password" type="password">
-<input id="id_button_{{ button }}" type="button" value="{{ button }}">
+<body class="jumbotron">
+    <div class="container" style="vertical-align:middle; padding-bottom: 10%; padding-top: 10%">
+        <form role="form">
+            <div class="form-group">
+                <label for="id_username">USERNAME</label>
+                <input id="id_username" placeholder="username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_username">PASSWORD</label>
+                <input id="id_password" placeholder="password" class="form-control" type="password">
+            </div>
+            <input id="id_button_{{ button }}" type="button" value="{{ button }}" class="btn btn-default">
+        </form>
+    </div>
 </body>
 </html>
