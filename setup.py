@@ -1,10 +1,19 @@
 #!/usr/bin/env python
-from __future__ import print_function
-from setuptools import setup
+import platform
+from setuptools import setup, Extension
 from karlooper import __version__
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
+
+kwargs = {}
+if platform.python_implementation() == 'CPython':
+    kwargs['ext_modules'] = [
+        Extension(
+            'karlooper.utils.encryption',
+            sources=['karlooper/utils/encryption.c']
+        ),
+    ]
 
 setup(
     name='karlooper',
@@ -39,5 +48,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7'
-    ]
+    ],
+    **kwargs
 )
