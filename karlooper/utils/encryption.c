@@ -31,13 +31,13 @@ char *str_encrypt(char *input, char *key) {
     int i;
     for (i = 0; i < first_length; ++i) {
         int encrypt = (int)input[i] + flag;
-        if (encrypt > 126) encrypt = encrypt - 126 + 32;
+        if (encrypt > 126) encrypt = encrypt - 126 + 38;
         result[i] = (char)(encrypt);
     }
     int j;
     for (j = first_length; j < str_length; ++j) {
         int encrypt = (int)key[j-first_length] + flag;
-        if (encrypt > 126) encrypt = encrypt - 126 + 32;
+        if (encrypt > 126) encrypt = encrypt - 126 + 38;
         result[j] = (char)(encrypt);
     }
     result[str_length] = '\0';
@@ -53,7 +53,7 @@ char *str_decrypt(char *input, char *key) {
     int i;
     for (i = 0; i < input_length; ++i) {
         int decrypt = (int)input[i] - flag;
-        if (decrypt < 32) decrypt = decrypt + 126 - 32;
+        if (decrypt < 38) decrypt = decrypt + 126 - 38;
         result[i] = (char)(decrypt);
     }
     result[value_length] = '\0';
