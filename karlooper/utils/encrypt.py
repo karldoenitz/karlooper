@@ -1,7 +1,28 @@
 # -*-coding:utf-8-*-
 """
 
+security
+~~~~~~~~
+
+Use this model to encrypt string.
+
+Usage
+=====
+>>> d = StrEncryption()
+>>> d.input_key("123456789")
+>>> s = "/static/hello.js"
+>>> a = d.encode(s)
+>>> print a
+b14f1453ceddc91e492fbe883d552a2e
+>>> b = d.decode(a)
+>>> print b
+/static/hello.js
+
 """
+
+__author__ = 'karlvorndoenitz@gmail.com'
+
+
 try:
     from encryption import encrypt_str, decrypt_str
 
