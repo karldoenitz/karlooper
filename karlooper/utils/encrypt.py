@@ -47,7 +47,7 @@ try:
             :return: the string be encoded
 
             """
-            return encrypt_str(s, self.__key).replace("%", "%%")
+            return encrypt_str(s + self.__key)
 
         def decode(self, s):
             """ decode string
@@ -56,7 +56,8 @@ try:
             :return: the string be decoded
 
             """
-            return decrypt_str(s, self.__key)
+            decode_result = decrypt_str(s)
+            return decode_result[:len(decode_result)-len(self.__key)]
 
 except ImportError:
     try:

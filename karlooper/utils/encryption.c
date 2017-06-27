@@ -4,83 +4,110 @@
 
 #include <Python.h>
 
+static const char *codes = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+static const unsigned char map[256] = {
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 253, 255,
+        255, 253, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 253, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255,  62, 255, 255, 255,  63,
+        52,  53,  54,  55,  56,  57,  58,  59,  60,  61, 255, 255,
+        255, 254, 255, 255, 255,   0,   1,   2,   3,   4,   5,   6,
+        7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,
+        19,  20,  21,  22,  23,  24,  25, 255, 255, 255, 255, 255,
+        255,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,
+        37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,
+        49,  50,  51, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        255, 255, 255, 255
+};
+
 int length(char *str){
     int i = 0;
     while (str[i] != '\0') i++;
     return i;
 }
 
-int flag_func(char *key) {
-    int i = 0;
-    int flag = 0;
-    while (key[i] != '\0') {
-        flag += key[i];
-        i++;
+char *str_encrypt(char *in) {
+    unsigned long len = (unsigned long)length(in);
+    unsigned long index, l_even;
+    char *p;
+    char *out = (char *) PyMem_Malloc (len * 4 / 3 + 1);
+    p = out;
+    /* valid output size ? */
+    l_even = 3 * (len / 3);
+    for (index = 0; index < l_even; index += 3) {
+        *p++ = codes[in[0] >> 2];
+        *p++ = codes[((in[0] & 3) << 4) + (in[1] >> 4)];
+        *p++ = codes[((in[1] & 0xf) << 2) + (in[2] >> 6)];
+        *p++ = codes[in[2] & 0x3f];
+        in += 3;
     }
-    return flag % 126;
+    /* Pad it if necessary...  */
+    if (index < len) {
+        unsigned a = (unsigned)in[0];
+        unsigned b = (unsigned)((index+1 < len) ? in[1] : 0);
+        unsigned c = 0;
+        *p++ = codes[a >> 2];
+        *p++ = codes[((a & 3) << 4) + (b >> 4)];
+        *p++ = (char)((index+1 < len) ? codes[((b & 0xf) << 2) + (c >> 6)] : '=');
+        *p++ = '=';
+    }
+    /* append a NULL byte */
+    *p = '\0';
+    return out;
 }
 
-char *str_encrypt(char *input, char *key) {
-    int first_length = length(input);
-    int second_length = length(key);
-    if (second_length == 0 || first_length == 0)
-        return input;
-    int str_length = first_length + second_length;
-    char *result = (char *)PyMem_Malloc((unsigned)(str_length+1));
-    int flag = flag_func(key);
-    int i;
-    for (i = 0; i < first_length; ++i) {
-        int encrypt = (int)input[i] + flag;
-        if (encrypt > 126) encrypt = encrypt - 126 + 31;
-        result[i] = (char)(encrypt);
+char *str_decrypt(char *in) {
+    unsigned long len = (unsigned long)length(in);
+    char *out = (char *) PyMem_Malloc ((len - 1) * 3 / 4);
+    int t, x, y, z;
+    unsigned char c;
+    int	g = 3;
+    for (x = y = z = t = 0; in[x]!=0;) {
+        c = map[in[x++]];
+        if (c == 255) break;
+        if (c == 253) continue;
+        if (c == 254) { c = 0; g--; }
+        t = (t<<6)|c;
+        if (++y == 4) {
+            out[z++] = (unsigned char)((t>>16)&255);
+            if (g > 1) out[z++] = (unsigned char)((t>>8)&255);
+            if (g > 2) out[z++] = (unsigned char)(t&255);
+            y = t = 0;
+        }
     }
-    int j;
-    for (j = first_length; j < str_length; ++j) {
-        int encrypt = (int)key[j-first_length] + flag;
-        if (encrypt > 126) encrypt = encrypt - 126 + 31;
-        result[j] = (char)(encrypt);
-    }
-    result[str_length] = '\0';
-    return result;
-}
-
-char *str_decrypt(char *input, char *key) {
-    int input_length = length(input);
-    int key_length = length(key);
-    int flag = flag_func(key);
-    int value_length = input_length - key_length;
-    char *result = (char *)PyMem_Malloc((unsigned)(value_length+1));
-    int i;
-    for (i = 0; i < input_length; ++i) {
-        int decrypt = (int)input[i] - flag;
-        if (decrypt < 32) decrypt = decrypt + 126 - 31;
-        result[i] = (char)(decrypt);
-    }
-    result[value_length] = '\0';
-    return result;
+    return out;
 }
 
 static PyObject *wrap_encrypt_str(PyObject *self, PyObject *args) {
     char *input_str;
-    char *key;
-    if (!PyArg_ParseTuple(args, "ss", &input_str, &key)) {
+    if (!PyArg_ParseTuple(args, "s", &input_str)) {
         return NULL;
     }
-    char *result = str_encrypt(input_str, key);
+    char *result = str_encrypt(input_str);
     PyObject *pyObject = Py_BuildValue("s", result);
-    free(result);
+    PyMem_Free(result);
     return pyObject;
 }
 
 static PyObject *wrap_decrypt_str(PyObject *self, PyObject *args) {
     char *input_str;
-    char *key;
-    if (!PyArg_ParseTuple(args, "ss", &input_str, &key)) {
+    if (!PyArg_ParseTuple(args, "s", &input_str)) {
         return NULL;
     }
-    char *result = str_decrypt(input_str, key);
+    char *result = str_decrypt(input_str);
     PyObject *obj = Py_BuildValue("s", result);
-    free(result);
+    PyMem_Free(result);
     return obj;
 }
 

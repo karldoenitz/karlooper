@@ -11,7 +11,8 @@ if platform.python_implementation() == 'CPython':
     kwargs['ext_modules'] = [
         Extension(
             'karlooper.utils.encryption',
-            sources=['karlooper/utils/encryption.c']
+            sources=['karlooper/utils/encryption.c'],
+            extra_compile_args=["-Wno-char-subscripts"]
         ),
     ]
 
