@@ -26,7 +26,7 @@ try:
             :return: the string be encoded
 
             """
-            return encrypt_str(s, self.__key)
+            return encrypt_str(s, self.__key).replace("%", "%%")
 
         def decode(self, s):
             """ decode string
