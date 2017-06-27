@@ -371,7 +371,7 @@ class Request(object):
         :return: a tuple contains http message, status, status message
 
         """
-        self.logger.info("response data:", data)
+        self.logger.info("response data: %s", data)
         return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def render(self, template_path, **kwargs):
