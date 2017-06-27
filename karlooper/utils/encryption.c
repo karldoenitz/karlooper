@@ -41,7 +41,8 @@ char *str_encrypt(char *in) {
     unsigned long len = (unsigned long)length(in);
     unsigned long index, l_even;
     char *p;
-    char *out = (char *) PyMem_Malloc (len * 4 / 3 + 1);
+//    char *out = (char *) PyMem_Malloc (len * 4 / 3 + 1);
+    char *out = (char *) PyMem_Malloc (len * 2);
     p = out;
     /* valid output size ? */
     l_even = 3 * (len / 3);
@@ -69,7 +70,8 @@ char *str_encrypt(char *in) {
 
 char *str_decrypt(char *in) {
     unsigned long len = (unsigned long)length(in);
-    char *out = (char *) PyMem_Malloc ((len - 1) * 3 / 4);
+//    char *out = (char *) PyMem_Malloc ((len - 1) * 3 / 4);
+    char *out = (char *) PyMem_Malloc (len);
     int t, x, y, z;
     unsigned char c;
     int	g = 3;
@@ -86,6 +88,7 @@ char *str_decrypt(char *in) {
             y = t = 0;
         }
     }
+    out[z] = '\0';
     return out;
 }
 

@@ -13,7 +13,7 @@ Usage
 >>> s = "/static/hello.js"
 >>> a = d.encode(s)
 >>> print a
-b14f1453ceddc91e492fbe883d552a2e
+L3N0YXRpYy9oZWxsby5qczEyMzQ1Njc4OQ==
 >>> b = d.decode(a)
 >>> print b
 /static/hello.js
