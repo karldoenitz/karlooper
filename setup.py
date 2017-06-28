@@ -34,7 +34,9 @@ setup(
     ],
     data_files=[
         ('karlooper/logger', ['karlooper/logger/log.conf']),
-        ('karlooper/logger', ['karlooper/logger/log.conf'])
+        ('karlooper/logger', ['karlooper/logger/log.conf']),
+        ('lib/python2.7/dist-packages/karlooper/logger', ['karlooper/logger/log.conf']),
+        ('lib/python2.7/site-packages/karlooper/logger', ['karlooper/logger/log.conf'])
     ],
     url='https://github.com/karldoenitz/karlooper',
     license='',
