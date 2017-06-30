@@ -34,9 +34,11 @@ setup(
     ],
     data_files=[
         ('karlooper/logger', ['karlooper/logger/log.conf']),
-        ('karlooper/utils', ['karlooper/utils/encryption.pyi']),
         ('lib/python2.7/dist-packages/karlooper/logger', ['karlooper/logger/log.conf']),
-        ('lib/python2.7/site-packages/karlooper/logger', ['karlooper/logger/log.conf'])
+        ('lib/python2.7/site-packages/karlooper/logger', ['karlooper/logger/log.conf']),
+        ('karlooper/utils', ['karlooper/utils/encryption.pyi']),
+        ('lib/python2.7/dist-packages/karlooper/utils', ['karlooper/utils/encryption.pyi']),
+        ('lib/python2.7/site-packages/karlooper/utils', ['karlooper/utils/encryption.pyi'])
     ],
     url='https://github.com/karldoenitz/karlooper',
     license='',
