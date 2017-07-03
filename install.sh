@@ -6,22 +6,32 @@ if [ -z "$1" ] ; then
     echo "sdist: release dist files"
 elif [ $1 = "develop" ] ; then
     echo "start install in develop mod..."
-    mkdir ~/karlooper
-    cp -r ./ ~/karlooper
-    cd ~/karlooper
+    mkdir ~/karlooper-tmp-folder
+    cp -r ./ ~/karlooper-tmp-folder
+    cd ~/karlooper-tmp-folder
     python setup.py install
     cd -
-    rm -rf ~/karlooper
-elif [ $1 = "sdist" ] ; then
+    rm -rf ~/karlooper-tmp-folder
+elif [ $1 = "lib" ] ; then
     echo "start install in develop mod..."
-    mkdir ~/karlooper
-    cp -r ./ ~/karlooper
-    cd ~/karlooper
+    mkdir ~/karlooper-tmp-folder
+    cp -r ./ ~/karlooper-tmp-folder
+    cd ~/karlooper-tmp-folder
     python setup.py sdist
     cd dist
     tar -zxvf karlooper*.tar.gz
     cd ./karlooper*
     python setup.py install_lib
+    cd ~
+    rm -rf ~/karlooper-tmp-folder
+elif [ $1 = "sdist" ] ; then
+    echo "start distribute package..."
+    python setup.py sdist
+    echo "upload to pypi..."
+    twine upload dist/*
+    echo "remove dist file in local..."
+    rm -rf ./dist/ ./karlooper.egg-info/
+    echo "files be removed"
 elif [ $1 = "release" ] ; then
     echo "start install..."
     python setup.py install

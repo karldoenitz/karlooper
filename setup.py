@@ -1,11 +1,19 @@
 #!/usr/bin/env python
+import os
 import platform
 from setuptools import setup, Extension
 from karlooper import __version__
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+# load requirements file
+requirements = 'requirements.txt'
+if os.path.exists(requirements):
+    with open(requirements) as f:
+        required = f.read().splitlines()
+else:
+    with open('karlooper.egg-info/requires.txt') as f:
+        required = f.read().splitlines()
 
+# whether need add c extension
 kwargs = {}
 if platform.python_implementation() == 'CPython':
     kwargs['ext_modules'] = [
@@ -32,14 +40,9 @@ setup(
         'karlooper.utils',
         'karlooper.web'
     ],
-    data_files=[
-        ('karlooper/logger', ['karlooper/logger/log.conf']),
-        ('lib/python2.7/dist-packages/karlooper/logger', ['karlooper/logger/log.conf']),
-        ('lib/python2.7/site-packages/karlooper/logger', ['karlooper/logger/log.conf']),
-        ('karlooper/utils', ['karlooper/utils/encryption.pyi']),
-        ('lib/python2.7/dist-packages/karlooper/utils', ['karlooper/utils/encryption.pyi']),
-        ('lib/python2.7/site-packages/karlooper/utils', ['karlooper/utils/encryption.pyi'])
-    ],
+    package_data={
+        '': ['*.txt', '*.pyi', '*.conf']
+    },
     url='https://github.com/karldoenitz/karlooper',
     license='',
     author='lizhihao',
