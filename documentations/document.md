@@ -258,12 +258,12 @@ Otherwise it must be a unicode string and is encoded as utf8.
 _**karlooper.utils**_ provides `security` and `parse_command_line` models.
 ## security
 ```python
-class DES()
+class StrEncryption()
 ```
 DES security class.  
 **Methods**:
 ```python
-def input(key, base=10)
+def input_key(key, base=10)
 ```
 Set security key.
 ```python
