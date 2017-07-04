@@ -3,7 +3,8 @@
 if [ -z "$1" ] ; then
     echo "develop: install for developers"
     echo "release: install standard"
-    echo "sdist: release dist files"
+    echo "lib: install dist files lib"
+    echo "sdist: upload distribute file to pypi"
 elif [ $1 = "develop" ] ; then
     echo "start install in develop mod..."
     mkdir ~/karlooper-tmp-folder
