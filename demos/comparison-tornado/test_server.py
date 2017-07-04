@@ -47,6 +47,10 @@ class TestHandler(Request):
         self.set_cookie("what", "happened")
         return self.response_as_json(result)
 
+    def put(self):
+        self.clear_all_cookie()
+        return self.response_as_json({"msg": "cookie cleared"})
+
 
 class TestHandler2(Request):
     def get(self):
