@@ -10,6 +10,7 @@ from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING,
 from karlooper.escape import utf8
 from karlooper.utils.encrypt import StrEncryption
 from karlooper.template import render
+from karlooper.web.response import HTTPResponse405
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -416,35 +417,35 @@ class Request(object):
         return self.__http_data.get("method")
 
     def get(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def post(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def put(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def head(self):
         self.logger.info(self.__http_data.get("url", ""))
         return ""
 
     def options(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def delete(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def trace(self):
         return self.__http_message.split("\r\n\r\n") if "\r\n\r\n" in self.__http_message else ""
 
     def connect(self):
-        self.logger.error(HttpStatusMsg.METHOD_NOT_ALLOWED)
-        return "405", HttpStatus.METHOD_NOT_ALLOWED, HttpStatusMsg.METHOD_NOT_ALLOWED
+        self.logger.error(HTTPResponse405.message)
+        return HTTPResponse405().data, HTTPResponse405.status, HTTPResponse405.message
 
     def before_request(self):
         pass

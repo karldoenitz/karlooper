@@ -3,7 +3,8 @@
 import datetime
 import logging
 from karlooper.router.router import Router
-from karlooper.config.config import HttpStatus, HttpStatusMsg, ContentType, RESPONSE_HEAD_MESSAGE
+from karlooper.config.config import ContentType, RESPONSE_HEAD_MESSAGE
+from karlooper.web.response import HTTPResponse404, HTTPResponse500
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -61,11 +62,11 @@ class HttpParser(object):
         path_param = handler[1]
         handler = handler[0]
         if not handler:
-            status["status"] = HttpStatus.NOT_FOUND
+            status["status"] = HTTPResponse404.status
             status["content_type"] = ContentType.HTML
             status["content_length"] = 3
-            status["status_msg"] = HttpStatusMsg.NOT_FOUND
-            data = str(HttpStatus.NOT_FOUND)
+            status["status_msg"] = HTTPResponse404.message
+            data = HTTPResponse404().data
         else:
             try:
                 handler_init = handler(http_message_dict, self.data, self.settings)
@@ -81,8 +82,8 @@ class HttpParser(object):
                 data = data[0]
                 handler_init.teardown_request()
             except Exception, e:
-                status["status"] = HttpStatus.SERVER_ERROR
-                status["status_msg"] = HttpStatusMsg.SERVER_ERROR
+                status["status"] = HTTPResponse500.status
+                status["status_msg"] = HTTPResponse500.message
                 data = str(e)
             status["content_length"] = len(data)
         response_data = self.response_header % status + data
