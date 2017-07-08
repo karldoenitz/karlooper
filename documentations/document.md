@@ -161,7 +161,7 @@ Renders the template with the given arguments as the response.
 def redirect(url, status=302)
 ```
 Redirect to the url, default status is 302.
-## karlooper.web.request
+## karlooper.web.response
 This model provides some classes named HTTPResponse, HTTPResponse404, HTTPResponse405, HTTPResponse500.
 ```python
 class HTTPResponse(object)
