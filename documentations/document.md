@@ -170,7 +170,7 @@ This class contain attributes ```status```, ```message```, ```data```.
 ```python
 class HTTPResponse404(HTTPResponse)
 ```
-To rewrite 404 page use this class.
+To rewrite 404 page use this class.  
 **methods**
 ```python
 def data()
@@ -179,7 +179,7 @@ Rewrite this method to customize your 404 page.
 ```python
 class HTTPResponse405(HTTPResponse)
 ```
-To rewrite 405 page use this class.
+To rewrite 405 page use this class.  
 **methods**
 ```python
 def data()
@@ -188,7 +188,7 @@ Rewrite this method to customize your 405 page.
 ```python
 class HTTPResponse500(HTTPResponse)
 ```
-To rewrite 500 page use this class.
+To rewrite 500 page use this class.  
 **methods**
 ```python
 def data()
