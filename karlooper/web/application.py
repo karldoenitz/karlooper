@@ -100,7 +100,7 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_epoll", e)
+                        self.logger.error("error in __run_epoll: %s", str(e))
                         continue
         finally:
             epoll.unregister(server_socket.fileno())
@@ -122,7 +122,7 @@ class Application(object):
             try:
                 event_list = kq.control(events, 1)
             except select.error as e:
-                self.logger.error("error in __run_kqueue", e)
+                self.logger.error("error in __run_kqueue: %s", str(e))
                 break
             if event_list:
                 for each in event_list:
@@ -155,7 +155,7 @@ class Application(object):
                                 else:
                                     conn.close()
                         except Exception, e:
-                            self.logger.error("error in __run_kqueue event list", e)
+                            self.logger.error("error in __run_kqueue event list: %s", str(e))
                         finally:
                             events.remove(select.kevent(
                                 http_connection.get_connection(each.udata).fileno(),
@@ -224,7 +224,7 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_poll", e)
+                        self.logger.error("error in __run_poll: %s", str(e))
                         continue
         finally:
             poll.unregister(server_socket.fileno())
