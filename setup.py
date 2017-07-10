@@ -47,7 +47,7 @@ setup(
     license='',
     author='lizhihao',
     author_email='karlvorndoenitz@gmail.com',
-    description='karloop plus framework',
+    description='karloop plus micro-framework',
     long_description=open("README.rst").read(),
     classifiers=[
         "Environment :: Web Environment",
