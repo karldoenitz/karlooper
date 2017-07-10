@@ -15,7 +15,7 @@ else:
 
 # whether need add c extension
 kwargs = {}
-if platform.python_implementation() == 'CPython':
+if platform.python_implementation() == 'CPython' and platform.system().lower() not in ['windows']:
     kwargs['ext_modules'] = [
         Extension(
             'karlooper.utils.encryption',
