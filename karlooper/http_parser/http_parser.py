@@ -62,11 +62,11 @@ class HttpParser(object):
         path_param = handler[1]
         handler = handler[0]
         if not handler:
+            data = HTTPResponse404().data()
             status["status"] = HTTPResponse404.status
             status["content_type"] = ContentType.HTML
-            status["content_length"] = 3
+            status["content_length"] = len(data)
             status["status_msg"] = HTTPResponse404.message
-            data = HTTPResponse404().data
         else:
             try:
                 handler_init = handler(http_message_dict, self.data, self.settings)
@@ -84,7 +84,7 @@ class HttpParser(object):
             except Exception, e:
                 status["status"] = HTTPResponse500.status
                 status["status_msg"] = HTTPResponse500.message
-                data = str(e)
+                data = HTTPResponse500().data() or str(e)
             status["content_length"] = len(data)
         response_data = self.response_header % status + data
         return response_data

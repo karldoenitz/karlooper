@@ -161,6 +161,82 @@ Renders the template with the given arguments as the response.
 def redirect(url, status=302)
 ```
 Redirect to the url, default status is 302.
+## karlooper.web.response
+This model provides some classes named HTTPResponse, HTTPResponse404, HTTPResponse405, HTTPResponse500.
+### HTTPResponse
+```python
+class HTTPResponse(object)
+```
+This class contain attributes ```status```, ```message```, ```data```.
+### HTTPResponse404
+```python
+class HTTPResponse404(HTTPResponse)
+```
+To rewrite 404 page use this class.  
+**methods**
+```python
+def data()
+```
+Rewrite this method to customize your 404 page.  
+**example**
+```python
+from karlooper.web.response import HTTPResponse404
+
+
+def response_404(self):
+    return "<html><head><title>404</title></head><body><h1>Page not found!</h1></body></html>"
+
+HTTPResponse404.data = response_404
+```
+Visit the web page you will see this.
+![customize 404 page](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/example-404-page.png "customize 404 page")
+
+### HTTPResponse405
+```python
+class HTTPResponse405(HTTPResponse)
+```
+To rewrite 405 page use this class.  
+**methods**
+```python
+def data()
+```
+Rewrite this method to customize your 405 page.  
+**example**
+```python
+from karlooper.web.response import HTTPResponse405
+
+
+def response_405(self):
+    return "<html><head><title>405</title></head><body><h1>Method not allowed!</h1></body></html>"
+
+HTTPResponse405.data = response_405
+```
+Visit the web page you will see this.
+![customize 405 page](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/example-405-page.png "customize 405 page")
+
+### HTTPResponse500
+```python
+class HTTPResponse500(HTTPResponse)
+```
+To rewrite 500 page use this class.  
+**methods**
+```python
+def data()
+```
+Rewrite this method to customize your 500 page.  
+**example**
+```python
+from karlooper.web.response import HTTPResponse500
+
+
+def response_500(self):
+    return "<html><head><title>500</title></head><body><h1>Server Error!</h1></body></html>"
+
+HTTPResponse500.data = response_500
+```
+Visit the web page you will see this.
+![customize 500 page](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/example-500-page.png "customize 500 page")
+
 ## karlooper.web.application
 This model provides a class named Application.  
 ```python
