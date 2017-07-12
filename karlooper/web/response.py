@@ -1,12 +1,21 @@
 # -*-coding:utf-8-*-
 
 from karlooper.config.config import HttpStatus, HttpStatusMsg
+from karlooper.template import render
 
 
 class HTTPResponse(object):
     status = 0
     message = ""
     data = ""
+    
+    def __init__(self, **kwargs):
+        self.__settings = kwargs
+        
+    def render(self, template_path, **kwargs):
+        static_path = self.__settings.get("template", ".")
+        template_path = root_path + template_path
+        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
 
 class HTTPResponse404(HTTPResponse):
