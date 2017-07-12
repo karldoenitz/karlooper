@@ -22,7 +22,7 @@ class HTTPResponse(object):
         """
         static_path = self.__settings.get("template", ".")
         template_path = static_path + template_path
-        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+        return render(template_path, **kwargs)
 
 
 class HTTPResponse404(HTTPResponse):
