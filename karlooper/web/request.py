@@ -418,15 +418,15 @@ class Request(object):
 
     def get(self):
         self.logger.error(HTTPResponse405.message)
-        return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
+        return HTTPResponse405(**self.__settings).data(), HTTPResponse405.status, HTTPResponse405.message
 
     def post(self):
         self.logger.error(HTTPResponse405.message)
-        return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
+        return HTTPResponse405(**self.__settings).data(), HTTPResponse405.status, HTTPResponse405.message
 
     def put(self):
         self.logger.error(HTTPResponse405.message)
-        return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
+        return HTTPResponse405(**self.__settings).data(), HTTPResponse405.status, HTTPResponse405.message
 
     def head(self):
         self.logger.info(self.__http_data.get("url", ""))
@@ -434,7 +434,7 @@ class Request(object):
 
     def options(self):
         self.logger.error(HTTPResponse405.message)
-        return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
+        return HTTPResponse405(**self.__settings).data(), HTTPResponse405.status, HTTPResponse405.message
 
     def delete(self):
         self.logger.error(HTTPResponse405.message)
@@ -445,7 +445,7 @@ class Request(object):
 
     def connect(self):
         self.logger.error(HTTPResponse405.message)
-        return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
+        return HTTPResponse405(**self.__settings).data(), HTTPResponse405.status, HTTPResponse405.message
 
     def before_request(self):
         pass

@@ -13,8 +13,15 @@ class HTTPResponse(object):
         self.__settings = kwargs
         
     def render(self, template_path, **kwargs):
+        """ customize your HTTPResponse web page use template
+
+        :param template_path: template path
+        :param kwargs: parameters
+        :return: html formatted string
+
+        """
         static_path = self.__settings.get("template", ".")
-        template_path = root_path + template_path
+        template_path = static_path + template_path
         return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
 
