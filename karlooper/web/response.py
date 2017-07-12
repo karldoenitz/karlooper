@@ -10,6 +10,9 @@ class HTTPResponse(object):
     
     def __init__(self, **kwargs):
         self.__settings = kwargs
+        
+    def render(self, **kwargs):
+        pass
 
 
 class HTTPResponse404(HTTPResponse):
