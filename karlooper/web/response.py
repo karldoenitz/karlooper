@@ -1,5 +1,20 @@
 # -*-coding:utf-8-*-
+"""
 
+response
+~~~~~~~~
+
+Use this model to customize your http response web page.
+
+Usage
+=====
+>>> from karlooper.web.response import HTTPResponse404
+>>> def not_found(self):
+...     return "<h1>Page Not Found</h1>"
+...
+>>> HTTPResponse404.data = not_found
+
+"""
 from karlooper.config.config import HttpStatus, HttpStatusMsg
 from karlooper.template import render
 
