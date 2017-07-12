@@ -7,6 +7,9 @@ class HTTPResponse(object):
     status = 0
     message = ""
     data = ""
+    
+    def __init__(self, **kwargs):
+        self.__settings = kwargs
 
 
 class HTTPResponse404(HTTPResponse):
