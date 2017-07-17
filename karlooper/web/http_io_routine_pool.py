@@ -9,7 +9,8 @@ class HttpIORoutinePool(object):
         self.pool[file_no] = coroutine
 
     def get(self, file_no):
-        return self.pool[file_no]
+        return self.pool.get(file_no, None)
 
     def remove(self, file_no):
-        del self.pool[file_no]
+        if file_no in self.pool:
+            del self.pool[file_no]

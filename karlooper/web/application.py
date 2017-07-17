@@ -92,7 +92,6 @@ class Application(object):
                             )
                             http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
-                                epoll.modify(fileno, 0)  # change file number to hup mode
                                 http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
                                 epoll.modify(fileno, select.EPOLLHUP)
                         elif event & select.EPOLLHUP:  # if message sent and file number in epoll is hup
@@ -216,7 +215,6 @@ class Application(object):
                             )
                             http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
-                                poll.modify(fileno, 0)  # change file number to hup mode
                                 http_connection.get_connection(fileno).shutdown(socket.SHUT_RDWR)
                                 poll.modify(fileno, select.POLLHUP)
                         elif event & select.POLLHUP:  # if message sent and file number in poll is hup
