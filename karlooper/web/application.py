@@ -6,6 +6,7 @@ from karlooper.logger.logger import init_logger
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.web.http_connection import HttpConnection
 from karlooper.web.http_io_buffer import HttpIOBuffer
+from karlooper.web.http_io_routine_pool import HttpIORoutinePool
 from karlooper.http_parser.http_parser import HttpParser
 from karlooper.config import get_cli_data, set_cli_data
 from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT, CLIENT_CONNECT_TO_SERVER_NUM
@@ -58,8 +59,11 @@ class Application(object):
         try:
             http_connection = HttpConnection()
             http_io_buffer = HttpIOBuffer()
+            http_io_routine_pool = HttpIORoutinePool()
+            events_buf = []
             while True:
-                events = epoll.poll(1)
+                events = epoll.poll(1) + events_buf
+                events_buf = []
                 for fileno, event in events:
                     try:
                         if fileno == server_socket.fileno():  # if request come
@@ -70,22 +74,46 @@ class Application(object):
                             http_io_buffer.add_request(connection.fileno(), b'')
                             http_io_buffer.add_response(connection.fileno(), self.response)
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
-                            http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
-                            http_io_buffer.add_request(
-                                fileno,
-                                http_io_buffer.get_request(fileno) + http_request_buffer
-                            )
-                            if self.EOL1 in http_io_buffer.get_request(fileno) \
-                                    or self.EOL2 in http_io_buffer.get_request(fileno):
-                                request_data = http_io_buffer.get_request(fileno)[:-2] \
-                                    if http_io_buffer.get_request(fileno).endswith("\r\n") \
-                                    else http_io_buffer.get_request(fileno)
-                                data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
-                                http_io_buffer.add_response(
+                            http_parser = http_io_routine_pool.get(file_no=fileno)
+                            if http_parser:
+                                data = http_parser.parse()
+                                if isinstance(data, str) or isinstance(data, unicode):
+                                    http_io_buffer.add_response(
+                                        fileno,
+                                        http_io_buffer.get_response(fileno) + data
+                                    )
+                                    epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
+                                    http_io_routine_pool.remove(fileno)
+                                else:  # if coroutine
+                                    http_io_routine_pool.add(fileno, http_parser)
+                                    events_buf.append((fileno, event))
+                            else:
+                                http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                                http_io_buffer.add_request(
                                     fileno,
-                                    http_io_buffer.get_response(fileno) + data
+                                    http_io_buffer.get_request(fileno) + http_request_buffer
                                 )
-                                epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
+                                if self.EOL1 in http_io_buffer.get_request(fileno) \
+                                        or self.EOL2 in http_io_buffer.get_request(fileno):
+                                    request_data = http_io_buffer.get_request(fileno)[:-2] \
+                                        if http_io_buffer.get_request(fileno).endswith("\r\n") \
+                                        else http_io_buffer.get_request(fileno)
+                                    http_parser = HttpParser(
+                                        request_data,
+                                        self.handlers,
+                                        settings=self.settings
+                                    )
+                                    data = http_parser.parse()
+                                    if isinstance(data, str):
+                                        http_io_buffer.add_response(
+                                            fileno,
+                                            http_io_buffer.get_response(fileno) + data
+                                        )
+                                        epoll.modify(fileno, select.EPOLLOUT)  # change file number to epoll out mode
+                                        http_io_routine_pool.remove(fileno)
+                                    else:  # if coroutine
+                                        http_io_routine_pool.add(fileno, http_parser)
+                                        events_buf.append((fileno, event))
                         elif event & select.EPOLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
@@ -181,8 +209,11 @@ class Application(object):
         try:
             http_connection = HttpConnection()
             http_io_buffer = HttpIOBuffer()
+            http_io_routine_pool = HttpIORoutinePool()
+            events_buf = []
             while True:
-                events = poll.poll(1)
+                events = poll.poll(1) + events_buf
+                events_buf = []
                 for fileno, event in events:
                     try:
                         if fileno == server_socket.fileno():  # if request come
@@ -193,22 +224,46 @@ class Application(object):
                             http_io_buffer.add_request(connection.fileno(), b'')
                             http_io_buffer.add_response(connection.fileno(), self.response)
                         elif event & select.POLLIN:  # when data in os's read buffer area
-                            http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
-                            http_io_buffer.add_request(
-                                fileno,
-                                http_io_buffer.get_request(fileno) + http_request_buffer
-                            )
-                            if self.EOL1 in http_io_buffer.get_request(fileno) \
-                                    or self.EOL2 in http_io_buffer.get_request(fileno):
-                                request_data = http_io_buffer.get_request(fileno)[:-2] \
-                                    if http_io_buffer.get_request(fileno).endswith("\r\n") \
-                                    else http_io_buffer.get_request(fileno)
-                                data = HttpParser(request_data, self.handlers, settings=self.settings).parse()
-                                http_io_buffer.add_response(
+                            http_parser = http_io_routine_pool.get(file_no=fileno)
+                            if http_parser:
+                                data = http_parser.parse()
+                                if isinstance(data, str) or isinstance(data, unicode):
+                                    http_io_buffer.add_response(
+                                        fileno,
+                                        http_io_buffer.get_response(fileno) + data
+                                    )
+                                    poll.modify(fileno, select.POLLOUT)  # change file number to epoll out mode
+                                    http_io_routine_pool.remove(fileno)
+                                else:  # if coroutine
+                                    http_io_routine_pool.add(fileno, http_parser)
+                                    events_buf.append((fileno, event))
+                            else:
+                                http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                                http_io_buffer.add_request(
                                     fileno,
-                                    http_io_buffer.get_response(fileno) + data
+                                    http_io_buffer.get_request(fileno) + http_request_buffer
                                 )
-                                poll.modify(fileno, select.POLLOUT)  # change file number to poll out mode
+                                if self.EOL1 in http_io_buffer.get_request(fileno) \
+                                        or self.EOL2 in http_io_buffer.get_request(fileno):
+                                    request_data = http_io_buffer.get_request(fileno)[:-2] \
+                                        if http_io_buffer.get_request(fileno).endswith("\r\n") \
+                                        else http_io_buffer.get_request(fileno)
+                                    http_parser = HttpParser(
+                                        request_data,
+                                        self.handlers,
+                                        settings=self.settings
+                                    )
+                                    data = http_parser.parse()
+                                    if isinstance(data, str):
+                                        http_io_buffer.add_response(
+                                            fileno,
+                                            http_io_buffer.get_response(fileno) + data
+                                        )
+                                        poll.modify(fileno, select.POLLOUT)  # change file number to epoll out mode
+                                        http_io_routine_pool.remove(fileno)
+                                    else:  # if coroutine
+                                        http_io_routine_pool.add(fileno, http_parser)
+                                        events_buf.append((fileno, event))
                         elif event & select.POLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
