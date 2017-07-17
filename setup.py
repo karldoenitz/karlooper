@@ -32,6 +32,7 @@ setup(
         'karlooper',
         'karlooper.autoreload',
         'karlooper.config',
+        'karlooper.coroutine',
         'karlooper.escape',
         'karlooper.http_parser',
         'karlooper.logger',
