@@ -104,7 +104,7 @@ class Application(object):
                                         settings=self.settings
                                     )
                                     data = http_parser.parse()
-                                    if isinstance(data, str):
+                                    if isinstance(data, str) or isinstance(data, unicode):
                                         http_io_buffer.add_response(
                                             fileno,
                                             http_io_buffer.get_response(fileno) + data
@@ -254,7 +254,7 @@ class Application(object):
                                         settings=self.settings
                                     )
                                     data = http_parser.parse()
-                                    if isinstance(data, str):
+                                    if isinstance(data, str) or isinstance(data, unicode):
                                         http_io_buffer.add_response(
                                             fileno,
                                             http_io_buffer.get_response(fileno) + data

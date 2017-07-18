@@ -24,16 +24,24 @@ from coroutine_pool import *
 # print next(a, Future)
 
 
-class Test(object):
+class TT(object):
+    def __init__(self, num):
+        self.sum = num
+
+
+class Test(TT):
+
     @koroutine
     def test(self):
         for i in xrange(3):
+            self.sum += 1
             yield i
+        yield self.sum
 
 
 class Parser(object):
     def parser(self):
-        t = Test()
+        t = Test(6)
         return t.test()
 
 
