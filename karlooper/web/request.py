@@ -430,7 +430,7 @@ class Request(object):
 
     def head(self):
         self.logger.info(self.__http_data.get("url", ""))
-        return ""
+        return "", HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
 
     def options(self):
         self.logger.error(HTTPResponse405.message)
@@ -441,7 +441,10 @@ class Request(object):
         return HTTPResponse405().data(), HTTPResponse405.status, HTTPResponse405.message
 
     def trace(self):
-        return self.__http_message.split("\r\n\r\n") if "\r\n\r\n" in self.__http_message else ""
+        return (
+            self.__http_message.split("\r\n\r\n") if "\r\n\r\n" in self.__http_message else "",
+            HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+        )
 
     def connect(self):
         self.logger.error(HTTPResponse405.message)

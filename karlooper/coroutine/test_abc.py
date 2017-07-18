@@ -28,6 +28,9 @@ class TT(object):
     def __init__(self, num):
         self.sum = num
 
+    def print_sum(self):
+        print self.sum, 'a'
+
 
 class Test(TT):
 
@@ -42,7 +45,9 @@ class Test(TT):
 class Parser(object):
     def parser(self):
         t = Test(6)
-        return t.test()
+        result = t.test()
+        t.print_sum()
+        return result
 
 
 if __name__ == '__main__':
