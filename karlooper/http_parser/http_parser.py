@@ -75,6 +75,8 @@ class HttpParser(object):
                 handler_init.before_request()
                 pro_function = getattr(handler_init, http_method)
                 data = pro_function()
+                if isinstance(data, type):
+                    return data
                 http_response_header = handler_init.get_response_header()
                 self.response_header = self.response_header.replace("\r\n\r\n", http_response_header)
                 status["status"] = data[1]
