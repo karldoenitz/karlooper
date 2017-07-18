@@ -363,7 +363,7 @@ class Request(object):
         """
         self.set_header({"Content-Type": "application/json"})
         response = json.dumps(data, ensure_ascii=False)
-        return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+        return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def http_response(self, data):
         """decorate data to http response data
@@ -373,7 +373,7 @@ class Request(object):
 
         """
         self.logger.info("response data: %s", data)
-        return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+        return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def render(self, template_path, **kwargs):
         """render a template
@@ -385,7 +385,7 @@ class Request(object):
         """
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
-        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS
+        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def redirect(self, url, status=HttpStatus.REDIRECT):
         """redirect to defined url
@@ -398,7 +398,7 @@ class Request(object):
         self.set_header({
             "Location": url,
         })
-        return "", status, HttpStatusMsg.REDIRECT
+        return "", status, HttpStatusMsg.REDIRECT, self
 
     def get_http_request_message(self):
         """get request message
