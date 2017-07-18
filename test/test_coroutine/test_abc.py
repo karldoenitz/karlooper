@@ -1,6 +1,6 @@
 # -*-encoding:utf-8-*-
 
-from coroutine_pool import *
+from karlooper.coroutine.coroutine_pool import *
 
 
 # class Future(object):
@@ -38,16 +38,18 @@ class Test(TT):
     def test(self):
         for i in xrange(3):
             self.sum += 1
-            yield i
-        yield self.sum
+            yield i, self
+        yield self.sum, self
 
 
 class Parser(object):
     def parser(self):
         t = Test(6)
         result = t.test()
-        t.print_sum()
-        return result
+        if not isinstance(result, type):
+            result[-1].print_sum()
+            return result[0]
+        return None
 
 
 if __name__ == '__main__':
