@@ -171,16 +171,13 @@ class Application(object):
                                     and each.filter == select.KQ_FILTER_READ:
                                 conn = http_connection.get_connection(each.udata)
                                 request_data = conn.recv(SOCKET_RECEIVE_SIZE)
-                                if request_data:
-                                    request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
-                                    data = HttpParser(
-                                        request_data,
-                                        handlers=self.handlers,
-                                        settings=self.settings
-                                    ).parse()
-                                    conn.send(data)
-                                else:
-                                    conn.close()
+                                request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
+                                data = HttpParser(
+                                    request_data,
+                                    handlers=self.handlers,
+                                    settings=self.settings
+                                ).parse()
+                                conn.send(data)
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
                         finally:
