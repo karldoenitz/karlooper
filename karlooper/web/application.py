@@ -179,17 +179,16 @@ class Application(object):
                                     settings=self.settings
                                 ).parse()
                                 conn.send(data)
+                                events.remove(select.kevent(
+                                    http_connection.get_connection(each.udata).fileno(),
+                                    select.KQ_FILTER_READ,
+                                    select.KQ_EV_ADD,
+                                    udata=each.udata)
+                                )
+                                http_connection.remove_connection(each.udata)
+                                conn.close()
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
-                        finally:
-                            events.remove(select.kevent(
-                                http_connection.get_connection(each.udata).fileno(),
-                                select.KQ_FILTER_READ,
-                                select.KQ_EV_ADD,
-                                udata=each.udata)
-                            )
-                            http_connection.remove_connection(each.udata)
-                            conn.close()
         server_socket.close()
 
     def __run_poll(self):
@@ -328,3 +327,5 @@ class Application(object):
                 print "run with asyncore"
                 self.logger.info("run with asyncore")
                 self.__run_async_io()
+        print "server start failed!"
+        self.logger.info("server start failed!")
