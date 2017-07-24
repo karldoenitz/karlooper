@@ -3,6 +3,7 @@
 import socket
 import select
 from karlooper.logger.logger import init_logger
+from karlooper.web import IOModel
 from karlooper.web.__async_core_server import EchoServer, asyncore
 from karlooper.web.http_connection import HttpConnection
 from karlooper.web.http_io_buffer import HttpIOBuffer
@@ -236,25 +237,42 @@ class Application(object):
         EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
         asyncore.loop()
 
-    def run(self):
-        """
-        run the web server
+    def run(self, io_model=None):
+        """run the web server
+
+        :param io_model: os io model
+        :return: None
+
         """
         print "server run on port: %d" % self.port
         self.logger.info("server run on port: %d" % self.port)
-        if hasattr(select, "epoll"):
-            print "run with epoll"
-            self.logger.info("run with epoll")
-            self.__run_epoll()
-        elif hasattr(select, "kqueue"):
-            print "run with kqueue"
-            self.logger.info("run with kqueue")
-            self.__run_kqueue()
-        elif hasattr(select, "poll"):
-            print "run with poll"
-            self.logger.info("run with poll")
-            self.__run_poll()
+        if io_model:
+            if io_model == IOModel.EPOLL and hasattr(select, "epoll"):
+                print "run with epoll"
+                self.logger.info("run with epoll")
+                self.__run_epoll()
+            elif io_model == IOModel.KQUEUE and hasattr(select, "kqueue"):
+                print "run with kqueue"
+                self.logger.info("run with kqueue")
+                self.__run_kqueue()
+            elif io_model == IOModel.POLL and hasattr(select, "poll"):
+                print "run with poll"
+                self.logger.info("run with poll")
+                self.__run_poll()
         else:
-            print "run with asyncore"
-            self.logger.info("run with asyncore")
-            self.__run_async_io()
+            if hasattr(select, "epoll"):
+                print "run with epoll"
+                self.logger.info("run with epoll")
+                self.__run_epoll()
+            elif hasattr(select, "kqueue"):
+                print "run with kqueue"
+                self.logger.info("run with kqueue")
+                self.__run_kqueue()
+            elif hasattr(select, "poll"):
+                print "run with poll"
+                self.logger.info("run with poll")
+                self.__run_poll()
+            else:
+                print "run with asyncore"
+                self.logger.info("run with asyncore")
+                self.__run_async_io()
