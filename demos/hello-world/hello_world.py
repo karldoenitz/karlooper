@@ -13,6 +13,7 @@ class HelloWorldHandler(Request):
 class HelloKoroutineHandler(Request):
     @koroutine
     def get(self):
+        yield self.set_security_cookie("test", "I Love Moira!")
         yield self.http_response("<p>Hello, Koroutine!</p>")
 
 

@@ -144,11 +144,14 @@ class Application(object):
         server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)
         kq = select.kqueue()
         http_connection = HttpConnection()
+        http_io_routine_pool = HttpIORoutinePool()
         index = 1
         events = [select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD)]
+        events_buf = []
         while True:
             try:
-                event_list = kq.control(events, 1)
+                event_list = kq.control(events, 128, 0.0001) + events_buf
+                events_buf = []
             except select.error as e:
                 self.logger.error("error in __run_kqueue: %s", str(e))
                 break
@@ -170,23 +173,46 @@ class Application(object):
                         try:
                             if each.udata >= 1 and each.flags == select.KQ_EV_ADD \
                                     and each.filter == select.KQ_FILTER_READ:
-                                conn = http_connection.get_connection(each.udata)
-                                request_data = conn.recv(SOCKET_RECEIVE_SIZE)
-                                request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
-                                data = HttpParser(
-                                    request_data,
-                                    handlers=self.handlers,
-                                    settings=self.settings
-                                ).parse()
-                                conn.send(data)
-                                events.remove(select.kevent(
-                                    http_connection.get_connection(each.udata).fileno(),
-                                    select.KQ_FILTER_READ,
-                                    select.KQ_EV_ADD,
-                                    udata=each.udata)
-                                )
-                                http_connection.remove_connection(each.udata)
-                                conn.close()
+                                http_parser = http_io_routine_pool.get(file_no=each.udata)
+                                if http_parser:
+                                    data = http_parser.parse()
+                                    if isinstance(data, str) or isinstance(data, unicode):
+                                        http_io_routine_pool.remove(each.udata)
+                                        conn.send(data)
+                                        events.remove(select.kevent(
+                                            http_connection.get_connection(each.udata).fileno(),
+                                            select.KQ_FILTER_READ,
+                                            select.KQ_EV_ADD,
+                                            udata=each.udata)
+                                        )
+                                        http_connection.remove_connection(each.udata)
+                                        conn.close()
+                                    else:  # if coroutine
+                                        http_io_routine_pool.add(each.udata, http_parser)
+                                        events_buf.append(each)
+                                else:
+                                    conn = http_connection.get_connection(each.udata)
+                                    request_data = conn.recv(SOCKET_RECEIVE_SIZE)
+                                    request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
+                                    http_parser = HttpParser(
+                                        request_data,
+                                        handlers=self.handlers,
+                                        settings=self.settings
+                                    )
+                                    data = http_parser.parse()
+                                    if isinstance(data, str) or isinstance(data, unicode):
+                                        conn.send(data)
+                                        events.remove(select.kevent(
+                                            http_connection.get_connection(each.udata).fileno(),
+                                            select.KQ_FILTER_READ,
+                                            select.KQ_EV_ADD,
+                                            udata=each.udata)
+                                        )
+                                        http_connection.remove_connection(each.udata)
+                                        conn.close()
+                                    else:  # if coroutine
+                                        http_io_routine_pool.add(each.udata, http_parser)
+                                        events_buf.append(each)
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
         server_socket.close()
