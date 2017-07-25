@@ -171,8 +171,7 @@ class Application(object):
                         )
                     else:
                         try:
-                            if each.udata >= 1 and each.flags == select.KQ_EV_ADD \
-                                    and each.filter == select.KQ_FILTER_READ:
+                            if each.udata >= 1 and each.filter == select.KQ_FILTER_READ:
                                 http_parser = http_io_routine_pool.get(file_no=each.udata)
                                 if http_parser:
                                     data = http_parser.parse()
