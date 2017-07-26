@@ -38,7 +38,10 @@ class EchoHandler(asyncore.dispatcher_with_send):
     def handle_read(self):
         try:
             data = self.recv(SOCKET_RECEIVE_SIZE)
-            response_data = HttpParser(data=data, handlers=self.__handlers, settings=self.__settings).parse()
+            http_parser = HttpParser(data=data, handlers=self.__handlers, settings=self.__settings)
+            response_data = http_parser.parse()
+            while not (isinstance(response_data, str) or isinstance(response_data, unicode)):
+                response_data = http_parser.parse()
             self.send(response_data)
         except Exception, e:
             self.logger.info("echo handler error: %s" % str(e))
