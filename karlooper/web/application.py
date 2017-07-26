@@ -247,6 +247,12 @@ class Application(object):
                             http_io_buffer.remove_response(each.udata)
                             http_io_routine_pool.remove(each.udata)
                             self.logger.error("each filter: %s", each.filter)
+                            events.remove(select.kevent(
+                                http_connection.get_connection(each.udata).fileno(),
+                                each.filter,
+                                select.KQ_EV_ADD,
+                                udata=each.udata)
+                            )
         server_socket.close()
 
     def __run_poll(self):
