@@ -144,9 +144,13 @@ class Application(object):
         server_socket.listen(CLIENT_CONNECT_TO_SERVER_NUM)
         kq = select.kqueue()
         http_connection = HttpConnection()
+        http_io_buffer = HttpIOBuffer()
         http_io_routine_pool = HttpIORoutinePool()
         index = 1
-        events = [select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD)]
+        events = [
+            select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD),
+            select.kevent(server_socket.fileno(), select.KQ_FILTER_WRITE, select.KQ_EV_ADD)
+        ]
         events_buf = []
         while True:
             try:
@@ -177,15 +181,21 @@ class Application(object):
                                     data = http_parser.parse()
                                     if isinstance(data, str) or isinstance(data, unicode):
                                         http_io_routine_pool.remove(each.udata)
-                                        conn.send(data)
+                                        http_io_buffer.add_response(each.udata, data)
+                                        events.append(
+                                            select.kevent(
+                                                http_connection.get_connection(each.udata).fileno(),
+                                                select.KQ_FILTER_WRITE,
+                                                select.KQ_EV_ADD,
+                                                udata=each.udata
+                                            )
+                                        )
                                         events.remove(select.kevent(
                                             http_connection.get_connection(each.udata).fileno(),
                                             select.KQ_FILTER_READ,
                                             select.KQ_EV_ADD,
                                             udata=each.udata)
                                         )
-                                        http_connection.remove_connection(each.udata)
-                                        conn.close()
                                     else:  # if coroutine
                                         http_io_routine_pool.add(each.udata, http_parser)
                                         events_buf.append(each)
@@ -200,18 +210,36 @@ class Application(object):
                                     )
                                     data = http_parser.parse()
                                     if isinstance(data, str) or isinstance(data, unicode):
-                                        conn.send(data)
+                                        http_io_buffer.add_response(each.udata, data)
+                                        events.append(
+                                            select.kevent(
+                                                http_connection.get_connection(each.udata).fileno(),
+                                                select.KQ_FILTER_WRITE,
+                                                select.KQ_EV_ADD,
+                                                udata=each.udata
+                                            )
+                                        )
                                         events.remove(select.kevent(
                                             http_connection.get_connection(each.udata).fileno(),
                                             select.KQ_FILTER_READ,
                                             select.KQ_EV_ADD,
                                             udata=each.udata)
                                         )
-                                        http_connection.remove_connection(each.udata)
-                                        conn.close()
                                     else:  # if coroutine
                                         http_io_routine_pool.add(each.udata, http_parser)
                                         events_buf.append(each)
+                            elif each.udata >= 1 and each.filter == select.KQ_FILTER_WRITE:
+                                conn = http_connection.get_connection(each.udata)
+                                data = http_io_buffer.get_response(each.udata)
+                                conn.send(data)
+                                events.remove(select.kevent(
+                                    http_connection.get_connection(each.udata).fileno(),
+                                    select.KQ_FILTER_WRITE,
+                                    select.KQ_EV_ADD,
+                                    udata=each.udata)
+                                )
+                                conn.close()
+                                http_connection.remove_connection(each.udata)
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
         server_socket.close()
@@ -316,7 +344,7 @@ class Application(object):
     def run(self, io_model=None):
         """run the web server
 
-        :param io_model: os io model
+        :param io_model: os io model, EPOLL 0 KQUEUE 1 POLL 2
         :return: None
 
         """
