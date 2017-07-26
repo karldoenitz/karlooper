@@ -242,6 +242,11 @@ class Application(object):
                                 http_connection.remove_connection(each.udata)
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
+                            http_connection.remove_connection(each.udata)
+                            http_io_buffer.remove_request(each.udata)
+                            http_io_buffer.remove_response(each.udata)
+                            http_io_routine_pool.remove(each.udata)
+                            self.logger.error("each filter: %s", each.filter)
         server_socket.close()
 
     def __run_poll(self):

@@ -20,7 +20,9 @@ class HttpIOBuffer(object):
         return self.responses[name]
 
     def remove_request(self, name):
-        del self.requests[name]
+        if name in self.requests:
+            del self.requests[name]
 
     def remove_response(self, name):
-        del self.responses[name]
+        if name in self.responses:
+            del self.responses[name]
