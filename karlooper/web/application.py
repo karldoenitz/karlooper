@@ -254,17 +254,12 @@ class Application(object):
                                 http_connection.remove_connection(each.udata)
                         except Exception, e:
                             self.logger.error("error in __run_kqueue event list: %s", str(e))
+                            self.logger.error("each filter: %s", each.filter)
+                            self.__remove_event(events, each)
                             http_connection.remove_connection(each.udata)
                             http_io_buffer.remove_request(each.udata)
                             http_io_buffer.remove_response(each.udata)
                             http_io_routine_pool.remove(each.udata)
-                            self.logger.error("each filter: %s", each.filter)
-                            events.remove(select.kevent(
-                                http_connection.get_connection(each.udata).fileno(),
-                                each.filter,
-                                select.KQ_EV_ADD,
-                                udata=each.udata)
-                            )
         server_socket.close()
 
     def __run_poll(self):
@@ -375,6 +370,20 @@ class Application(object):
         """
         EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
         asyncore.loop()
+
+    def __remove_event(self, events, each):
+        """remove event from events
+
+        :param events: the list contain some events
+        :param udata: the event's udata
+        :return: None
+
+        """
+        self.logger.warning("remove event with udata: %s", str(each.udata))
+        for event in events:
+            if event.ident == each.ident:
+                events.remove(event)
+                break
 
     def run(self, io_model=None):
         """run the web server
