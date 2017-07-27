@@ -115,6 +115,13 @@ class Application(object):
                                     else:  # if coroutine
                                         http_io_routine_pool.add(fileno, http_parser)
                                         events_buf.append((fileno, event))
+                                else:
+                                    self.logger.error("connection error in __run_epoll: %s", str(e))
+                                    http_connection.remove_connection(fileno)
+                                    http_io_buffer.remove_request(fileno)
+                                    http_io_buffer.remove_response(fileno)
+                                    http_io_routine_pool.remove(fileno)
+                                    epoll.unregister(fileno)
                         elif event & select.EPOLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
@@ -129,7 +136,12 @@ class Application(object):
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
                         self.logger.error("error in __run_epoll: %s", str(e))
-                        continue
+                        http_connection.remove_connection(fileno)
+                        http_io_buffer.remove_request(fileno)
+                        http_io_buffer.remove_response(fileno)
+                        http_io_routine_pool.remove(fileno)
+                        self.logger.error("fileno is: %s", str(fileno))
+                        epoll.unregister(fileno)
         finally:
             epoll.unregister(server_socket.fileno())
             epoll.close()
@@ -325,6 +337,13 @@ class Application(object):
                                     else:  # if coroutine
                                         http_io_routine_pool.add(fileno, http_parser)
                                         events_buf.append((fileno, event))
+                                else:
+                                    self.logger.error("connection error in __run_epoll: %s", str(e))
+                                    http_connection.remove_connection(fileno)
+                                    http_io_buffer.remove_request(fileno)
+                                    http_io_buffer.remove_response(fileno)
+                                    http_io_routine_pool.remove(fileno)
+                                    poll.unregister(fileno)
                         elif event & select.POLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
@@ -339,7 +358,12 @@ class Application(object):
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
                         self.logger.error("error in __run_poll: %s", str(e))
-                        continue
+                        http_connection.remove_connection(fileno)
+                        http_io_buffer.remove_request(fileno)
+                        http_io_buffer.remove_response(fileno)
+                        http_io_routine_pool.remove(fileno)
+                        self.logger.error("fileno is: %s", str(fileno))
+                        poll.unregister(fileno)
         finally:
             poll.unregister(server_socket.fileno())
             poll.close()
