@@ -77,8 +77,12 @@ class HttpParser(object):
                 data = pro_function()
                 if isinstance(data, type):
                     return data
-                handler_init = data[-1]
-                http_response_header = handler_init.get_response_header()
+                try:
+                    handler_init_k = data[-1]
+                    http_response_header = handler_init_k.get_response_header()
+                except Exception, e:
+                    self.logger.info("static handler response: %s", str(e))
+                    http_response_header = handler_init.get_response_header()
                 self.response_header = self.response_header.replace("\r\n\r\n", http_response_header)
                 status["status"] = data[1]
                 status["status_msg"] = data[2]
