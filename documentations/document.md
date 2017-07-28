@@ -173,7 +173,7 @@ This class contain attributes ```status```, ```message```, ```data```.
 class HTTPResponse404(HTTPResponse)
 ```
 To rewrite 404 page use this class.  
-**methods**
+**Methods**
 ```python
 def data()
 ```
@@ -196,7 +196,7 @@ Visit the web page you will see this.
 class HTTPResponse405(HTTPResponse)
 ```
 To rewrite 405 page use this class.  
-**methods**
+**Methods**
 ```python
 def data()
 ```
@@ -219,7 +219,7 @@ Visit the web page you will see this.
 class HTTPResponse500(HTTPResponse)
 ```
 To rewrite 500 page use this class.  
-**methods**
+**Methods**
 ```python
 def data()
 ```
@@ -263,7 +263,7 @@ If not define the port in anywhere, the server will run on the port 80.
   - `port`:  define the server's port.  
   - `log_conf`:  define the configuration for logger.  
 
-**methods**
+**Methods**:
 ```python
 def listen(port)
 ```
@@ -275,12 +275,12 @@ Run the web server.
 # karlooper.coroutine
 _**karlooper.coroutine**_ provides a simple coroutine for karlooper.  
 This coroutine based on python generator.  
-_**Method**_:
+**Methods**:
 ```python
 def koroutine(method)
 ```
 Use this decorator to run a method use coroutine.  
-_**sample**_:
+_**example**_:
 ```python
 
 from karlooper.coroutine.coroutine_pool import koroutine
@@ -298,7 +298,7 @@ class SearchHandler(BaseHandler):
 # karlooper.template
 _**karlooper.template**_ provides a simple template system that compiles templates to Python code.  
 This template system based on jinja2.  
-_**Methods**_:
+**Methods**:
 ```python
 def render(template_path, **kwargs)
 ```
@@ -360,7 +360,7 @@ _**karlooper.utils**_ provides `security` and `parse_command_line` models.
 class StrEncryption()
 ```
 DES security class.  
-**Methods**:
+**methods**:
 ```python
 def input_key(key, base=10)
 ```
@@ -378,7 +378,7 @@ Decode a string.
 class CommandLineParser()
 ```
 This class contains some methods to parse the command line.  
-**Method**:
+**Methods**:
 ```python
 def default(**kwargs)
 ```
