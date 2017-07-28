@@ -260,6 +260,8 @@ class Application(object):
                             http_io_buffer.remove_request(each.udata)
                             http_io_buffer.remove_response(each.udata)
                             http_io_routine_pool.remove(each.udata)
+                            kq.close()
+                            kq = select.kqueue()
         server_socket.close()
 
     def __run_poll(self):
@@ -375,7 +377,7 @@ class Application(object):
         """remove event from events
 
         :param events: the list contain some events
-        :param udata: the event's udata
+        :param each: the event will be removed
         :return: None
 
         """
