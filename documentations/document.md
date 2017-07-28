@@ -272,6 +272,29 @@ Starts an HTTP server for this application on the given port.
 def run()
 ```
 Run the web server.  
+# karlooper.coroutine
+_**karlooper.coroutine**_ provides a simple coroutine for karlooper.  
+This coroutine based on python generator.  
+_**Method**_:
+```python
+def koroutine(method)
+```
+Use this decorator to run a method use coroutine.  
+_**sample**_:
+```python
+
+from karlooper.coroutine.coroutine_pool import koroutine
+
+
+class SearchHandler(BaseHandler):
+    @koroutine
+    def get(self):
+        title = self.get_parameter("title", "")
+        yield self.update_db_with(title=title)  # When the thread run to key word `yield`, the context will be restore and the thread to accept another http request.
+        result = self.response_OK()
+        yield self.response_as_json(result)  # generate the coroutine's result.
+
+```
 # karlooper.template
 _**karlooper.template**_ provides a simple template system that compiles templates to Python code.  
 This template system based on jinja2.  
