@@ -142,6 +142,9 @@ class Application(object):
                         http_io_routine_pool.remove(fileno)
                         self.logger.error("fileno is: %s", str(fileno))
                         epoll.unregister(fileno)
+                        epoll.close()
+                        epoll = select.epoll()
+                        epoll.register(server_socket.fileno(), select.EPOLLIN)
         finally:
             epoll.unregister(server_socket.fileno())
             epoll.close()
