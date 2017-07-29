@@ -135,13 +135,12 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_epoll: %s", str(e))
+                        self.logger.info("error in __run_epoll: %s", str(e))
                         http_connection.remove_connection(fileno)
                         http_io_buffer.remove_request(fileno)
                         http_io_buffer.remove_response(fileno)
                         http_io_routine_pool.remove(fileno)
-                        self.logger.error("fileno is: %s", str(fileno))
-                        epoll.unregister(fileno)
+                        self.logger.info("fileno is: %s", str(fileno))
                         epoll.close()
                         epoll = select.epoll()
                         epoll.register(server_socket.fileno(), select.EPOLLIN)
@@ -256,8 +255,8 @@ class Application(object):
                                 conn.close()
                                 http_connection.remove_connection(each.udata)
                         except Exception, e:
-                            self.logger.error("error in __run_kqueue event list: %s", str(e))
-                            self.logger.error("each filter: %s", each.filter)
+                            self.logger.info("error in __run_kqueue event list: %s", str(e))
+                            self.logger.info("each filter: %s", each.filter)
                             self.__remove_event(events, each)
                             http_connection.remove_connection(each.udata)
                             http_io_buffer.remove_request(each.udata)
@@ -357,12 +356,12 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_poll: %s", str(e))
+                        self.logger.info("error in __run_poll: %s", str(e))
                         http_connection.remove_connection(fileno)
                         http_io_buffer.remove_request(fileno)
                         http_io_buffer.remove_response(fileno)
                         http_io_routine_pool.remove(fileno)
-                        self.logger.error("fileno is: %s", str(fileno))
+                        self.logger.info("fileno is: %s", str(fileno))
                         poll.unregister(fileno)
         finally:
             poll.unregister(server_socket.fileno())
