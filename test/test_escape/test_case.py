@@ -16,7 +16,7 @@ def test():
         print html
         print html_escape
         assert "html escape or unescape error"
-    url = "http://www.test.com/test?param=参数"
+    url = "http://www.test.com/test?param=param"
     url_escaped = url_escape(url)
     if url != url_unescape(url_escaped):
         print url
