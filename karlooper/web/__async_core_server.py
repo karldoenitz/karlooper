@@ -43,7 +43,7 @@ class EchoHandler(asyncore.dispatcher_with_send):
             while not (isinstance(response_data, str) or isinstance(response_data, unicode)):
                 response_data = http_parser.parse()
             self.send(response_data)
-        except Exception, e:
+        except Exception as e:
             self.logger.info("echo handler error: %s" % str(e))
 
 

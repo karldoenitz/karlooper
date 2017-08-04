@@ -80,7 +80,7 @@ class HttpParser(object):
                 try:
                     handler_init_k = data[-1]
                     http_response_header = handler_init_k.get_response_header()
-                except Exception, e:
+                except Exception as e:
                     self.logger.info("static handler response: %s", str(e))
                     http_response_header = handler_init.get_response_header()
                 self.response_header = self.response_header.replace("\r\n\r\n", http_response_header)
@@ -88,7 +88,7 @@ class HttpParser(object):
                 status["status_msg"] = data[2]
                 data = data[0]
                 handler_init.teardown_request()
-            except Exception, e:
+            except Exception as e:
                 status["status"] = HTTPResponse500.status
                 status["status_msg"] = HTTPResponse500.message
                 data = HTTPResponse500(**self.settings).data() or str(e)

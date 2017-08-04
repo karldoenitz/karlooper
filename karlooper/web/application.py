@@ -157,7 +157,7 @@ class Application(object):
                             epoll.unregister(fileno)  # remove file number from epoll
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.info("error in __run_epoll: %s", str(e))
                         http_connection.remove_connection(fileno)
                         http_io_buffer.remove_request(fileno)
@@ -277,7 +277,7 @@ class Application(object):
                                 )
                                 conn.close()
                                 http_connection.remove_connection(each.udata)
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.info("error in __run_kqueue event list: %s", str(e))
                             self.logger.info("each filter: %s", each.filter)
                             self.__remove_event(events, each)
@@ -378,7 +378,7 @@ class Application(object):
                             poll.unregister(fileno)  # remove file number from poll
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.info("error in __run_poll: %s", str(e))
                         http_connection.remove_connection(fileno)
                         http_io_buffer.remove_request(fileno)
@@ -419,37 +419,37 @@ class Application(object):
         :return: None
 
         """
-        print "server run on port: %d" % self.port
+        print("server run on port: %d" % self.port)
         self.logger.info("server run on port: %d" % self.port)
         if io_model:
             if io_model == IOModel.EPOLL and hasattr(select, "epoll"):
-                print "run with epoll"
+                print("run with epoll")
                 self.logger.info("run with epoll")
                 self.__run_epoll()
             elif io_model == IOModel.KQUEUE and hasattr(select, "kqueue"):
-                print "run with kqueue"
+                print("run with kqueue")
                 self.logger.info("run with kqueue")
                 self.__run_kqueue()
             elif io_model == IOModel.POLL and hasattr(select, "poll"):
-                print "run with poll"
+                print("run with poll")
                 self.logger.info("run with poll")
                 self.__run_poll()
         else:
             if hasattr(select, "epoll"):
-                print "run with epoll"
+                print("run with epoll")
                 self.logger.info("run with epoll")
                 self.__run_epoll()
             elif hasattr(select, "kqueue"):
-                print "run with kqueue"
+                print("run with kqueue")
                 self.logger.info("run with kqueue")
                 self.__run_kqueue()
             elif hasattr(select, "poll"):
-                print "run with poll"
+                print("run with poll")
                 self.logger.info("run with poll")
                 self.__run_poll()
             else:
-                print "run with asyncore"
+                print("run with asyncore")
                 self.logger.info("run with asyncore")
                 self.__run_async_io()
-        print "server start failed!"
+        print("server start failed!")
         self.logger.info("server start failed!")
