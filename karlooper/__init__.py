@@ -5,10 +5,11 @@
 """
 
 __author__ = 'karlvorndoenitz@gmail.com'
-__version__ = '0.5.3'
+__version__ = '0.6.0'
 __packages__ = [
     "autoreload",
     "config",
+    "coroutine",
     "escape",
     "http_parser",
     "logger",

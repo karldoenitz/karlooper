@@ -3,27 +3,6 @@
 from karlooper.coroutine.coroutine_pool import *
 
 
-# class Future(object):
-#     pass
-#
-#
-# def test():
-#     yield 1
-#     yield 2
-#     yield 3
-#     yield 4
-#     yield 5
-#
-#
-# a = test()
-# print next(a, Future)
-# print next(a, Future)
-# print next(a, Future)
-# print next(a, Future)
-# print next(a, Future)
-# print next(a, Future)
-
-
 class TT(object):
     def __init__(self, num):
         self.sum = num

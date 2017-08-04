@@ -14,4 +14,5 @@ class HttpConnection(object):
         return self.connection[name]
 
     def remove_connection(self, name):
-        del self.connection[name]
+        if name in self.connection:
+            del self.connection[name]

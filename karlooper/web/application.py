@@ -1,4 +1,27 @@
 # -*-coding:utf-8-*-
+"""
+
+application
+~~~~~~~~~~~
+
+Use this model to initialize web application.
+
+Usage
+=====
+>>> from karlooper.web import IOModel
+>>> from karlooper.web.application import Application
+>>> application = Application(handlers={}, settings={}, port=8080, log_conf="./config.log")
+>>> application.run(io_model=IOModel.POLL)
+server run on port: 8080
+run with poll
+
+>>> application = Application(handlers={}, settings={}, log_conf="./config.log")
+>>> application.listen(8000)
+>>> application.run(io_model=IOModel.POLL)
+server run on port: 8000
+run with poll
+
+"""
 
 import socket
 import select
@@ -115,6 +138,13 @@ class Application(object):
                                     else:  # if coroutine
                                         http_io_routine_pool.add(fileno, http_parser)
                                         events_buf.append((fileno, event))
+                                else:
+                                    self.logger.error("connection error in __run_epoll: %s", str(e))
+                                    http_connection.remove_connection(fileno)
+                                    http_io_buffer.remove_request(fileno)
+                                    http_io_buffer.remove_response(fileno)
+                                    http_io_routine_pool.remove(fileno)
+                                    epoll.unregister(fileno)
                         elif event & select.EPOLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
@@ -128,8 +158,15 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_epoll: %s", str(e))
-                        continue
+                        self.logger.info("error in __run_epoll: %s", str(e))
+                        http_connection.remove_connection(fileno)
+                        http_io_buffer.remove_request(fileno)
+                        http_io_buffer.remove_response(fileno)
+                        http_io_routine_pool.remove(fileno)
+                        self.logger.info("fileno is: %s", str(fileno))
+                        epoll.close()
+                        epoll = select.epoll()
+                        epoll.register(server_socket.fileno(), select.EPOLLIN)
         finally:
             epoll.unregister(server_socket.fileno())
             epoll.close()
@@ -241,7 +278,15 @@ class Application(object):
                                 conn.close()
                                 http_connection.remove_connection(each.udata)
                         except Exception, e:
-                            self.logger.error("error in __run_kqueue event list: %s", str(e))
+                            self.logger.info("error in __run_kqueue event list: %s", str(e))
+                            self.logger.info("each filter: %s", each.filter)
+                            self.__remove_event(events, each)
+                            http_connection.remove_connection(each.udata)
+                            http_io_buffer.remove_request(each.udata)
+                            http_io_buffer.remove_response(each.udata)
+                            http_io_routine_pool.remove(each.udata)
+                            kq.close()
+                            kq = select.kqueue()
         server_socket.close()
 
     def __run_poll(self):
@@ -314,6 +359,13 @@ class Application(object):
                                     else:  # if coroutine
                                         http_io_routine_pool.add(fileno, http_parser)
                                         events_buf.append((fileno, event))
+                                else:
+                                    self.logger.error("connection error in __run_epoll: %s", str(e))
+                                    http_connection.remove_connection(fileno)
+                                    http_io_buffer.remove_request(fileno)
+                                    http_io_buffer.remove_response(fileno)
+                                    http_io_routine_pool.remove(fileno)
+                                    poll.unregister(fileno)
                         elif event & select.POLLOUT:  # if out mode
                             bytes_written = http_connection.get_connection(fileno).send(
                                 http_io_buffer.get_response(fileno)
@@ -327,8 +379,13 @@ class Application(object):
                             http_connection.get_connection(fileno).close()  # close connection
                             http_connection.remove_connection(fileno)  # delete connection from connections dict
                     except Exception, e:
-                        self.logger.error("error in __run_poll: %s", str(e))
-                        continue
+                        self.logger.info("error in __run_poll: %s", str(e))
+                        http_connection.remove_connection(fileno)
+                        http_io_buffer.remove_request(fileno)
+                        http_io_buffer.remove_response(fileno)
+                        http_io_routine_pool.remove(fileno)
+                        self.logger.info("fileno is: %s", str(fileno))
+                        poll.unregister(fileno)
         finally:
             poll.unregister(server_socket.fileno())
             poll.close()
@@ -340,6 +397,20 @@ class Application(object):
         """
         EchoServer('0.0.0.0', self.port, self.handlers, self.settings)
         asyncore.loop()
+
+    def __remove_event(self, events, each):
+        """remove event from events
+
+        :param events: the list contain some events
+        :param each: the event will be removed
+        :return: None
+
+        """
+        self.logger.warning("remove event with udata: %s", str(each.udata))
+        for event in events:
+            if event.ident == each.ident:
+                events.remove(event)
+                break
 
     def run(self, io_model=None):
         """run the web server
