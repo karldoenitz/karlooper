@@ -62,7 +62,7 @@ class Request(object):
         try:
             cookie_dict = dict((cookie.split("=")[0], cookie.split("=", 1)[1]) for cookie in cookie_string.split("; "))
             return cookie_dict
-        except Exception, e:
+        except Exception as e:
             raise e
 
     def __parse_param(self):
@@ -84,7 +84,7 @@ class Request(object):
         elif content_type == ContentType.JSON and http_body:
             try:
                 body_param = json.loads(http_body)
-            except Exception, e:
+            except Exception as e:
                 self.logger.warning("parse json error: %s" % str(e))
                 body_param = eval(http_body)
         else:

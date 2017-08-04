@@ -52,7 +52,7 @@ class CommandLineParser(object):
         params = sys.argv[1:]
         __params_dict = dict({})
         if "help" in params:
-            print message
+            print(message)
             sys.exit(0)
         for param in params:
             __params_dict[param.split("=")[0]] = param.split("=")[1]
