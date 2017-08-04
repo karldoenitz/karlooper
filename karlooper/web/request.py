@@ -1,4 +1,20 @@
 # -*-coding:utf-8-*-
+"""
+
+request
+~~~~~~~
+
+Use this model to implement karlooper's interfaces.
+
+Usage
+=====
+>>> from karlooper.web.request import Request
+>>> class ExampleHandler(Request):
+...     def get(self):
+...         return self.http_response("<h1>Example</h1>")
+...
+
+"""
 
 import datetime
 import json

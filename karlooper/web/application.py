@@ -1,4 +1,27 @@
 # -*-coding:utf-8-*-
+"""
+
+application
+~~~~~~~~~~~
+
+Use this model to initialize web application.
+
+Usage
+=====
+>>> from karlooper.web import IOModel
+>>> from karlooper.web.application import Application
+>>> application = Application(handlers={}, settings={}, port=8080, log_conf="./config.log")
+>>> application.run(io_model=IOModel.POLL)
+server run on port: 8080
+run with poll
+
+>>> application = Application(handlers={}, settings={}, log_conf="./config.log")
+>>> application.listen(8000)
+>>> application.run(io_model=IOModel.POLL)
+server run on port: 8000
+run with poll
+
+"""
 
 import socket
 import select
