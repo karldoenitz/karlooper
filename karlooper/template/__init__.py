@@ -10,14 +10,27 @@ __author__ = 'karlvorndoenitz@gmail.com'
 
 
 def render(template_path, **kwargs):
-    template_file = open(template_path)
-    template_data = template_file.read()
+    """read template from file and compile to html content
+
+    :param template_path: template file's path
+    :param kwargs: parameters
+    :return: html content
+
+    """
+    with open(template_path) as template_file:
+        template_data = template_file.read()
     template = Template(template_data)
     data = template.render(kwargs)
-    template_file.close()
     return data
 
 
 def render_string(template_string, **kwargs):
+    """compile template string to html content
+
+    :param template_string: template string
+    :param kwargs: parameters
+    :return: html content
+
+    """
     template = Template(template_string)
     return template.render(kwargs)
