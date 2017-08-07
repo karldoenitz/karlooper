@@ -139,7 +139,6 @@ class Application(object):
                                         http_io_routine_pool.add(fileno, http_parser)
                                         events_buf.append((fileno, event))
                                 else:
-                                    self.logger.error("connection error in __run_epoll: %s", str(e))
                                     http_connection.remove_connection(fileno)
                                     http_io_buffer.remove_request(fileno)
                                     http_io_buffer.remove_response(fileno)
