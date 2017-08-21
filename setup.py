@@ -45,7 +45,7 @@ setup(
         '': ['*.txt', '*.pyi', '*.conf']
     },
     url='https://github.com/karldoenitz/karlooper',
-    license='',
+    license='MIT',
     author='lizhihao',
     author_email='karlvorndoenitz@gmail.com',
     description='karloop plus micro-framework',
