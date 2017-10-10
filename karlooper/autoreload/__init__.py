@@ -16,6 +16,8 @@ Usage
 
 """
 
+import time
+
 
 class AutoReload(object):
     def __init__(self, **kwargs):
@@ -24,5 +26,13 @@ class AutoReload(object):
     def __check(self):
         pass
 
-    def run(self):
+    def __application(self):
         pass
+
+    def run(self):
+        thread_obj = self.__application()
+        while True:
+            time.sleep(1)
+            if self.__check():
+                thread_obj.stop()
+                thread_obj = self.__application()
