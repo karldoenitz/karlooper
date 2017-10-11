@@ -237,6 +237,17 @@ HTTPResponse500.data = response_500
 Visit the web page you will see this.
 ![customize 500 page](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/example-500-page.png "customize 500 page")
 
+## karlooper.web.IOModel
+The package *karlooper.web* contains the class *IOModel*,
+```python
+class IOModel(object):
+    EPOLL = 0
+    KQUEUE = 1
+    POLL = 2
+```
+run application define io model.  
+epoll only for Linux and kqueue only for Unix, Darwin and BSD.  
+
 ## karlooper.web.application
 This model provides a class named Application.  
 ```python
@@ -251,6 +262,8 @@ handlers = {
 }
 application = Application(handlers, port=8080)
 application.run()
+# define io model
+# application.run(io_model=IOModel.EPOLL)
 ```
 If not define the port in anywhere, the server will run on the port 80.
 **arguments in init method**  
