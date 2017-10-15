@@ -432,6 +432,10 @@ class Application(object):
                 print("run with poll")
                 self.logger.info("run with poll")
                 self.__run_poll()
+            elif io_model == IOModel.ASYNCIO:
+                print ("run with asyncore")
+                self.logger.info("run with asyncore")
+                self.__run_async_io()
         else:
             if hasattr(select, "epoll"):
                 print("run with epoll")
