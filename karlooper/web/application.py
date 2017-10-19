@@ -185,7 +185,9 @@ class Application(object):
         index = 1
         events = [
             select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD),
-            select.kevent(server_socket.fileno(), select.KQ_FILTER_WRITE, select.KQ_EV_ADD)
+            select.kevent(server_socket.fileno(), select.KQ_FILTER_WRITE, select.KQ_EV_DELETE),
+            # select.kevent(server_socket.fileno(), select.KQ_FILTER_READ, select.KQ_EV_ADD),
+            # select.kevent(server_socket.fileno(), select.KQ_FILTER_WRITE, select.KQ_EV_DELETE),
         ]
         events_buf = []
         while True:
