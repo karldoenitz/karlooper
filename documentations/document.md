@@ -150,9 +150,9 @@ def http_response(data)
 ```
 Return http data.
 ```python
-def response_as_json(data)
+def response_as_json(data, ensure_gzip=False)
 ```
-Return json data.
+Return json data,```ensure_gzip``` the data whether need be compressed use gzip.
 ```python
 def render(template_path, **kwargs)
 ```
