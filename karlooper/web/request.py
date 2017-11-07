@@ -16,7 +16,9 @@ Usage
 
 """
 
+import StringIO
 import datetime
+import gzip
 import json
 import logging
 from urllib import unquote, unquote_plus
@@ -370,15 +372,22 @@ class Request(object):
         self.__parse_cookie_dict_to_string()
         return "\r\n" + self.header + "\r\n"
 
-    def response_as_json(self, data):
+    def response_as_json(self, data, ensure_gzip=False):
         """decorate data to http json data
 
         :param data: the response data
+        :param ensure_gzip: whether compress the response data use gzip
         :return: json data
 
         """
         self.set_header({"Content-Type": "application/json"})
         response = json.dumps(data, ensure_ascii=False)
+        if ensure_gzip:
+            out = StringIO.StringIO()
+            with gzip.GzipFile(fileobj=out, mode="w") as f:
+                f.write(response)
+            response = out.getvalue()
+            self.set_header({"Content-Encoding": "gzip"})
         return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def http_response(self, data):
