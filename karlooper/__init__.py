@@ -18,3 +18,4 @@ __packages__ = [
     "utils",
     "web"
 ]
+VERSION = tuple(map(int, __version__.split('.')))
