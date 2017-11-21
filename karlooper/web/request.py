@@ -390,14 +390,21 @@ class Request(object):
             self.set_header({"Content-Encoding": "gzip"})
         return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
-    def http_response(self, data):
+    def http_response(self, data, ensure_gzip=False):
         """decorate data to http response data
 
         :param data: http response data
+        :param ensure_gzip: whether compress the response data use gzip
         :return: a tuple contains http message, status, status message
 
         """
         self.logger.info("response data: %s", data)
+        if ensure_gzip:
+            out = StringIO.StringIO()
+            with gzip.GzipFile(fileobj=out, mode="w") as f:
+                f.write(data)
+            data = out.getvalue()
+            self.set_header({"Content-Encoding": "gzip"})
         return data, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def render(self, template_path, **kwargs):
@@ -410,7 +417,13 @@ class Request(object):
         """
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
-        return render(template_path, **kwargs), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
+        response = render(template_path, **kwargs)
+        out = StringIO.StringIO()
+        with gzip.GzipFile(fileobj=out, mode="w") as f:
+            f.write(response)
+        response = out.getvalue()
+        self.set_header({"Content-Encoding": "gzip"})
+        return response, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def redirect(self, url, status=HttpStatus.REDIRECT):
         """redirect to defined url
