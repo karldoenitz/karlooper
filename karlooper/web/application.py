@@ -34,6 +34,10 @@ from karlooper.web.http_io_routine_pool import HttpIORoutinePool
 from karlooper.http_parser.http_parser import HttpParser
 from karlooper.config import get_cli_data, set_cli_data
 from karlooper.config.config import SOCKET_RECEIVE_SIZE, DEFAULT_PORT, CLIENT_CONNECT_TO_SERVER_NUM
+from karlooper.utils import PY3
+
+if PY3:
+    unicode = str
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
