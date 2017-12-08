@@ -1,10 +1,12 @@
 # -*-coding:utf-8-*-
 
 from jinja2 import Template
+from karlooper.utils import PY3
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if not PY3:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 __author__ = 'karlvorndoenitz@gmail.com'
 

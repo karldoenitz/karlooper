@@ -1,6 +1,10 @@
 # -*-coding:utf-8-*-
 from karlooper.config import get_cli_data
+from karlooper.utils import PY3
 from karlooper.web.statics import StaticHandler
+
+if PY3:
+    xrange = range
 
 
 class PathParam(object):
