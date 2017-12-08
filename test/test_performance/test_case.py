@@ -5,7 +5,7 @@ from locust import HttpLocust, TaskSet, task
 
 class WebsiteTasks(TaskSet):
     def on_start(self):
-        print "start..."
+        print("start...")
 
     @task(1)
     def index(self):
