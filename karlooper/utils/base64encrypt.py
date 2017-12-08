@@ -21,6 +21,7 @@ b14f1453ceddc91e492fbe883d552a2e
 """
 
 import base64
+from karlooper.utils import PY3
 
 
 class Encryption(object):
@@ -44,7 +45,11 @@ class Encryption(object):
         :return: encoded result
 
         """
-        return base64.b64encode(s + self.__key)
+        ss = s + self.__key
+        if PY3:
+            return base64.b64encode(ss.encode("ascii"))
+        else:
+            return base64.b64decode(ss)
 
     def decode(self, s):
         """ decode a string
