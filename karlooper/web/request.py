@@ -16,19 +16,24 @@ Usage
 
 """
 
-import StringIO
+import io
 import datetime
 import gzip
 import json
 import logging
-from urllib import unquote, unquote_plus
 
+from karlooper.utils import PY3
 from karlooper.utils.http_utils import get_http_content_type
 from karlooper.config.config import ContentType, COOKIE_SECURITY_DEFAULT_STRING, HttpStatus, HttpStatusMsg
 from karlooper.escape import utf8
 from karlooper.utils.encrypt import StrEncryption
 from karlooper.template import render
 from karlooper.web.response import HTTPResponse405
+
+if PY3:
+    from urllib.parse import unquote, unquote_plus
+else:
+    from urllib import unquote, unquote_plus
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -383,7 +388,7 @@ class Request(object):
         self.set_header({"Content-Type": "application/json"})
         response = json.dumps(data, ensure_ascii=False)
         if ensure_gzip:
-            out = StringIO.StringIO()
+            out = io.BytesIO()
             with gzip.GzipFile(fileobj=out, mode="w") as f:
                 f.write(response)
             response = out.getvalue()
@@ -400,7 +405,7 @@ class Request(object):
         """
         self.logger.info("response data: %s", data)
         if ensure_gzip:
-            out = StringIO.StringIO()
+            out = io.BytesIO()
             with gzip.GzipFile(fileobj=out, mode="w") as f:
                 f.write(data)
             data = out.getvalue()
@@ -418,7 +423,7 @@ class Request(object):
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
         response = render(template_path, **kwargs)
-        out = StringIO.StringIO()
+        out = io.BytesIO()
         with gzip.GzipFile(fileobj=out, mode="w") as f:
             f.write(response)
         response = out.getvalue()
