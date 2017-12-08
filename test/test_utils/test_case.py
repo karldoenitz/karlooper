@@ -12,9 +12,9 @@ def test_encrypt():
     encode_str = str_encryption.encode(_str)
     decode_str = str_encryption.decode(encode_str)
     if _str != decode_str:
-        print encode_str
-        print decode_str
-        print _str
+        print(encode_str)
+        print(decode_str)
+        print(_str)
         assert "encode string error"
 
 
@@ -25,9 +25,9 @@ def test_base64encrypt():
     encode_str = str_encryption.encode(_str)
     decode_str = str_encryption.decode(encode_str)
     if _str != decode_str:
-        print encode_str
-        print decode_str
-        print _str
+        print(encode_str)
+        print(decode_str)
+        print(_str)
         assert "base64 encode string error"
 
 
@@ -38,9 +38,9 @@ def test_des_encrypt():
     encode_str = str_encryption.encode(_str)
     decode_str = str_encryption.decode(encode_str)
     if _str != decode_str:
-        print encode_str
-        print decode_str
-        print _str
+        print(encode_str)
+        print(decode_str)
+        print(_str)
         assert "des encode string error"
 
 
