@@ -49,7 +49,7 @@ class Encryption(object):
         if PY3:
             return base64.b64encode(ss.encode("ascii"))
         else:
-            return base64.b64decode(ss)
+            return base64.b64encode(ss)
 
     def decode(self, s):
         """ decode a string
