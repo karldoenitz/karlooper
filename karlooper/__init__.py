@@ -23,7 +23,7 @@
 """
 
 __author__ = 'karlvorndoenitz@gmail.com'
-__version__ = '0.6.3'
+__version__ = '0.6.5'
 __packages__ = [
     "autoreload",
     "config",
