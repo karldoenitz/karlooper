@@ -6,10 +6,10 @@ import requests
 
 
 def get_test_data(arg):
-    print arg
+    print(arg)
     get_url = "http://127.0.0.1:9898/test"
     a = requests.get(url=get_url)
-    print a.content
+    print(a.content)
 
 
 if __name__ == '__main__':
