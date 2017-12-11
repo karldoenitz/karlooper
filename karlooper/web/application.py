@@ -59,8 +59,8 @@ class Application(object):
         self.port = int(cli_data.get("port", DEFAULT_PORT))
         log_conf = self.settings.get("log_conf", None) if self.settings else kwargs.get("log_conf", None)
         self.logger = init_logger(config_path=log_conf)
-        self.EOL1 = b'\n\n'
-        self.EOL2 = b'\n\r\n'
+        self.EOL1 = '\n\n'
+        self.EOL2 = '\n\r\n'
         self.response = ""
 
     def listen(self, port):
@@ -99,7 +99,7 @@ class Application(object):
                             connection.setblocking(0)  # none block
                             epoll.register(connection.fileno(), select.EPOLLIN)  # register socket read event to epoll
                             http_connection.add_connection(connection.fileno(), connection)
-                            http_io_buffer.add_request(connection.fileno(), b'')
+                            http_io_buffer.add_request(connection.fileno(), '')
                             http_io_buffer.add_response(connection.fileno(), self.response)
                         elif event & select.EPOLLIN:  # when data in os's read buffer area
                             http_parser = http_io_routine_pool.get(file_no=fileno)
@@ -116,7 +116,12 @@ class Application(object):
                                     http_io_routine_pool.add(fileno, http_parser)
                                     events_buf.append((fileno, event))
                             else:
-                                http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                                if PY3:
+                                    http_request_buffer = http_connection.get_connection(fileno).recv(
+                                        SOCKET_RECEIVE_SIZE).decode("utf-8")
+                                else:
+                                    http_request_buffer = http_connection.get_connection(fileno).recv(
+                                        SOCKET_RECEIVE_SIZE)
                                 http_io_buffer.add_request(
                                     fileno,
                                     http_io_buffer.get_request(fileno) + http_request_buffer
@@ -149,8 +154,11 @@ class Application(object):
                                     http_io_routine_pool.remove(fileno)
                                     epoll.unregister(fileno)
                         elif event & select.EPOLLOUT:  # if out mode
+                            http_response_message = http_io_buffer.get_response(fileno)
+                            if PY3:
+                                http_response_message = http_response_message.encode('utf-8')
                             bytes_written = http_connection.get_connection(fileno).send(
-                                http_io_buffer.get_response(fileno)
+                                http_response_message
                             )
                             http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
@@ -243,7 +251,10 @@ class Application(object):
                                         events_buf.append(each)
                                 else:
                                     conn = http_connection.get_connection(each.udata)
-                                    request_data = conn.recv(SOCKET_RECEIVE_SIZE)
+                                    if PY3:
+                                        request_data = conn.recv(SOCKET_RECEIVE_SIZE).decode("utf-8")
+                                    else:
+                                        request_data = conn.recv(SOCKET_RECEIVE_SIZE)
                                     request_data = request_data[:-2] if request_data.endswith("\r\n") else request_data
                                     http_parser = HttpParser(
                                         request_data,
@@ -273,6 +284,8 @@ class Application(object):
                             elif each.udata >= 1 and each.filter == select.KQ_FILTER_WRITE:
                                 conn = http_connection.get_connection(each.udata)
                                 data = http_io_buffer.get_response(each.udata)
+                                if PY3:
+                                    data = data.encode('utf-8')
                                 conn.send(data)
                                 events.remove(select.kevent(
                                     http_connection.get_connection(each.udata).fileno(),
@@ -338,7 +351,12 @@ class Application(object):
                                     http_io_routine_pool.add(fileno, http_parser)
                                     events_buf.append((fileno, event))
                             else:
-                                http_request_buffer = http_connection.get_connection(fileno).recv(SOCKET_RECEIVE_SIZE)
+                                if PY3:
+                                    http_request_buffer = http_connection.get_connection(fileno).recv(
+                                        SOCKET_RECEIVE_SIZE).decode("utf-8")
+                                else:
+                                    http_request_buffer = http_connection.get_connection(fileno).recv(
+                                        SOCKET_RECEIVE_SIZE)
                                 http_io_buffer.add_request(
                                     fileno,
                                     http_io_buffer.get_request(fileno) + http_request_buffer
@@ -371,8 +389,11 @@ class Application(object):
                                     http_io_routine_pool.remove(fileno)
                                     poll.unregister(fileno)
                         elif event & select.POLLOUT:  # if out mode
+                            http_response_message = http_io_buffer.get_response(fileno)
+                            if PY3:
+                                http_response_message = http_response_message.encode('utf-8')
                             bytes_written = http_connection.get_connection(fileno).send(
-                                http_io_buffer.get_response(fileno)
+                                http_response_message
                             )
                             http_io_buffer.add_response(fileno, http_io_buffer.get_response(fileno)[bytes_written:])
                             if len(http_io_buffer.get_response(fileno)) == 0:  # if file sent
