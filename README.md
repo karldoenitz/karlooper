@@ -2,6 +2,9 @@
 ![karlooper logo](https://github.com/karldoenitz/karlooper/blob/master/documentations/images/logo.jpg "this is karlooper logo")  
 a python web micro-framework, single thread, asyncio
 
+# News
+The framework will support Python 3!
+
 # Install
 depend: jinja2.8  
 python version: >=2.6.6 and < 3.0  
