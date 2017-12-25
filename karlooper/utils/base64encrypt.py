@@ -47,7 +47,7 @@ class Encryption(object):
         """
         ss = s + self.__key
         if PY3:
-            return base64.b64encode(ss.encode("ascii"))
+            return base64.b64encode(ss.encode()).decode()
         else:
             return base64.b64encode(ss)
 
@@ -60,7 +60,10 @@ class Encryption(object):
         """
         missing_padding = 4 - len(s) % 4
         if missing_padding:
-            s += b'=' * missing_padding
-        decode_result = base64.b64decode(s)
+            s += '=' * missing_padding
+        if PY3:
+            decode_result = base64.b64decode(s.encode()).decode()
+        else:
+            decode_result = base64.b64decode(s)
         result = decode_result[:len(decode_result)-len(self.__key)]
         return result

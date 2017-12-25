@@ -5,7 +5,7 @@ import os
 from karlooper.utils.parse_command_line import CommandLineParser
 from karlooper.web.application import Application
 from karlooper.web.request import Request
-from test import test_handler
+from .test import test_handler
 
 __author__ = 'karlvorndoenitz@gmail.com'
 

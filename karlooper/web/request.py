@@ -387,13 +387,14 @@ class Request(object):
         """
         self.set_header({"Content-Type": "application/json"})
         response = json.dumps(data, ensure_ascii=False)
-        if ensure_gzip:
+        if ensure_gzip and not PY3:
             out = io.BytesIO()
             with gzip.GzipFile(fileobj=out, mode="w") as f:
                 f.write(response)
             response = out.getvalue()
             self.set_header({"Content-Encoding": "gzip"})
-        return utf8(response), HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
+            response = utf8(response)
+        return response, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def http_response(self, data, ensure_gzip=False):
         """decorate data to http response data
@@ -404,7 +405,7 @@ class Request(object):
 
         """
         self.logger.info("response data: %s", data)
-        if ensure_gzip:
+        if ensure_gzip and not PY3:
             out = io.BytesIO()
             with gzip.GzipFile(fileobj=out, mode="w") as f:
                 f.write(data)
@@ -423,11 +424,12 @@ class Request(object):
         root_path = self.__settings.get("template", ".")
         template_path = root_path + template_path
         response = render(template_path, **kwargs)
-        out = io.BytesIO()
-        with gzip.GzipFile(fileobj=out, mode="w") as f:
-            f.write(response)
-        response = out.getvalue()
-        self.set_header({"Content-Encoding": "gzip"})
+        if not PY3:
+            out = io.BytesIO()
+            with gzip.GzipFile(fileobj=out, mode="w") as f:
+                f.write(response)
+            response = out.getvalue()
+            self.set_header({"Content-Encoding": "gzip"})
         return response, HttpStatus.SUCCESS, HttpStatusMsg.SUCCESS, self
 
     def redirect(self, url, status=HttpStatus.REDIRECT):
