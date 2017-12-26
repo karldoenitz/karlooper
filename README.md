@@ -3,11 +3,11 @@
 a python web micro-framework, single thread, asyncio
 
 # News
-The framework will support Python 3!
+The framework support Python 3!
 
 # Install
 depend: jinja2.8  
-python version: >=2.6.6 and < 3.0  
+python version: >=2.6.6  
 download the package or check out the project  
 then cd to the project folder  
 run these commands:  
