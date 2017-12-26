@@ -1,8 +1,20 @@
 # -*-coding:utf-8-*-
 
+from karlooper.utils import PY3
 import re
-import urllib
-import htmlentitydefs
+
+if PY3:
+    basestring = str
+    unicode_type = str
+    unichr = chr
+    from urllib.parse import parse_qs as _parse_qs
+    import urllib.parse as urllib_parser
+    import html.entities as htmlentitydefs
+else:
+    unicode_type = unicode
+    from urlparse import parse_qs as _parse_qs
+    import urllib as urllib_parser
+    import htmlentitydefs
 
 _XHTML_ESCAPE_RE = re.compile('[&<>"\']')
 _XHTML_ESCAPE_DICT = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;'}
@@ -112,21 +124,62 @@ def url_escape(value, plus=True):
     :return: the escaped value
 
     """
-    quote = urllib.quote_plus if plus else urllib.quote
+    quote = urllib_parser.quote_plus if plus else urllib_parser.quote
     return quote(utf8(value))
 
 
-def url_unescape(value, encoding='utf-8', plus=True):
-    """Decodes the given value from a URL.
+if not PY3:
+    def url_unescape(value, encoding='utf-8', plus=True):
+        """Decodes the given value from a URL.
 
-    :param value: value will be unescaped
-    :param encoding: the encoding default is utf-8
-    :param plus: whether need plus default True
-    :return: the unescaped url
+        :param value: url will be unescaped
+        :param encoding: url encoding
+        :param plus: whether need plus default True
+        :return: the unescaped url
 
-    """
-    unquote = (urllib.unquote_plus if plus else urllib.unquote)
-    if encoding is None:
-        return unquote(utf8(value))
-    else:
-        return _unicode_type(unquote(utf8(value)), encoding)
+        """
+        unquote = (urllib_parser.unquote_plus if plus else urllib_parser.unquote)
+        if encoding is None:
+            return unquote(utf8(value))
+        else:
+            return unicode_type(unquote(utf8(value)), encoding)
+
+
+    parse_qs_bytes = _parse_qs
+else:
+    def url_unescape(value, encoding='utf-8', plus=True):
+        """Decodes the given value from a URL.
+
+        :param value: url will be unescaped
+        :param encoding: url encoding
+        :param plus: whether need plus default True
+        :return: the unescaped url
+
+        """
+        if encoding is None:
+            if plus:
+                # unquote_to_bytes doesn't have a _plus variant
+                value = to_basestring(value).replace('+', ' ')
+            return urllib_parser.unquote_to_bytes(value)
+        else:
+            unquote = (urllib_parser.unquote_plus if plus
+            else urllib_parser.unquote)
+            return unquote(to_basestring(value), encoding=encoding)
+
+
+    def parse_qs_bytes(qs, keep_blank_values=False, strict_parsing=False):
+        """Parses a query string like urlparse.parse_qs, but returns the values as byte strings.
+
+        :param qs: quotes
+        :param keep_blank_values: whether need keep bland values
+        :param strict_parsing: whether need strict parsing
+        :return: quotes bytes
+
+        """
+        # This is gross, but python3 doesn't give us another way.
+        # Latin1 is the universal donor of character encodings.
+        result = _parse_qs(qs, keep_blank_values, strict_parsing, encoding='latin1', errors='strict')
+        encoded = {}
+        for k, v in result.items():
+            encoded[k] = [i.encode('latin1') for i in v]
+        return encoded
