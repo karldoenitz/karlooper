@@ -15,7 +15,7 @@ class UserInfoHandler(Request):
         print(self.get_http_request_message())
         size = self.get_parameter("user_size", 0)
         size = int(size)
-        user_list = [{"name": "name_%d" % i, "gender": "male", "age": i + 10} for i in xrange(size)]
+        user_list = [{"name": "name_%d" % i, "gender": "male", "age": i + 10} for i in range(size)]
         result = {
             "status": 0,
             "message": "OK",
