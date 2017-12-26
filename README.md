@@ -3,7 +3,7 @@
 a python web micro-framework, single thread, asyncio
 
 # News
-The framework will support Python 3!
+The framework will only support Python 3 in the future!
 
 # Install
 depend: jinja2.8  
