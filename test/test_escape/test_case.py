@@ -1,6 +1,10 @@
 # -*-encoding:utf-8-*-
 
+import sys
 from karlooper.escape import *
+
+if sys.version_info >= (3,):
+    unicode = str
 
 
 def test():
@@ -13,14 +17,14 @@ def test():
     html = "<html><head><title>test</title></head><body><h1>hello world!</h1></body></html>"
     html_escape = xhtml_escape(html)
     if html != xhtml_unescape(html_escape):
-        print html
-        print html_escape
+        print(html)
+        print(html_escape)
         assert "html escape or unescape error"
     url = "http://www.test.com/test?param=param"
     url_escaped = url_escape(url)
     if url != url_unescape(url_escaped):
-        print url
-        print url_escaped
+        print(url)
+        print(url_escaped)
         assert "url escape or unescape error"
 
 

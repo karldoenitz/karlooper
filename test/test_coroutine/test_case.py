@@ -1,6 +1,10 @@
 # -*-encoding:utf-8-*-
 
+import sys
 from karlooper.coroutine.coroutine_pool import *
+
+if sys.version_info >= (3,):
+    xrange = range
 
 
 class TT(object):
@@ -8,7 +12,7 @@ class TT(object):
         self.sum = num
 
     def print_sum(self):
-        print self.sum, 'a'
+        print(self.sum, 'a')
 
 
 class Test(TT):
@@ -34,7 +38,7 @@ class Parser(object):
 if __name__ == '__main__':
     p = Parser()
     for j in xrange(5):
-        print p.parser()
+        print(p.parser())
     # t = test()
     # for j in xrange(10):
-    #     print t
+    #     print(t
