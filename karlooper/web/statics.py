@@ -67,11 +67,10 @@ class StaticHandler(Request):
         :return: file's etag
 
         """
-        with open(file_path) as f:
+        with open(file_path, 'rb') as f:
             file_data = f.read()
-        if PY3:
-            etag = hashlib.md5(file_data.encode()).hexdigest()
-        else:
-            etag = hashlib.md5(file_data).hexdigest()
+        etag = hashlib.md5(file_data).hexdigest()
         self.logger.info("%s's etag is %s" % (file_path, etag))
+        if PY3:
+            file_data = file_data.decode(errors='ignore')
         return etag, file_data

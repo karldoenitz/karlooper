@@ -5,7 +5,8 @@ import os
 from karlooper.utils.parse_command_line import CommandLineParser
 from karlooper.web.application import Application
 from karlooper.web.request import Request
-from .test import test_handler
+
+# from .test import test_handler
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -108,7 +109,7 @@ handlers = {
     "/test/test2": TestHandler2,
     "/hello-world": Test,
     "/hello": HelloWorld,
-    "/test-handler": test_handler.TestHandler1,
+    # "/test-handler": test_handler.TestHandler1,
     "/user/{age}/{id}": TestPathParam,
     "/user/vip/{id}/{token}": TestPathParam
 }
