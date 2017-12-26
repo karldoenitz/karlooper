@@ -334,7 +334,7 @@ class Application(object):
                             connection.setblocking(0)  # none block
                             poll.register(connection.fileno(), select.POLLIN)  # register socket read event to poll
                             http_connection.add_connection(connection.fileno(), connection)
-                            http_io_buffer.add_request(connection.fileno(), b'')
+                            http_io_buffer.add_request(connection.fileno(), '')
                             http_io_buffer.add_response(connection.fileno(), self.response)
                         elif event & select.POLLIN:  # when data in os's read buffer area
                             http_parser = http_io_routine_pool.get(file_no=fileno)
