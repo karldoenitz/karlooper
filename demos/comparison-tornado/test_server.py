@@ -5,7 +5,8 @@ import os
 from karlooper.utils.parse_command_line import CommandLineParser
 from karlooper.web.application import Application
 from karlooper.web.request import Request
-from test import test_handler
+
+# from .test import test_handler
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -13,7 +14,7 @@ __author__ = 'karlvorndoenitz@gmail.com'
 class TestHandler(Request):
     def get(self):
         http_message = self.get_http_request_message()
-        print http_message
+        print(http_message)
         test = self.get_parameter("test")
         cookie = self.get_cookie("what1")
         cookie_1 = self.get_security_cookie("what")
@@ -37,7 +38,7 @@ class TestHandler(Request):
 
     def post(self):
         http_message = self.get_http_request_message()
-        print http_message
+        print(http_message)
         post_1 = self.get_parameter("post1")
         result = {
             "key": "value",
@@ -61,7 +62,7 @@ class TestHandler2(Request):
         # return self.redirect("http://www.baidu.com")
 
     def post(self):
-        print self.get_http_request_message()
+        print(self.get_http_request_message())
         return self.http_response("Hello World")
 
 
@@ -76,7 +77,7 @@ class Hello(object):
 
 class HelloWorld(Request):
     def before_request(self):
-        print self.get_http_request_message()
+        print(self.get_http_request_message())
 
     def get(self):
         title = "你好, 世界"
@@ -86,7 +87,7 @@ class HelloWorld(Request):
         return self.render("/helloworld.html", title=title, numbers=numbers, hello=hello)
 
     def teardown_request(self):
-        print "tear down now"
+        print("tear down now")
 
 
 class TestPathParam(Request):
@@ -108,7 +109,7 @@ handlers = {
     "/test/test2": TestHandler2,
     "/hello-world": Test,
     "/hello": HelloWorld,
-    "/test-handler": test_handler.TestHandler1,
+    # "/test-handler": test_handler.TestHandler1,
     "/user/{age}/{id}": TestPathParam,
     "/user/vip/{id}/{token}": TestPathParam
 }

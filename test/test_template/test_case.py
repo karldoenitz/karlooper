@@ -21,9 +21,9 @@ def test():
     render_result = utf8(render_result)
     example_result = example_result.replace(" ", "").replace("\t", "").replace("  ", "").replace("\n", "")
     if render_result != example_result:
-        print type(example_result), type(render_result)
-        print example_result
-        print render_result
+        print(type(example_result), type(render_result))
+        print(example_result)
+        print(render_result)
         assert "render error"
     with open("./example.html", "r") as f:
         example_html = f.read()
@@ -32,9 +32,9 @@ def test():
     render_result = utf8(render_result)
     example_result = example_result.replace(" ", "").replace("\t", "").replace("  ", "").replace("\n", "")
     if render_result != example_result:
-        print type(example_result), type(render_result)
-        print example_result
-        print render_result
+        print(type(example_result), type(render_result))
+        print(example_result)
+        print(render_result)
         assert "render_string error"
 
 

@@ -18,7 +18,7 @@ class MessageHandler(Request):
         return self.response_as_json(result)
 
     def post(self):
-        print self.get_http_request_message()
+        print(self.get_http_request_message())
         from_user = self.get_parameter("from")
         new_value = self.decode_parameter_plus("value")
         redis_manager = get_global_conf("redis")

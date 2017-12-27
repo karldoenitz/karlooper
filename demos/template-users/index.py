@@ -15,7 +15,7 @@ class User(object):
 
 class UsersHandler(Request):
     def get(self):
-        user_list = [User("name_%d" % i, "male(男)", i+10) for i in xrange(20)]
+        user_list = [User("name_%d" % i, "male(男)", i + 10) for i in range(20)]
         return self.render("/user-page.html", users=user_list)
 
 
