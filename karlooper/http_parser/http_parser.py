@@ -5,6 +5,7 @@ import logging
 from karlooper.router.router import Router
 from karlooper.config.config import ContentType, RESPONSE_HEAD_MESSAGE
 from karlooper.web.response import HTTPResponse404, HTTPResponse500
+from karlooper.utils import PY3
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
@@ -65,7 +66,7 @@ class HttpParser(object):
             data = HTTPResponse404(**self.settings).data()
             status["status"] = HTTPResponse404.status
             status["content_type"] = ContentType.HTML
-            status["content_length"] = len(data)
+            status["content_length"] = len(data) if not PY3 else len(data.encode())
             status["status_msg"] = HTTPResponse404.message
         else:
             try:
@@ -92,6 +93,6 @@ class HttpParser(object):
                 status["status"] = HTTPResponse500.status
                 status["status_msg"] = HTTPResponse500.message
                 data = HTTPResponse500(**self.settings).data() or str(e)
-            status["content_length"] = len(data)
+            status["content_length"] = len(data) if not PY3 else len(data.encode())
         response_data = self.response_header % status + data
         return response_data
