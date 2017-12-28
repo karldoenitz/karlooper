@@ -19,12 +19,16 @@ L3N0YXRpYy9oZWxsby5qczEyMzQ1Njc4OQ==
 /static/hello.js
 
 """
+from karlooper.utils import PY3
 
 __author__ = 'karlvorndoenitz@gmail.com'
 
 
 try:
-    from encryption import encrypt_str, decrypt_str
+    if PY3:
+        from karlooper.utils.encryption import encrypt_str, decrypt_str
+    else:
+        from encryption import encrypt_str, decrypt_str
 
 
     class StrEncryption(object):
@@ -61,6 +65,12 @@ try:
 
 except ImportError:
     try:
-        from base64encrypt import Encryption as StrEncryption
+        if PY3:
+            from karlooper.utils.base64encrypt import Encryption as StrEncryption
+        else:
+            from base64encrypt import Encryption as StrEncryption
     except ImportError:
-        from des_encrypt import DES as StrEncryption
+        if PY3:
+            from karlooper.utils.des_encrypt import DES as StrEncryption
+        else:
+            from des_encrypt import DES as StrEncryption

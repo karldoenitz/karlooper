@@ -18,6 +18,7 @@ import hashlib
 from karlooper.web.request import Request
 from karlooper.config import get_cli_data
 from karlooper.config.config import content_type, HttpStatus, HttpStatusMsg
+from karlooper.utils import PY3
 
 
 class StaticHandler(Request):
@@ -66,9 +67,10 @@ class StaticHandler(Request):
         :return: file's etag
 
         """
-        f = open(file_path)
-        file_data = f.read()
-        f.close()
+        with open(file_path, 'rb') as f:
+            file_data = f.read()
         etag = hashlib.md5(file_data).hexdigest()
         self.logger.info("%s's etag is %s" % (file_path, etag))
+        if PY3:
+            file_data = file_data.decode(errors='ignore')
         return etag, file_data

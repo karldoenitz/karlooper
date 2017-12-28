@@ -21,6 +21,7 @@ b14f1453ceddc91e492fbe883d552a2e
 """
 
 import base64
+from karlooper.utils import PY3
 
 
 class Encryption(object):
@@ -44,7 +45,11 @@ class Encryption(object):
         :return: encoded result
 
         """
-        return base64.b64encode(s + self.__key)
+        ss = s + self.__key
+        if PY3:
+            return base64.b64encode(ss.encode()).decode()
+        else:
+            return base64.b64encode(ss)
 
     def decode(self, s):
         """ decode a string
@@ -55,7 +60,10 @@ class Encryption(object):
         """
         missing_padding = 4 - len(s) % 4
         if missing_padding:
-            s += b'=' * missing_padding
-        decode_result = base64.b64decode(s)
+            s += '=' * missing_padding
+        if PY3:
+            decode_result = base64.b64decode(s.encode()).decode()
+        else:
+            decode_result = base64.b64decode(s)
         result = decode_result[:len(decode_result)-len(self.__key)]
         return result
