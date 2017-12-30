@@ -162,8 +162,7 @@ else:
                 value = to_basestring(value).replace('+', ' ')
             return urllib_parser.unquote_to_bytes(value)
         else:
-            unquote = (urllib_parser.unquote_plus if plus
-            else urllib_parser.unquote)
+            unquote = (urllib_parser.unquote_plus if plus else urllib_parser.unquote)
             return unquote(to_basestring(value), encoding=encoding)
 
 
