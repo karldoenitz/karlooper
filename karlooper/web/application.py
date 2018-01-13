@@ -51,11 +51,11 @@ class Application(object):
         :param kwargs: options
 
         """
-        self.settings = settings
         self.handlers = handlers
-        set_cli_data(self.settings)
+        set_cli_data(settings)
         set_cli_data(kwargs)
         cli_data = get_cli_data()
+        self.settings = cli_data
         self.port = int(cli_data.get("port", DEFAULT_PORT))
         log_conf = self.settings.get("log_conf", None) if self.settings else kwargs.get("log_conf", None)
         self.logger = init_logger(config_path=log_conf)
