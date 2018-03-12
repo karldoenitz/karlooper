@@ -15,6 +15,8 @@ class HttpConnection(object):
     def remove_connection(self, name): remove connection
 
     """
+    __slots__ = ["connection", "requests", "responses", "__dict__"]
+
     def __init__(self):
         self.connection = {}
         self.requests = {}

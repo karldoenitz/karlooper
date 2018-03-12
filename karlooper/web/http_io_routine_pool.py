@@ -15,6 +15,8 @@ class HttpIORoutinePool(object):
     def remove(self, file_no): remove co-routine
 
     """
+    __slots__ = ["pool", "__dict__"]
+
     def __init__(self):
         self.pool = {}
 

@@ -19,6 +19,8 @@ class HttpIOBuffer(object):
     def remove_response(self, name): get response from io buffer
 
     """
+    __slots__ = ["requests", "responses", "__dict__"]
+
     def __init__(self):
         self.requests = {}
         self.responses = {}
