@@ -153,10 +153,12 @@ Return http data.
 def response_as_json(data, ensure_gzip=False)
 ```
 Return json data,```ensure_gzip``` the data whether need be compressed use gzip.
+- `ensure_gzip` is only valid for python 2
 ```python
 def render(template_path, **kwargs)
 ```
 Renders the template with the given arguments as the response.
+- notify: render string is gziped in python 2 and only in python 2
 ```python
 def redirect(url, status=302)
 ```
