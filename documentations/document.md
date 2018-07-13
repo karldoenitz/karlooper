@@ -1,5 +1,5 @@
 # Karlooper Documentation([中文文档点击此处](https://github.com/karldoenitz/karlooper/blob/master/documentations/%E6%96%87%E6%A1%A3.md))
-API index:  
+API index:
 - [karlooper.web](#karlooperweb)
 - [karlooper.coroutine](#karloopercoroutine)
 - [karlooper.template](#karloopertemplate)
