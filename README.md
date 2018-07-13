@@ -175,7 +175,7 @@ Percentage of the requests served within a certain time (ms)
 # Contributors
 Thanks goes to these wonderful people:
 |[<img src="https://avatars2.githubusercontent.com/u/7512821?s=460&v=4" width="100px;"/><br/><p>Karl</p>](https://github.com/karldoenitz)|[<img src="https://avatars3.githubusercontent.com/u/30079455?s=460&v=4" width="100px;"/><br/><p>Moira</p>](https://github.com/MoiraJune)|[<img src="https://avatars1.githubusercontent.com/u/12806543?s=460&v=4" width="100px;"/><br/><p>Double Sun</p>](https://github.com/ssundabao)|
-|---|---|---|
+|---------|----------|-----------|
 
 # Notice
 This framework has been used on the linux version of [CubeBackup for Google Apps](http://www.cubebackup.com), which is a local backup solution for Google Apps data.   
